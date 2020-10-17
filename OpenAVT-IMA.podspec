@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'OpenAVT-IMA'
   s.version          = '0.1.0'
-  s.summary          = 'Open Audio-Video Toolkit, IMA tracker.'
+  s.summary          = 'Open Audio-Video Telemetry, IMA tracker.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-  Open Audio-Video Toolkit, IMA tracker. It contains a tracker for the IMA Ads library, it depends on OpenAVT-Core.
+  Open Audio-Video Telemetry, IMA tracker. It contains a tracker for the IMA Ads library, it depends on OpenAVT-Core.
                        DESC
   s.swift_versions   = '5.0'
   s.homepage         = 'https://github.com/asllop/OpenAVT-iOS'
