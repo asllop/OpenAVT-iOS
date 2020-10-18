@@ -36,10 +36,9 @@ pod 'OpenAVT-AVPlayer', :git => 'https://github.com/asllop/OpenAVT-iOS'
 pod 'OpenAVT-IMA', :git => 'https://github.com/asllop/OpenAVT-iOS'
 ```
 
-## Example
+## Examples
 
 TODO: create examples
-
 
 ## Documentation
 
