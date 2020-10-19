@@ -84,12 +84,5 @@ class ViewController: UIViewController {
         self.avpTrackerId = self.instrument?.addTracker(OAVTTrackerAVPlayer(player: player))
         self.instrument?.ready()
     }
-    
-    // Create an OpenAVT Instrument to track the AVPlayer instance
-    func xxxsetupInstrument(player: AVPlayer!) {
-        let instrument = OAVTInstrument(hub: OAVTHubCore(), backend: DummyBackend())
-        let avpTrackerId = instrument.addTracker(OAVTTrackerAVPlayer(player: player))
-        instrument.ready()
-    }
 }
 
