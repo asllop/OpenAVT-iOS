@@ -23,7 +23,7 @@ These objects represent a chain because the data captured by a tracker is sent t
 
 One instrument can contain multiple trackers, but only one hub and one backend. An instrument is defined like this:
 
-```
+```swift
 let instrument = OAVTInstrument(hub: AnyHub(), backend: AnyBackend())
 let tracker1Id = instrument.addTracker(AnyTracker1())
 let tracker2Id = instrument.addTracker(AnyTracker2())
