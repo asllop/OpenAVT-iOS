@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="ExampleAVPlayer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fIA-sg-676">
+                                <rect key="frame" x="185.5" y="84" width="43" height="30"/>
+                                <state key="normal" title="Bunny"/>
+                                <connections>
+                                    <action selector="clickBunnyVideo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dEO-sg-YAT"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZqA-xd-0Ku">
+                                <rect key="frame" x="187.5" y="130" width="39" height="30"/>
+                                <state key="normal" title="Sintel"/>
+                                <connections>
+                                    <action selector="clickSintelVideo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZQD-A4-5wu"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lyV-uu-c25">
+                                <rect key="frame" x="158" y="176" width="98" height="30"/>
+                                <state key="normal" title="Airshow (Live)"/>
+                                <connections>
+                                    <action selector="clickAirshowLive:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Qa0-ys-gJI"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4r2-qs-XF1">
+                                <rect key="frame" x="145" y="222" width="124" height="30"/>
+                                <state key="normal" title="Apple Conference"/>
+                                <connections>
+                                    <action selector="clickAppleConferene:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PyW-Rg-DQA"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Scn-Rz-YGv">
+                                <rect key="frame" x="159.5" y="268" width="95" height="30"/>
+                                <state key="normal" title="Gear Example"/>
+                                <connections>
+                                    <action selector="clickGearExample:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MjK-AE-aUk"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="lyV-uu-c25" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="GOF-CC-g6I"/>
+                            <constraint firstItem="fIA-sg-676" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Rb2-ag-zmW"/>
+                            <constraint firstItem="4r2-qs-XF1" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="eDN-oO-k78"/>
+                            <constraint firstItem="Scn-Rz-YGv" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="gd4-Qb-ccw"/>
+                            <constraint firstItem="Scn-Rz-YGv" firstAttribute="top" secondItem="4r2-qs-XF1" secondAttribute="bottom" constant="16" id="iA0-3a-7AO"/>
+                            <constraint firstItem="ZqA-xd-0Ku" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="lKr-EO-zCX"/>
+                            <constraint firstItem="4r2-qs-XF1" firstAttribute="top" secondItem="lyV-uu-c25" secondAttribute="bottom" constant="16" id="qnp-Jx-hYs"/>
+                            <constraint firstItem="ZqA-xd-0Ku" firstAttribute="top" secondItem="fIA-sg-676" secondAttribute="bottom" constant="16" id="vGa-ya-rEa"/>
+                            <constraint firstItem="fIA-sg-676" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="vv8-K0-O3Z"/>
+                            <constraint firstItem="lyV-uu-c25" firstAttribute="top" secondItem="ZqA-xd-0Ku" secondAttribute="bottom" constant="16" id="yAU-Rx-Lv1"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="139" y="115"/>
+        </scene>
+    </scenes>
+</document>
