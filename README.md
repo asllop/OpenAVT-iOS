@@ -19,7 +19,7 @@ In OpenAVT the central concept is the **Instrument**, implemented in the class `
 
 - **Backends**: classes conforming to `OAVTBackendProtocol`, used to transmit data processed by a hub.
 
-These objects represent a chain because the data captured by a tracker is sent to a hub that processes it and passes it away to the backend.
+These objects represent a chain because the data captured by a tracker is sent to a hub that processes it and passes it to the backend.
 
 One instrument can contain multiple trackers, but only one hub and one backend.
 
