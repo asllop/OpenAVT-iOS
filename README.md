@@ -77,6 +77,10 @@ Inside the `Examples` folder you will find multiple usage examples. To run them 
 
 Shows how to use the AVPlayer tracker.
 
+#### ExampleAVPlayer+IMA
+
+Shows how to use the AVPlayer tracker and the Google IMA ads tracker.
+
 ## Documentation
 
 TODO: create autodocs and tutorials.
