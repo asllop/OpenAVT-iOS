@@ -11,17 +11,21 @@ The Open Audio-Video Telemetry is a set of tools for performance monitoring in m
 
 #### The Instrument
 
-In OpenAVT the central concept is the **Instrument**, represented by the class `OAVTInstrument`. An instrument represents a chain of objects that captures, processes and transmits data from a multimedia player. Each of these three steps is represented by:
+In OpenAVT the central concept is the **Instrument**, implemented in the class `OAVTInstrument`. An instrument contains a chain of objects that captures, processes and transmits data from a multimedia player. Each of these three steps is represented by:
 
-**Trackers**, classes conforming to `OAVTTrackerProtocol`, used to captured data from a specific player.
+- **Trackers**: classes conforming to `OAVTTrackerProtocol`, used to captured data from a specific player.
 
-**Hubs**, classes conforming to `OAVTHubProtocol`, used to process the data captured by a Tracker. Also keeps a state , an instance of `OAVTState`.
+- **Hubs**: classes conforming to `OAVTHubProtocol`, used to process the data captured by a tracker. A hub also keeps a state, an instance of `OAVTState`.
 
-**Backends**, classes conforming to `OAVTBackendProtocol`, used to transmit data processed by a Hub.
+- **Backends**: classes conforming to `OAVTBackendProtocol`, used to transmit data processed by a hub.
 
 These objects represent a chain because the data captured by a tracker is sent to a hub that processes it and passes it away to the backend.
 
-One instrument can contain multiple trackers, but only one hub and one backend. An instrument is defined like this:
+One instrument can contain multiple trackers, but only one hub and one backend.
+
+![Alt text](./oavtinstrument_diag.svg)
+
+An instrument is defined like this:
 
 ```swift
 let instrument = OAVTInstrument(hub: AnyHub(), backend: AnyBackend())
@@ -35,7 +39,7 @@ instrument.ready()
 
 We talked about data being captured and passed along the instrument chain, but what is the nature of this data?
 
-In OpenAVT the data unit is the **Event**, represented by the class `OAVTEvent`. An event contains an **Action** (class `OAVTAction`) and a list of **Attributes** (class `OAVTAttribute`).
+In OpenAVT the data unit is the **Event**, implemented in the class `OAVTEvent`. An event contains an **Action** (class `OAVTAction`) and a list of **Attributes** (class `OAVTAttribute`).
 
 The action tells us what is the event about, for example when a video starts, an event with the action `OAVTAction.START` is sent.
 
