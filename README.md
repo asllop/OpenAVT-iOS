@@ -3,11 +3,46 @@
 [![License](https://img.shields.io/github/license/asllop/OpenAVT-iOS)](https://github.com/asllop/OpenAVT-iOS)
 [![Language](https://img.shields.io/badge/language-Swift-orange)](https://github.com/asllop/OpenAVT-iOS)
 
-## Introduction
+1. [ Introduction ](#intro)
+2. [ Installation ](#install)
+3. [ Behaviour ](#behav)
+4. [ Examples ](#examp)
+5. [ Documentation ](#doc)
+6. [ Author ](#auth)
+7. [ License ](#lice)
+
+<a name="intro"></a>
+## 1. Introduction
 
 The Open Audio-Video Telemetry is a set of tools for performance monitoring in multimedia applications. The objectives are similar to those of the OpenTelemetry project, but specifically for sensing data from audio and video players.
 
-## Usage
+<a name="install"></a>
+## 2. Installation
+
+To install OpenAVT-iOS, simply add the following line to your Podfile:
+
+```ruby
+pod 'OpenAVT-Core', :git => 'https://github.com/asllop/OpenAVT-iOS'
+```
+
+The `OpenAVT-Core` is the base package, needed by all the rest. But you also need to add pods for the specific OpenAVT components you will use in your project.
+
+The following packages are available:
+
+#### AVPlayer Tracker
+
+```ruby
+pod 'OpenAVT-AVPlayer', :git => 'https://github.com/asllop/OpenAVT-iOS'
+```
+
+#### Google IMA Tracker
+
+```ruby
+pod 'OpenAVT-IMA', :git => 'https://github.com/asllop/OpenAVT-iOS'
+```
+
+<a name="behav"></a>
+## 3. Behaviour
 
 #### The Instrument
 
@@ -45,31 +80,12 @@ The action tells us what is the event about, for example when a video starts, an
 
 The attributes offers context for the actions. For example, the attribute `OAVTAttribute.DURATION` informs the stream duration in milliseconds.
 
-## Installation
+#### The Chain
 
-To install OpenAVT-iOS, simply add the following line to your Podfile:
+TODO: explain the specific travel of the data, the methods called on each step of the chain.
 
-```ruby
-pod 'OpenAVT-Core', :git => 'https://github.com/asllop/OpenAVT-iOS'
-```
-
-The `OpenAVT-Core` is the base package, needed by all the rest. But you also need to add pods for the specific OpenAVT components you will use in your project.
-
-The following packages are available:
-
-#### AVPlayer Tracker
-
-```ruby
-pod 'OpenAVT-AVPlayer', :git => 'https://github.com/asllop/OpenAVT-iOS'
-```
-
-#### Google IMA Tracker
-
-```ruby
-pod 'OpenAVT-IMA', :git => 'https://github.com/asllop/OpenAVT-iOS'
-```
-
-## Examples
+<a name="examp"></a>
+## 4. Examples
 
 Inside the `Examples` folder you will find multiple usage examples. To run them execute `pod install` from each example directory.
 
@@ -81,15 +97,18 @@ Shows how to use the AVPlayer tracker.
 
 Shows how to use the AVPlayer tracker and the Google IMA ads tracker.
 
-## Documentation
+<a name="doc"></a>
+## 5. Documentation
 
 TODO: create autodocs and tutorials.
 
-## Author
+<a name="auth"></a>
+## 6. Author
 
 Andreu Santarén Llop<br>
 <andreu.santaren@gmail.com>
 
-## License
+<a name="lice"></a>
+## 7. License
 
 OpenAVT-iOS is available under the MIT license. See the LICENSE file for more info.

@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// An OpenAVT Instrument.
 public class OAVTInstrument {
     
     private let instrumentId : String
@@ -22,10 +23,24 @@ public class OAVTInstrument {
     private var pingTrackerTimers: Dictionary<Int, Timer> = [:]
     private var trackerGetters : Dictionary<Int, Dictionary<OAVTAttribute, () -> Any?>> = [:]
     
+    /**
+     Init a new OAVTInstrument.
+     
+     - Returns: An empty OAVTInstrument instance.
+    */
     public init() {
         self.instrumentId = UUID().uuidString
     }
-    
+
+    /**
+     Init a new OAVTInstrument, providing hub and backend.
+     
+     - Parameters:
+        - hub: An object conforming to OAVTHubProtocol.
+        - backend: An object conforming to OAVTBackendProtocol.
+     
+     - Returns: A new OAVTInstrument instance.
+    */
     public convenience init(hub: OAVTHubProtocol, backend: OAVTBackendProtocol) {
         self.init()
         setHub(hub)
@@ -35,7 +50,13 @@ public class OAVTInstrument {
     deinit {
         OAVTLog.verbose("##### OAVTInstrument deinit")
     }
-    
+
+    /**
+     Set the hub instance.
+     
+     - Parameters:
+        - hub: An object conforming to OAVTHubProtocol.
+    */
     public func setHub(_ hub: OAVTHubProtocol) {
         if let hub = self.hub {
             hub.endOfService()
@@ -43,6 +64,12 @@ public class OAVTInstrument {
         self.hub = hub
     }
     
+    /**
+     Set the backend instance.
+     
+     - Parameters:
+        - backend: An object conforming to OAVTBackendProtocol.
+    */
     public func setBackend(_ backend: OAVTBackendProtocol) {
         if let backend = self.backend {
             backend.endOfService()
@@ -50,6 +77,14 @@ public class OAVTInstrument {
         self.backend = backend
     }
     
+    /**
+     Add a tracker instance.
+     
+     - Parameters:
+        - tracker: An object conforming to OAVTTrackerProtocol.
+     
+     - Returns: The Tracker ID.
+    */
     @discardableResult
     public func addTracker(_ tracker: OAVTTrackerProtocol) -> Int {
         var tracker = tracker
@@ -59,10 +94,23 @@ public class OAVTInstrument {
         return self.nextTrackerId - 1
     }
     
+    /**
+     Get the list of trackers.
+     
+     - Returns: Dictionary of trackers, using tracker ID as a key.
+    */
     public func getTrackers() -> Dictionary<Int, OAVTTrackerProtocol> {
         return self.trackers
     }
     
+    /**
+     Get one specific tracker.
+     
+     - Parameters:
+        - trackerId: Tracker ID.
+     
+     - Returns: A tracker.
+    */
     public func getTracker(_ trackerId: Int) -> OAVTTrackerProtocol? {
         if let val = self.trackers[trackerId] {
             return val
@@ -72,14 +120,32 @@ public class OAVTInstrument {
         }
     }
     
+    /**
+     Get the hub.
+     
+     - Returns: A hub.
+    */
     public func getHub() -> OAVTHubProtocol? {
         return self.hub
     }
     
+    /**
+     Get the backend.
+     
+     - Returns: A backend.
+    */
     public func getBackend() -> OAVTBackendProtocol? {
         return self.backend
     }
     
+    /**
+     Remove a tracker.
+     
+     - Parameters:
+        - trackerId: Tracker ID.
+     
+     - Returns: True if removed, False otherwise.
+    */
     @discardableResult
     public func removeTracker(_ trackerId: Int) -> Bool {
         if self.trackers[trackerId] != nil {
@@ -94,6 +160,11 @@ public class OAVTInstrument {
         }
     }
     
+    /**
+     Tell the instrument chain everything is ready to start.
+     
+     It calls the `instrumentReady` method of all chain components (trackers, hub and backend).
+    */
     public func ready() {
         if let backend = self.backend {
             backend.instrumentReady(instrument: self)
@@ -106,11 +177,26 @@ public class OAVTInstrument {
         }
     }
     
+    /**
+     Start PING timer.
+     
+     Once called it will start sending PING events every `interval` using the tracker specified in `trackerId`.
+     
+     - Parameters:
+        - trackerId: Tracker ID.
+        - interval: The timer interval of the timer.
+    */
     public func startPing(trackerId: Int, interval: TimeInterval) {
         stopPing(trackerId: trackerId)
         pingTrackerTimers[trackerId] = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(pingTimerMethod), userInfo: trackerId, repeats: true)
     }
     
+    /**
+     Stop PING timer.
+     
+     - Parameters:
+        - trackerId: Tracker ID.
+    */
     public func stopPing(trackerId: Int) {
         if let t = pingTrackerTimers[trackerId] {
             t.invalidate()
@@ -123,12 +209,30 @@ public class OAVTInstrument {
         }
     }
     
+    /**
+     Emit an event.
+     
+     It generates an `OAVTEvent` using the specified action and emits it using the specified tracker.
+     
+     - Parameters:
+        - action: Action.
+        - trackerId: Tracker ID.
+    */
     public func emit(action: OAVTAction, trackerId: Int) {
         if let tracker = self.getTracker(trackerId) {
             self.emit(action: action, tracker: tracker)
         }
     }
-        
+    
+    /**
+     Emit an event.
+     
+     It generates an `OAVTEvent` using the specified action and emits it using the specified tracker.
+     
+     - Parameters:
+        - action: Action.
+        - tracker: Tracker.
+    */
     public func emit(action: OAVTAction, tracker: OAVTTrackerProtocol) {
         // Create event
         let event = generateEvent(action: action, tracker: tracker)
@@ -151,10 +255,29 @@ public class OAVTInstrument {
         }
     }
     
+    /**
+     Set an interceptor code block.
+     
+     An interceptor is a code block that is called at the end of the instrument chain, right after the Backend's `receiveEvent`. Is a way to intervene in the event chain without having to modify the components of the instrument.
+     
+     - Parameters:
+        - method: Code block.
+    */
     public func setIntercept(_ method: ((OAVTEvent, OAVTTrackerProtocol)->(OAVTEvent))?) {
         self.interceptionMethod = method
     }
     
+    /**
+     Add an attribute for current instrument.
+     
+     All the attributes added to the instrument are included automatically into every event passing though the chain.
+     
+     - Parameters:
+        - key: An OAVTAttribute.
+        - value: Value for the attribute.
+        - action: (optional) Action.  The attribute will be only added to the events with the specified action.
+        - trackerId: (optional) Tracker ID. The attribute will be only added to the events comming from the specified tracker..
+    */
     public func addAttribute(key: OAVTAttribute, value: Any, action: OAVTAction? = nil, trackerId: Int? = nil) {
         let k = generateCustomAttributeId(action: action, trackerId: trackerId)
         if self.customAttributes[k] == nil {
@@ -163,6 +286,17 @@ public class OAVTInstrument {
         self.customAttributes[k]![key] = value
     }
     
+    /**
+     Remove attribute for current instrument.
+     
+     - Parameters:
+        - key: An OAVTAttribute.
+        - value: Value for the attribute.
+        - action: (optional) Action.  The attribute will be only added to the events with the specified action.
+        - trackerId: (optional) Tracker ID. The attribute will be only added to the events comming from the specified tracker..
+     
+     - Returns: True if removed, False otherwise.
+    */
     @discardableResult
     public func removeAttribute(key: OAVTAttribute, action: OAVTAction? = nil, trackerId: Int? = nil) -> Bool{
         let k = generateCustomAttributeId(action: action, trackerId: trackerId)
@@ -180,6 +314,14 @@ public class OAVTInstrument {
         }
     }
     
+    /**
+     Register an attribute getter for a tracker.
+     
+     - Parameters:
+        - attribute: An OAVTAttribute.
+        - getter: Code block. It must return the attribute value.
+        - tracker: Tracker.
+    */
     public func registerGetter(attribute: OAVTAttribute, getter: @escaping () -> Any?, tracker: OAVTTrackerProtocol) {
         if let trackerId = tracker.trackerId {
             if self.trackerGetters[trackerId] == nil {
@@ -189,6 +331,15 @@ public class OAVTInstrument {
         }
     }
     
+    /**
+     Call an attribute getter.
+     
+     - Parameters:
+        - attribute: An OAVTAttribute.
+        - tracker: Tracker.
+     
+     - Returns: Attribute value returned by the getter code block.
+    */
     public func callGetter(attribute: OAVTAttribute, tracker: OAVTTrackerProtocol) -> Any? {
         if let trackerId = tracker.trackerId {
             if let d = self.trackerGetters[trackerId] {
@@ -200,6 +351,14 @@ public class OAVTInstrument {
         return nil
     }
     
+    /**
+     Call an attribute getter and put the resulting attribute into an event.
+     
+     - Parameters:
+        - attribute: An OAVTAttribute.
+        - event: An OAVTEvent.
+        - tracker: Tracker.
+    */
     public func useGetter(attribute: OAVTAttribute, event: OAVTEvent, tracker: OAVTTrackerProtocol) {
         if let val = callGetter(attribute: attribute, tracker: tracker) {
             event.setAttribute(key: attribute, value: val)
