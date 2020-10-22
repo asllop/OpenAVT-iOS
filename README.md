@@ -82,7 +82,14 @@ The attributes offers context for the actions. For example, the attribute `OAVTA
 
 #### The Chain
 
-TODO: explain the specific travel of the data, the methods called on each step of the chain.
+The instrument chain describes the steps followed by an event from the moment it is created till the end of the chain.
+
+1. The jorney of an event starts with a call to `OAVTInstrument.emit(...)`. This function takes an action and a tracker, and generates en event. Initially the event only contains few attributes: the sender ID (that identifies a tracker within an instrument), the time since attributes of previous events and the custom attributes of the instrument created with `OAVTInstrument.addAttribute(...)`.
+2. Once the event is created it is sent to the tracker, calling the method `OAVTTrackerProtocol.initEvent(...)`. This method receives an event and returns it, in between it can be tranformed by adding/changing attributes (calling `OAVTEvent.setAttribute(...)`), or even it can stop the chain by returning a nil.
+3. The event passed by the tracker is sent to the hub, calling `OAVTHubProtocol.processEvent(...)`. This method works like the previous, it can change the event or block it.
+4. Once the hub have processed the event, it is sent to the backend calling `OAVTBackendProtocol.receiveEvent(...)`. Again, the event can be modified or blocked.
+5. Optionally, the user can define an interceptor. That is a code block that is executed right after receiveEvent. An interceptor receives an event and can tranform it as usual, but it can't block it. It must return an event, not nil. An interceptor can be defined by calling `OAVTInstrument.setIntercept(...)`.
+6. Finally the event is passed to `OAVTBackendProtocol.sendEvent(...)`, that is the last step.
 
 <a name="examp"></a>
 ## 4. Examples
