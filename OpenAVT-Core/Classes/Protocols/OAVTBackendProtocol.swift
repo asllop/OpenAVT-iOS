@@ -8,7 +8,23 @@
 
 import Foundation
 
+/// OpenAVT protocol for Backend objects.
 public protocol OAVTBackendProtocol: OAVTBaseProtocol {
+    /**
+     Receive an event.
+     
+     - Parameters:
+        - event: Event received.
+        - tracker: Tracker that generated the event.
+     
+     - Returns: The event or nil.
+    */
     func receiveEvent(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> OAVTEvent?
+    /**
+     Send an event.
+     
+     - Parameters:
+        - event: Event received.
+    */
     func sendEvent(event: OAVTEvent)
 }

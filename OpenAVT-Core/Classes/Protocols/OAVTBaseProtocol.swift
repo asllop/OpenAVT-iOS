@@ -8,7 +8,15 @@
 
 import Foundation
 
+/// OpenAVT base protocol for instrument components.
 public protocol OAVTBaseProtocol {
+    /**
+     Instrument is ready. Called when the user executes `OAVTInstrument.ready()`.
+     
+     - Parameters:
+        - instrument: Instrument.
+    */
     func instrumentReady(instrument: OAVTInstrument)
+    /// End of service. Called when an instrument component is removed from the instrument.
     func endOfService()
 }

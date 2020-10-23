@@ -8,7 +8,17 @@
 
 import Foundation
 
+/// OpenAVT protocol for Tracker objects.
 public protocol OAVTTrackerProtocol: OAVTBaseProtocol {
+    /**
+     Init an event.
+     
+     - Parameters:
+        - event: Event received.
+     
+     - Returns: The event or nil.
+    */
     func initEvent(event: OAVTEvent) -> OAVTEvent?
+    /// Tracker ID.
     var trackerId : Int? { get set }
 }
