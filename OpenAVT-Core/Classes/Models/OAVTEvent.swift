@@ -8,27 +8,57 @@
 
 import Foundation
 
+/// An OpenAVT Event.
 public class OAVTEvent {
     
     private var action: OAVTAction
     private var attributes: Dictionary<OAVTAttribute, Any> = [:]
     
+    /**
+     Init a new OAVTEvent, providing action.
+     
+     - Parameters:
+        - action: Action for the event.
+     
+     - Returns: A new OAVTEvent instance.
+    */
     public init(action: OAVTAction) {
         self.action = action
     }
     
+    /**
+     Get event action.
+     
+     - Returns: Action.
+    */
     public func getAction() -> OAVTAction {
         return self.action
     }
     
+    /**
+     Set attribute for event.
+     
+     - Parameters:
+        - key: Attribute name
+        - value: Attribute value.
+    */
     public func setAttribute(key: OAVTAttribute, value: Any) {
         self.attributes[key] = value
     }
     
+    /**
+     Get attribute from event.
+     
+     - Parameters:
+        - key: Attribute name.
+     
+     - Returns: Attribute value.
+    */
     public func getAttribute(key: OAVTAttribute) -> Any? {
         return self.attributes[key]
     }
     
+    /// Generate a readable description.
     public var description : String {
         var attrString = "[ "
         for (k,v) in self.attributes {
