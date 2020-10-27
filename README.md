@@ -1,7 +1,7 @@
 # OpenAVT-iOS
 
 [![License](https://img.shields.io/github/license/asllop/OpenAVT-iOS)](https://github.com/asllop/OpenAVT-iOS)
-[![Language](https://img.shields.io/badge/language-Swift-orange)](https://github.com/asllop/OpenAVT-iOS)
+
 
 1. [ Introduction ](#intro)
 2. [ Installation ](#install)
@@ -109,7 +109,11 @@ Shows how to use the AVPlayer tracker and the Google IMA ads tracker.
 <a name="doc"></a>
 ## 5. Documentation
 
-TODO: create autodocs and tutorials.
+All classes and methods are documented with annotations. To generate the docs in HTML you can use [Jazzy](https://github.com/realm/jazzy), like this:
+
+```bash
+jazzy --podspec OpenAVT-Core.podspec --theme fullwidth
+```
 
 <a name="auth"></a>
 ## 6. Author
