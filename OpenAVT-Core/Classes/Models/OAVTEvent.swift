@@ -58,6 +58,25 @@ public class OAVTEvent {
         return self.attributes[key]
     }
     
+    /**
+     Remove attribute from event.
+     
+     - Parameters:
+        - key: Attribute name.
+     
+     - Returns: Boolean, true if attribute removed, false otherwise.
+    */
+    @discardableResult
+    public func removeAttribute(key: OAVTAttribute) -> Bool {
+        if self.attributes[key] != nil {
+            self.attributes.removeValue(forKey: key)
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    
     /// Generate a readable description.
     public var description : String {
         var attrString = "[ "
