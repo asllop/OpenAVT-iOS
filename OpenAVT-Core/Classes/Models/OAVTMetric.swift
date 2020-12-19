@@ -10,7 +10,16 @@ import Foundation
 /// An OpenAVT metric.
 open class OAVTMetric {
     
+    /// Metric types
+    public enum MetricType: Int {
+        /// Type counter. Sum all the values.
+        case Counter = 0
+        /// Type gauge. Use the last value.
+        case Gauge = 1
+    }
+    
     private let metricName: String
+    private let metricType: MetricType
     private let metricValueD: Double?
     private let metricValueI: Int?
     
@@ -23,8 +32,9 @@ open class OAVTMetric {
      
      - Returns: A new OAVTMetric instance.
     */
-    public init(name: String, value: Double) {
+    public init(name: String, type: MetricType, value: Double) {
         self.metricName = name
+        self.metricType = type
         self.metricValueD = value
         self.metricValueI = nil
     }
@@ -38,8 +48,9 @@ open class OAVTMetric {
      
      - Returns: A new OAVTMetric instance.
     */
-    public init(name: String, value: Int) {
+    public init(name: String, type: MetricType, value: Int) {
         self.metricName = name
+        self.metricType = type
         self.metricValueI = value
         self.metricValueD = nil
     }
@@ -72,6 +83,6 @@ open class OAVTMetric {
     
     /// Generate a readable description.
     public var description : String {
-        return "<OAVTMetric : Name = \(metricName) , Value = \(self.getValue())>"
+        return "<OAVTMetric : Name = \(metricName) , Type = \(self.metricType), Value = \(self.getValue())>"
     }
 }
