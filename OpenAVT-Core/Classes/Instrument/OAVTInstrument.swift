@@ -14,6 +14,7 @@ public class OAVTInstrument {
     private let instrumentId : String
     
     private var hub : OAVTHubProtocol?
+    private var metricalc : OAVTMetricalcProtocol?
     private var backend : OAVTBackendProtocol?
     private var trackers : Dictionary<Int, OAVTTrackerProtocol> = [:]
     private var nextTrackerId : Int = 0
@@ -47,6 +48,11 @@ public class OAVTInstrument {
         setBackend(backend)
     }
     
+    public convenience init(hub: OAVTHubProtocol, metricalc: OAVTMetricalcProtocol, backend: OAVTBackendProtocol) {
+        self.init(hub: hub, backend: backend)
+        setMetricalc(metricalc)
+    }
+    
     deinit {
         OAVTLog.verbose("##### OAVTInstrument deinit")
     }
@@ -62,6 +68,19 @@ public class OAVTInstrument {
             hub.endOfService()
         }
         self.hub = hub
+    }
+    
+    /**
+     Set the metricalc instance.
+     
+     - Parameters:
+        - metricalc: An object conforming to OAVTMetricalcProtocol.
+    */
+    public func setMetricalc(_ metricalc: OAVTMetricalcProtocol) {
+        if let metricalc = self.metricalc {
+            metricalc.endOfService()
+        }
+        self.metricalc = metricalc
     }
     
     /**
@@ -241,14 +260,24 @@ public class OAVTInstrument {
             if let hub = self.hub {
                 if let hubEvent = hub.processEvent(event: trackerEvent, tracker: tracker) {
                     if let backend = self.backend {
-                        if var backendEvent = backend.receiveEvent(event: hubEvent, tracker: tracker) {
-                            if let interceptionMethod = self.interceptionMethod {
-                                backendEvent = interceptionMethod(backendEvent, tracker)
-                            }
-                            backend.sendEvent(event: backendEvent)
-                            // Save action timeSince, only when the event reached the end of the instrument chain
-                            self.timeSince[action.getTimeAttribute()] = Date.init().timeIntervalSince1970
+                        let finalEvent : OAVTEvent
+                        if let interceptionMethod = self.interceptionMethod {
+                            finalEvent = interceptionMethod(hubEvent, tracker)
                         }
+                        else {
+                            finalEvent = hubEvent
+                        }
+                        if let metricalc = self.metricalc {
+                            if let metric = metricalc.processMetric(event: finalEvent, tracker: tracker) {
+                                backend.sendMetric(metric: metric)
+                            }
+                        }
+                        else {
+                            backend.sendEvent(event: finalEvent)
+                        }
+                        
+                        // Save action timeSince, only when the event reached the end of the instrument chain
+                        self.timeSince[action.getTimeAttribute()] = Date.init().timeIntervalSince1970
                     }
                 }
             }
