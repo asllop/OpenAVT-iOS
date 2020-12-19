@@ -24,10 +24,11 @@ open class OAVTMetric {
     private let metricValueI: Int?
     
     /**
-     Init a new OAVTMetric, providing name and value.
+     Init a new OAVTMetric, providing name, type and value.
      
      - Parameters:
         - name: Metric name.
+        - type: Metric type.
         - value: Metric value, double.
      
      - Returns: A new OAVTMetric instance.
@@ -40,10 +41,11 @@ open class OAVTMetric {
     }
     
     /**
-     Init a new OAVTMetric, providing name and value.
+     Init a new OAVTMetric, providing name, type and value.
      
      - Parameters:
         - name: Metric name.
+        - type: Metric type.
         - value: Metric value, integer.
      
      - Returns: A new OAVTMetric instance.
