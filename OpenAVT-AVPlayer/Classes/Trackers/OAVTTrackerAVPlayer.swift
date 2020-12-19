@@ -23,12 +23,13 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
     private var lastResolutionHeight: Int = 0
     private var lastResolutionWidth: Int = 0
 
-    public init(player: AVPlayer) {
-        self.player = player
+    public convenience init(player: AVPlayer) {
+        self.init()
+        self.setPlayer(player)
     }
     
     public override init() {
-        
+        super.init()
     }
     
     deinit {
@@ -79,7 +80,6 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
     open func instrumentReady(instrument: OAVTInstrument) {
         if self.instrument == nil {
             self.instrument = instrument
-            registerListeners()
             registerGetters()
             self.instrument?.emit(action: OAVTAction.TRACKER_INIT, tracker: self)
         }
