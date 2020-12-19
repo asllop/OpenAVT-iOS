@@ -1,5 +1,5 @@
 //
-//  OAVTBaseProtocol.swift
+//  OAVTComponentProtocol.swift
 //  OpenAVT
 //
 //  Created by Andreu Santaren on 20/08/2020.
@@ -9,7 +9,7 @@
 import Foundation
 
 /// OpenAVT base protocol for instrument components.
-public protocol OAVTBaseProtocol {
+public protocol OAVTComponentProtocol {
     /**
      Instrument is ready. Called when the user executes `OAVTInstrument.ready()`.
      

@@ -9,7 +9,7 @@
 import Foundation
 
 /// OpenAVT protocol for Hub objects.
-public protocol OAVTHubProtocol: OAVTBaseProtocol {
+public protocol OAVTHubProtocol: OAVTComponentProtocol {
     /**
      Process an event.
      

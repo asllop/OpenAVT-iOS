@@ -9,7 +9,7 @@
 import Foundation
 
 /// OpenAVT protocol for Backend objects.
-public protocol OAVTBackendProtocol: OAVTBaseProtocol {
+public protocol OAVTBackendProtocol: OAVTComponentProtocol {
     /**
      Receive an event.
      

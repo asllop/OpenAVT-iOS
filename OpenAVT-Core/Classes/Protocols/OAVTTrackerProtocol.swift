@@ -9,7 +9,7 @@
 import Foundation
 
 /// OpenAVT protocol for Tracker objects.
-public protocol OAVTTrackerProtocol: OAVTBaseProtocol {
+public protocol OAVTTrackerProtocol: OAVTComponentProtocol {
     /**
      Init an event.
      
