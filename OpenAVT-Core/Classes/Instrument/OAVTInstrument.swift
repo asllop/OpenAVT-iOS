@@ -271,6 +271,9 @@ public class OAVTInstrument {
                             if let metric = metricalc.processMetric(event: finalEvent, tracker: tracker) {
                                 backend.sendMetric(metric: metric)
                             }
+                            else {
+                                backend.sendEvent(event: finalEvent)
+                            }
                         }
                         else {
                             backend.sendEvent(event: finalEvent)
