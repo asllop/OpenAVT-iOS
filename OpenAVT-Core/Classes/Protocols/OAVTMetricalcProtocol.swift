@@ -16,7 +16,7 @@ public protocol OAVTMetricalcProtocol: OAVTComponentProtocol {
         - event: Event received.
         - tracker: Tracker that generated the event.
      
-     - Returns: The metric or nil.
+     - Returns: Array of metrics.
     */
-    func processMetric(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> OAVTMetric?
+    func processMetric(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> [OAVTMetric]
 }

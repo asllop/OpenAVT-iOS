@@ -260,7 +260,7 @@ public class OAVTInstrument {
                 if let hubEvent = hub.processEvent(event: trackerEvent, tracker: tracker) {
                     if let backend = self.backend {
                         if let metricalc = self.metricalc {
-                            if let metric = metricalc.processMetric(event: hubEvent, tracker: tracker) {
+                            for metric in metricalc.processMetric(event: hubEvent, tracker: tracker) {
                                 backend.sendMetric(metric: metric)
                             }
                         }
