@@ -170,6 +170,8 @@ open class OAVTHubCore : OAVTHubProtocol {
             event.setAttribute(key: OAVTAttribute.PLAYBACK_ID, value: playbackId)
         }
         
+        //TODO: implement attribute, playtime since last event and total playtime (accumulated playtime and accumulated playtime since last event)
+        
         updatePlaybackId(event: event)
         
         return event

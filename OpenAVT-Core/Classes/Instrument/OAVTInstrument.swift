@@ -271,13 +271,9 @@ public class OAVTInstrument {
                             if let metric = metricalc.processMetric(event: finalEvent, tracker: tracker) {
                                 backend.sendMetric(metric: metric)
                             }
-                            else {
-                                backend.sendEvent(event: finalEvent)
-                            }
                         }
-                        else {
-                            backend.sendEvent(event: finalEvent)
-                        }
+                        
+                        backend.sendEvent(event: finalEvent)
                         
                         // Save action timeSince, only when the event reached the end of the instrument chain
                         self.timeSince[action.getTimeAttribute()] = Date.init().timeIntervalSince1970
