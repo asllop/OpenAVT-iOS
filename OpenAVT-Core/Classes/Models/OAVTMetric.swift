@@ -94,4 +94,8 @@ public extension OAVTMetric {
     static let START_TIME = "startTime"
     /// Number of videos metric name
     static let NUM_VIDEOS = "numVideos"
+    /// Rebuffer time metric name
+    static let REBUFFER_TIME = "rebufferTime"
+    /// Number of rebufers metric name
+    static let NUM_REBUFFERS = "numRebuffers"
 }
