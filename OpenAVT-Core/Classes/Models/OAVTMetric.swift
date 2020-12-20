@@ -85,6 +85,6 @@ open class OAVTMetric {
     
     /// Generate a readable description.
     public var description : String {
-        return "<OAVTMetric : Name = \(metricName) , Type = \(self.metricType), Value = \(self.getValue())>"
+        return "<OAVTMetric : Name = \(metricName) , Type = \(self.metricType) , Value = \(self.getValue())>"
     }
 }
