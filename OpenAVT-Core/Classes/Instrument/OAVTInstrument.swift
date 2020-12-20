@@ -20,7 +20,6 @@ public class OAVTInstrument {
     private var nextTrackerId : Int = 0
     private var timeSince : Dictionary<OAVTAttribute, TimeInterval> = [:]
     private var customAttributes : Dictionary<String, Dictionary<OAVTAttribute, Any>> = [:]
-    private var interceptionMethod : ((OAVTEvent, OAVTTrackerProtocol)->(OAVTEvent))?
     private var pingTrackerTimers: Dictionary<Int, Timer> = [:]
     private var trackerGetters : Dictionary<Int, Dictionary<OAVTAttribute, () -> Any?>> = [:]
     
@@ -260,20 +259,12 @@ public class OAVTInstrument {
             if let hub = self.hub {
                 if let hubEvent = hub.processEvent(event: trackerEvent, tracker: tracker) {
                     if let backend = self.backend {
-                        let finalEvent : OAVTEvent
-                        if let interceptionMethod = self.interceptionMethod {
-                            finalEvent = interceptionMethod(hubEvent, tracker)
-                        }
-                        else {
-                            finalEvent = hubEvent
-                        }
                         if let metricalc = self.metricalc {
-                            if let metric = metricalc.processMetric(event: finalEvent, tracker: tracker) {
+                            if let metric = metricalc.processMetric(event: hubEvent, tracker: tracker) {
                                 backend.sendMetric(metric: metric)
                             }
                         }
-                        
-                        backend.sendEvent(event: finalEvent)
+                        backend.sendEvent(event: hubEvent)
                         
                         // Save action timeSince, only when the event reached the end of the instrument chain
                         self.timeSince[action.getTimeAttribute()] = Date.init().timeIntervalSince1970
@@ -281,18 +272,6 @@ public class OAVTInstrument {
                 }
             }
         }
-    }
-    
-    /**
-     Set an interceptor code block.
-     
-     An interceptor is a code block that is called at the end of the instrument chain, right after the Backend's `receiveEvent`. Is a way to intervene in the event chain without having to modify the components of the instrument.
-     
-     - Parameters:
-        - method: Code block.
-    */
-    public func setIntercept(_ method: ((OAVTEvent, OAVTTrackerProtocol)->(OAVTEvent))?) {
-        self.interceptionMethod = method
     }
     
     /**
