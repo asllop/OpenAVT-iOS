@@ -88,3 +88,10 @@ open class OAVTMetric {
         return "<OAVTMetric : Name = \(metricName) , Type = \(self.metricType) , Value = \(self.getValue())>"
     }
 }
+
+public extension OAVTMetric {
+    /// Start time metric name
+    static let START_TIME = "startTime"
+    /// Number of videos metric name
+    static let NUM_VIDEOS = "numVideos"
+}

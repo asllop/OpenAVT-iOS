@@ -22,14 +22,14 @@ open class OAVTMetricalcCore : OAVTMetricalcProtocol {
     public func processMetric(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> [OAVTMetric] {
         if (event.getAction() == OAVTAction.START) {
             if let timeSinceMediaRequest = event.getAttribute(key: OAVTAction.MEDIA_REQUEST.getTimeAttribute()) {
-                return [OAVTMetric(name: "startTime", type: OAVTMetric.MetricType.Gauge, value: timeSinceMediaRequest as! Int)]
+                return [OAVTMetric(name: OAVTMetric.START_TIME, type: OAVTMetric.MetricType.Gauge, value: timeSinceMediaRequest as! Int)]
             }
             else if let timeSinceStreamLoad = event.getAttribute(key: OAVTAction.STREAM_LOAD.getTimeAttribute()) {
-                return [OAVTMetric(name: "startTime", type: OAVTMetric.MetricType.Gauge, value: timeSinceStreamLoad as! Int)]
+                return [OAVTMetric(name: OAVTMetric.START_TIME, type: OAVTMetric.MetricType.Gauge, value: timeSinceStreamLoad as! Int)]
             }
         }
         else if (event.getAction() == OAVTAction.STREAM_LOAD) {
-            return [OAVTMetric(name: "numVideos", type: OAVTMetric.MetricType.Counter, value: 1)]
+            return [OAVTMetric(name: OAVTMetric.NUM_VIDEOS, type: OAVTMetric.MetricType.Counter, value: 1)]
         }
         
         return []
