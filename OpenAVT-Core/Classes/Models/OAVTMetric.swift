@@ -100,4 +100,10 @@ public extension OAVTMetric {
     static let NUM_REBUFFERS = "numRebuffers"
     /// Playtime since last event.
     static let PLAY_TIME = "playTime"
+    /// Number of streams requested metric name
+    static let NUM_REQUESTS = "numRequests"
+    /// Number of streams loaded metric name
+    static let NUM_LOADS = "numLoads"
+    /// Number of streams ended metric name
+    static let NUM_ENDS = "numEnds"
 }

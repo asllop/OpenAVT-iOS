@@ -12,9 +12,6 @@ open class OAVTMetricalcCore : OAVTMetricalcProtocol {
     public init() {
     }
     
-    //TODO: calculate most common KPIs
-    //- Total Playtime on END/STOP/NEXT -> MetricType.Gauge
-    
     public func processMetric(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> [OAVTMetric] {
         var metricArray : [OAVTMetric] = []
         
@@ -40,6 +37,15 @@ open class OAVTMetricalcCore : OAVTMetricalcProtocol {
                     }
                 }
             }
+        }
+        else if event.getAction() == OAVTAction.MEDIA_REQUEST {
+            metricArray.append(OAVTMetric(name: OAVTMetric.NUM_REQUESTS, type: OAVTMetric.MetricType.Counter, value: 1))
+        }
+        else if event.getAction() == OAVTAction.STREAM_LOAD {
+            metricArray.append(OAVTMetric(name: OAVTMetric.NUM_LOADS, type: OAVTMetric.MetricType.Counter, value: 1))
+        }
+        else if event.getAction() == OAVTAction.END || event.getAction() == OAVTAction.STOP || event.getAction() == OAVTAction.NEXT  {
+            metricArray.append(OAVTMetric(name: OAVTMetric.NUM_ENDS, type: OAVTMetric.MetricType.Counter, value: 1))
         }
         
         if let deltaPlayTime = event.getAttribute(key: OAVTAttribute.DELTA_PLAY_TIME) as? Int {
