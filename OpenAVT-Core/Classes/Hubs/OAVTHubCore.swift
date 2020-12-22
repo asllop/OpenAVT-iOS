@@ -21,6 +21,7 @@ open class OAVTHubCore : OAVTHubProtocol {
     private var lastBufferBeginInSeekBlock = false
     private var streamId : String?
     private var playbackId : String?
+    private var timestampOfLastEventOnPlayback : TimeInterval = 0
     
     public init() {
     }
@@ -40,6 +41,10 @@ open class OAVTHubCore : OAVTHubProtocol {
         }
         
         initPlaybackId(event: event)
+        
+        if state.didStart && !state.isPaused && !state.isSeeking && !state.isBuffering {
+            event.setAttribute(key: OAVTAttribute.DELTA_PLAY_TIME, value: Int((NSDate().timeIntervalSince1970 - timestampOfLastEventOnPlayback)*1000))
+        }
         
         if event.getAction() == OAVTAction.MEDIA_REQUEST {
             if !state.didMediaRequest {
@@ -145,6 +150,8 @@ open class OAVTHubCore : OAVTHubProtocol {
         
         // Once we get here, the event has been accepted by the Hub
         
+        timestampOfLastEventOnPlayback = NSDate().timeIntervalSince1970
+        
         event.setAttribute(key: OAVTAttribute.COUNT_ERRORS, value: countErrors)
         event.setAttribute(key: OAVTAttribute.COUNT_STARTS, value: countStarts)
         event.setAttribute(key: OAVTAttribute.ACCUM_PAUSE_TIME, value: accumPauseTime)
@@ -169,8 +176,6 @@ open class OAVTHubCore : OAVTHubProtocol {
         if let playbackId = self.playbackId {
             event.setAttribute(key: OAVTAttribute.PLAYBACK_ID, value: playbackId)
         }
-        
-        //TODO: implement attribute, playtime since last event and total playtime (accumulated playtime and accumulated playtime since last event)
         
         updatePlaybackId(event: event)
         

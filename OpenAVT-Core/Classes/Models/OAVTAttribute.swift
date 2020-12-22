@@ -79,6 +79,10 @@ public extension OAVTAttribute {
     static let ACCUM_BUFFER_TIME = OAVTAttribute(name: "accumBufferTime")
     /// Accumulated Seek Time attribute. Total amount of time seeking.
     static let ACCUM_SEEK_TIME = OAVTAttribute(name: "accumSeekTime")
+    /// Accumulated Play Time attribute. Total amount of time playing.
+    static let ACCUM_PLAY_TIME = OAVTAttribute(name: "accumPlayTime")
+    /// Delta Play Time attribute. Time playing since last event.
+    static let DELTA_PLAY_TIME = OAVTAttribute(name: "deltaPlayTime")
     /// In Pause Block attribute. Player is paused.
     static let IN_PAUSE_BLOCK = OAVTAttribute(name: "inPauseBlock")
     /// In Seek Block attribute. Player is seeking.
