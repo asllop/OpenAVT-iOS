@@ -92,10 +92,12 @@ open class OAVTMetric {
 public extension OAVTMetric {
     /// Start time metric name
     static let START_TIME = "startTime"
-    /// Number of videos metric name
-    static let NUM_VIDEOS = "numVideos"
+    /// Number of streams played metric name
+    static let NUM_PLAYS = "numPlays"
     /// Rebuffer time metric name
     static let REBUFFER_TIME = "rebufferTime"
     /// Number of rebufers metric name
     static let NUM_REBUFFERS = "numRebuffers"
+    /// Playtime since last event.
+    static let PLAY_TIME = "playTime"
 }
