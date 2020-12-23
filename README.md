@@ -25,9 +25,7 @@ To install OpenAVT-iOS, simply add the following line to your Podfile:
 pod 'OpenAVT-Core', :git => 'https://github.com/asllop/OpenAVT-iOS'
 ```
 
-The `OpenAVT-Core` is the base package, needed by all the rest. But you also need to add pods for the specific OpenAVT components you will use in your project.
-
-The following packages are available:
+The `OpenAVT-Core` is the base package needed by all the rest, the following packages are available:
 
 #### AVPlayer Tracker
 
@@ -54,9 +52,9 @@ In OpenAVT the central concept is the **Instrument**, implemented in the class `
 
 - **Metricalc**: class conforming to `OAVTMetricalcProtocol`, used to calculate metrics. This step is optional.
 
-- **Backends**: class conforming to `OAVTBackendProtocol`, used to transmit data to a data service, database, business intelligence system, etc.
+- **Backend**: class conforming to `OAVTBackendProtocol`, used to transmit data to a data service, database, business intelligence system, storage media, etc.
 
-These objects represent a chain because the data captured by a tracker is sent to a hub that processes, pass it to a metric calculator and finally it is passed to a backend.
+These objects represents a chain because the data goes from one step to the next in a straight line. The data captured by a tracker is sent to a hub that process it, pass it to a metric calculator and finally it is passed to a backend.
 
 One instrument can contain multiple trackers, but only one hub, one metricalc and one backend.
 
@@ -72,25 +70,25 @@ let trackerNId = instrument.addTracker(AnyTrackerN())
 instrument.ready()
 ```
 
-The method `OAVTInstrument.ready()` must be called once all the components of the instrument chain are in place. This will cause the execution of the method `OAVTBaseProtocol.instrumentReady(...)` in all trackers, hub and backend.
+The method `OAVTInstrument.ready()` must be called once all the components of the instrument chain are in place. This will cause the execution of the method `OAVTComponentProtocol.instrumentReady(...)` in all trackers, hub, metricalc and backend.
 
 #### The Data
 
 We talked about data being captured and passed along the instrument chain, but what is the nature of this data?
 
-In OpenAVT the basic data unit is the **Event**, implemented in the class `OAVTEvent`. An event contains an **Action** (class `OAVTAction`) and a list of **Attributes** (class `OAVTAttribute`).
+In OpenAVT the main data unit is the **Event**, implemented in the class `OAVTEvent`. An event contains an **Action** (class `OAVTAction`) and a list of **Attributes** (class `OAVTAttribute`).
 
 The action tells us what is the event about, for example when a video starts, an event with the action `OAVTAction.START` is sent.
 
 The attributes offers context for the actions. For example, the attribute `OAVTAttribute.DURATION` informs the stream duration in milliseconds.
 
-OpenAVT can also generate **Metrics**, using an specific step called metricalc (Metric Calculator). A metric is represented by an instance of the class `OAVTMetric`, and is defined by three propeties: name (`String`), value (`Double` or `Int`) and type (`OAVTMetric.MetricType`).
+OpenAVT can also generate **Metrics**, using an specific step called metricalc (Metric Calculator). A metric is represented by an instance of the class `OAVTMetric`, and is defined by three propeties: name (`String`), value (`Double` or `Int`) and type (`OAVTMetric.MetricType`). An example of metric is `OAVTMetric.START_TIME`, that informs the time elapsed between a video is requested and it actually starts playing.
 
 #### The Chain
 
 The instrument chain describes the steps followed by an event from the moment it is created untill the end of its life.
 
-1. The journey of an event starts with a call to `OAVTInstrument.emit(...)`. This function takes an action and a tracker, and generates en event. Initially the event only contains few attributes: the sender ID (that identifies a tracker within an instrument), the timer attributes of previous events and the custom attributes of the instrument created with `OAVTInstrument.addAttribute(...)`.
+1. The journey of an event starts with a call to `OAVTInstrument.emit(...)`, that can be called from anywhere, but it's usually called from within a tracker. This function takes an action and a tracker, and generates en event. Initially the event only contains few attributes: the sender ID (that identifies a tracker within an instrument), the timer attributes of previous events and the custom attributes of the instrument created with `OAVTInstrument.addAttribute(...)`.
 2. Once the event is created it is sent to the tracker, calling the method `OAVTTrackerProtocol.initEvent(...)`. This method receives an event and returns it, in between it can be tranformed by adding/changing attributes (calling `OAVTEvent.setAttribute(...)`), or even it can stop the chain by returning a nil.
 3. The event passed by the tracker is sent to the hub, calling `OAVTHubProtocol.processEvent(...)`. This method works like the previous, it can change the event or block it.
 4. If a metricalc is defined, the event is passed to it by calling `OAVTMetricalcProtocol.processMetric(...)`. This method returns an array of metrics (instances of `OAVTMetric`). The array can be empty if no metrics are generated.
