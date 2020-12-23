@@ -76,6 +76,8 @@ public class OAVTAction : Equatable {
     }
 }
 
+//TODO: ad actions only for ad spewcific events, not for playback egenric.
+
 // Static stuff
 public extension OAVTAction {
     /// Tracker Init action. Sent when a tracker is started.

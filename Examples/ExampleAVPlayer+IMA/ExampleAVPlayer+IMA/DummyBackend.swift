@@ -15,12 +15,12 @@ class DummyBackend : OAVTBackendProtocol {
         OAVTLog.verbose("##### DummyBackend deinit")
     }
     
-    func receiveEvent(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> OAVTEvent? {
-        return event
-    }
-    
     func sendEvent(event: OAVTEvent) {
         OAVTLog.verbose("---> SEND EVENT = \(event.description)")
+    }
+    
+    func sendMetric(metric: OAVTMetric) {
+        OAVTLog.verbose("---> SEND METRIC = \(metric.description)")
     }
     
     func instrumentReady(instrument: OAVTInstrument) {
