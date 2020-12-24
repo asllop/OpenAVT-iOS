@@ -73,6 +73,7 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
         self.instrument?.useGetter(attribute: OAVTAttribute.BITRATE, event: event, tracker: self)
         self.instrument?.useGetter(attribute: OAVTAttribute.LANGUAGE, event: event, tracker: self)
         self.instrument?.useGetter(attribute: OAVTAttribute.SUBTITLES, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.IS_ADS_TRACKER, event: event, tracker: self)
         
         return event
     }
@@ -102,6 +103,7 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
         self.instrument?.registerGetter(attribute: OAVTAttribute.BITRATE, getter: self.getBitrate, tracker: self)
         self.instrument?.registerGetter(attribute: OAVTAttribute.LANGUAGE, getter: self.getLanguage, tracker: self)
         self.instrument?.registerGetter(attribute: OAVTAttribute.SUBTITLES, getter: self.getSubtitles, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.IS_ADS_TRACKER, getter: self.getIsAdsTracker, tracker: self)
     }
     
     open func registerListeners() {
@@ -418,4 +420,8 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
     }
     
     //TODO: get title (https://developer.apple.com/documentation/avfoundation/media_assets_and_metadata/finding_metadata_values)
+    
+    open func getIsAdsTracker() -> Bool {
+        return false
+    }
 }

@@ -49,6 +49,7 @@ open class OAVTTrackerIMA : OAVTTrackerProtocol {
         self.instrument?.useGetter(attribute: OAVTAttribute.AD_RESOLUTION_WIDTH, event: event, tracker: self)
         self.instrument?.useGetter(attribute: OAVTAttribute.AD_RESOLUTION_HEIGHT, event: event, tracker: self)
         self.instrument?.useGetter(attribute: OAVTAttribute.AD_SYSTEM, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.IS_ADS_TRACKER, event: event, tracker: self)
         
         // Try to find a player tracker that registered a getter for OAVTAttribute.POSITION
         if let trackers = self.instrument?.getTrackers() {
@@ -89,6 +90,7 @@ open class OAVTTrackerIMA : OAVTTrackerProtocol {
         self.instrument?.registerGetter(attribute: OAVTAttribute.AD_RESOLUTION_WIDTH, getter: self.getAdWidth, tracker: self)
         self.instrument?.registerGetter(attribute: OAVTAttribute.AD_RESOLUTION_HEIGHT, getter: self.getAdHeight, tracker: self)
         self.instrument?.registerGetter(attribute: OAVTAttribute.AD_SYSTEM, getter: self.getAdSystem, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.IS_ADS_TRACKER, getter: self.getIsAdsTracker, tracker: self)
     }
     
     open func adBreakBegin() {
@@ -250,5 +252,9 @@ open class OAVTTrackerIMA : OAVTTrackerProtocol {
             return event.ad.vastMediaHeight
         }
         return nil
+    }
+    
+    open func getIsAdsTracker() -> Bool {
+        return true
     }
 }

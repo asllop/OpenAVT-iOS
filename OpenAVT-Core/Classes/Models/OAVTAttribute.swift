@@ -117,6 +117,8 @@ public extension OAVTAttribute {
     static let SUBTITLES = OAVTAttribute(name: "subtitles")
     /// Title attribute. Stream title.
     static let TITLE = OAVTAttribute(name: "title")
+    /// Is Ads Tracker attribute. Tracker is generating Ad events.
+    static let IS_ADS_TRACKER = OAVTAttribute(name: "isAdsTracker")
     /// In Ad Break Block attribute. An Ad break has started.
     static let IN_AD_BREAK_BLOCK = OAVTAttribute(name: "inAdBreakBlock")
     /// In Ad Block attribute. Currently playing an Ad.
