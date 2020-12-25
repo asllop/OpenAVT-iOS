@@ -11,24 +11,26 @@ import OpenAVT_Core
 
 open class OAVTHubIMA : OAVTHubCore {
     
+    var instrument : OAVTInstrument?
+    
     open override func processEvent(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> OAVTEvent? {
         if event.getAction() == OAVTAction.AD_BREAK_BEGIN {
-            tracker.getState().inAdBreak = true
+            setInAdBreakState(state: true)
         }
         else if event.getAction() == OAVTAction.AD_BREAK_FINISH {
             if tracker.getState().inAdBreak {
-                tracker.getState().inAdBreak = false
+                setInAdBreakState(state: false)
             }
             else {
                 return nil
             }
         }
         else if event.getAction() == OAVTAction.AD_BEGIN {
-            tracker.getState().inAd = true
+            setInAdState(state: true)
         }
         else if event.getAction() == OAVTAction.AD_FINISH {
             if tracker.getState().inAd {
-                tracker.getState().inAd = false
+                setInAdState(state: false)
             }
             else {
                 return nil
@@ -44,5 +46,27 @@ open class OAVTHubIMA : OAVTHubCore {
         event.setAttribute(key: OAVTAttribute.IN_AD_BLOCK, value: tracker.getState().inAd)
         
         return super.processEvent(event: event, tracker: tracker)
+    }
+    
+    open override func instrumentReady(instrument: OAVTInstrument) {
+        self.instrument = instrument
+    }
+    
+    /// Set inAd state for all trackers of the instrument
+    open func setInAdState(state: Bool) {
+        if let trackers = self.instrument?.getTrackers() {
+            for (_, tracker) in trackers {
+                tracker.getState().inAd = state
+            }
+        }
+    }
+    
+    /// Set inAdBreak state for all trackers of the instrument
+    open func setInAdBreakState(state: Bool) {
+        if let trackers = self.instrument?.getTrackers() {
+            for (_, tracker) in trackers {
+                tracker.getState().inAdBreak = state
+            }
+        }
     }
 }
