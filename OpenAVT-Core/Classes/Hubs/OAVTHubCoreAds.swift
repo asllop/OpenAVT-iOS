@@ -10,7 +10,8 @@ import Foundation
 
 open class OAVTHubCoreAds : OAVTHubCore {
     
-    var instrument : OAVTInstrument?
+    var countAds = 0
+    var instrument: OAVTInstrument?
     
     open override func processEvent(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> OAVTEvent? {
         if event.getAction() == OAVTAction.AD_BREAK_BEGIN {
@@ -26,6 +27,7 @@ open class OAVTHubCoreAds : OAVTHubCore {
         }
         else if event.getAction() == OAVTAction.AD_BEGIN {
             setInAdState(state: true)
+            countAds = countAds + 1
         }
         else if event.getAction() == OAVTAction.AD_FINISH {
             if tracker.getState().inAd {
@@ -43,6 +45,7 @@ open class OAVTHubCoreAds : OAVTHubCore {
         
         event.setAttribute(key: OAVTAttribute.IN_AD_BREAK_BLOCK, value: tracker.getState().inAdBreak)
         event.setAttribute(key: OAVTAttribute.IN_AD_BLOCK, value: tracker.getState().inAd)
+        event.setAttribute(key: OAVTAttribute.COUNT_ADS, value: countAds)
         
         // Get current content video position
         if let trackers = self.instrument?.getTrackers() {
