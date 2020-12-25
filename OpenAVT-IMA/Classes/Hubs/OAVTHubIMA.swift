@@ -13,35 +13,35 @@ open class OAVTHubIMA : OAVTHubCore {
     
     open override func processEvent(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> OAVTEvent? {
         if event.getAction() == OAVTAction.AD_BREAK_BEGIN {
-            state.inAdBreak = true
+            tracker.getState().inAdBreak = true
         }
         else if event.getAction() == OAVTAction.AD_BREAK_FINISH {
-            if state.inAdBreak {
-                state.inAdBreak = false
+            if tracker.getState().inAdBreak {
+                tracker.getState().inAdBreak = false
             }
             else {
                 return nil
             }
         }
         else if event.getAction() == OAVTAction.AD_BEGIN {
-            state.inAd = true
+            tracker.getState().inAd = true
         }
         else if event.getAction() == OAVTAction.AD_FINISH {
-            if state.inAd {
-                state.inAd = false
+            if tracker.getState().inAd {
+                tracker.getState().inAd = false
             }
             else {
                 return nil
             }
         }
         else if event.getAction() == OAVTAction.PAUSE_BEGIN || event.getAction() == OAVTAction.END {
-            if state.inAdBreak {
+            if tracker.getState().inAdBreak {
                 return nil
             }
         }
         
-        event.setAttribute(key: OAVTAttribute.IN_AD_BREAK_BLOCK, value: state.inAdBreak)
-        event.setAttribute(key: OAVTAttribute.IN_AD_BLOCK, value: state.inAd)
+        event.setAttribute(key: OAVTAttribute.IN_AD_BREAK_BLOCK, value: tracker.getState().inAdBreak)
+        event.setAttribute(key: OAVTAttribute.IN_AD_BLOCK, value: tracker.getState().inAd)
         
         return super.processEvent(event: event, tracker: tracker)
     }

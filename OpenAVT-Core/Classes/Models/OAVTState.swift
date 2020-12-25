@@ -31,8 +31,6 @@ open class OAVTState {
     /// Player playing an Ad flag.
     public var inAd = false
     
-    //TODO: flags for all possible states/events/blocks
-    
     /**
      Init a new OAVTState.
      

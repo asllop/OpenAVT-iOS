@@ -12,6 +12,7 @@ import OpenAVT_Core
 
 open class OAVTTrackerIMA : OAVTTrackerProtocol {
     
+    public var state = OAVTState()
     public var trackerId: Int?
     
     private weak var instrument: OAVTInstrument?
@@ -51,6 +52,7 @@ open class OAVTTrackerIMA : OAVTTrackerProtocol {
         self.instrument?.useGetter(attribute: OAVTAttribute.AD_SYSTEM, event: event, tracker: self)
         self.instrument?.useGetter(attribute: OAVTAttribute.IS_ADS_TRACKER, event: event, tracker: self)
         
+        //TODO: move this logic to OAVTHubIMA and use IS_ADS_TRACKER to identify the main video tracker, instead of POSITION attribute.
         // Try to find a player tracker that registered a getter for OAVTAttribute.POSITION
         if let trackers = self.instrument?.getTrackers() {
             for (trackerId, tracker) in trackers {
@@ -61,6 +63,10 @@ open class OAVTTrackerIMA : OAVTTrackerProtocol {
         }
         
         return event
+    }
+    
+    open func getState() -> OAVTState {
+        return self.state
     }
     
     open func instrumentReady(instrument: OAVTInstrument) {

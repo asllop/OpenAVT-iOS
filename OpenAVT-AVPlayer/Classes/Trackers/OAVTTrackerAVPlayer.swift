@@ -12,6 +12,7 @@ import OpenAVT_Core
 
 open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
     
+    public var state = OAVTState()
     public var trackerId: Int?
     
     private weak var instrument: OAVTInstrument?
@@ -78,6 +79,10 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
         return event
     }
     
+    open func getState() -> OAVTState {
+        return self.state
+    }
+    
     open func instrumentReady(instrument: OAVTInstrument) {
         if self.instrument == nil {
             self.instrument = instrument
@@ -131,23 +136,21 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
                 
                 self.checkResolutionChange()
                 
-                let state = self.instrument?.getHub()?.getState()
-                
                 //TODO: Does AVPlayeer support backward playback and fast forward/rewind? In these cases the rate will be either negative or greater than 1.
                 
                 if player.rate == 1.0 {
-                    if state?.didStart == false {
+                    if self.getState().didStart == false {
                         self.instrument?.emit(action: OAVTAction.START, tracker: self)
                     }
-                    if state?.isSeeking == true {
+                    if self.getState().isSeeking == true {
                         self.instrument?.emit(action: OAVTAction.SEEK_FINISH, tracker: self)
                     }
-                    if state?.isPaused == true {
+                    if self.getState().isPaused == true {
                         self.instrument?.emit(action: OAVTAction.PAUSE_FINISH, tracker: self)
                     }
                 }
                 else if player.rate == 0.0 {
-                    if state?.isPaused == false {
+                    if self.getState().isPaused == false {
                         self.pauseBeginPosition = self.getPosition()
                         self.instrument?.emit(action: OAVTAction.PAUSE_BEGIN, tracker: self)
                     }
@@ -187,10 +190,8 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
     
     @objc private func itemDidPlayToEndTimeNotification(notification: NSNotification) {
         OAVTLog.verbose("---> itemDidPlayToEndTimeNotification")
-        if let state = instrument?.getHub()?.getState() {
-            if !state.inAdBreak {
-                self.instrument?.emit(action: OAVTAction.END, tracker: self)
-            }
+        if !self.getState().inAdBreak {
+            self.instrument?.emit(action: OAVTAction.END, tracker: self)
         }
     }
     
@@ -251,8 +252,7 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
                 // Fallback on earlier versions
             }
         case "currentItem.playbackBufferEmpty":
-            let state = self.instrument?.getHub()?.getState()
-            if state?.isPaused == true {
+            if self.getState().isPaused == true {
                 OAVTLog.verbose("Current position = \(getPosition() ?? 0) , PauseBeginPosition = \(self.pauseBeginPosition ?? 0)")
                 if let pos = getPosition(), let pausePos = self.pauseBeginPosition {
                     if pos > pausePos {
