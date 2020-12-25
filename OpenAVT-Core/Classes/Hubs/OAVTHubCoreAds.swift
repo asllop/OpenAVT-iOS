@@ -37,7 +37,8 @@ open class OAVTHubCoreAds : OAVTHubCore {
                 return nil
             }
         }
-        else if event.getAction() == OAVTAction.PAUSE_BEGIN || event.getAction() == OAVTAction.END {
+        else if event.getAction() == OAVTAction.END {
+            // To avoid content end when an ad break happens
             if tracker.getState().inAdBreak {
                 return nil
             }
