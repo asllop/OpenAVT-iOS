@@ -45,6 +45,17 @@ open class OAVTHubIMA : OAVTHubCore {
         event.setAttribute(key: OAVTAttribute.IN_AD_BREAK_BLOCK, value: tracker.getState().inAdBreak)
         event.setAttribute(key: OAVTAttribute.IN_AD_BLOCK, value: tracker.getState().inAd)
         
+        // Get current content video position
+        if let trackers = self.instrument?.getTrackers() {
+            for (_, tracker) in trackers {
+                if let isAdsTracker = self.instrument?.callGetter(attribute: OAVTAttribute.IS_ADS_TRACKER, tracker: tracker) as? Bool {
+                    if !isAdsTracker {
+                        instrument?.useGetter(attribute: OAVTAttribute.POSITION, event: event, tracker: tracker)
+                    }
+                }
+            }
+        }
+        
         return super.processEvent(event: event, tracker: tracker)
     }
     
