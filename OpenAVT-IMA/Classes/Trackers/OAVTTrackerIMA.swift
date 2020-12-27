@@ -34,12 +34,6 @@ open class OAVTTrackerIMA : OAVTTrackerProtocol {
             }
             self.errorMessage = nil
         }
-        else if event.getAction() == OAVTAction.AD_BEGIN {
-            self.instrument?.startPing(trackerId: self.trackerId!, interval: 30.0)
-        }
-        else if event.getAction() == OAVTAction.AD_FINISH {
-            self.instrument?.stopPing(trackerId: trackerId!)
-        }
         
         self.instrument?.useGetter(attribute: OAVTAttribute.TRACKER_TARGET, event: event, tracker: self)
         self.instrument?.useGetter(attribute: OAVTAttribute.AD_POSITION, event: event, tracker: self)

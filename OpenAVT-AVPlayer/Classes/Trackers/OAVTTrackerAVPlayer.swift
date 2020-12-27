@@ -54,12 +54,6 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
             }
             self.lastError = nil
         }
-        else if event.getAction() == OAVTAction.START {
-            self.instrument?.startPing(trackerId: self.trackerId!, interval: 30.0)
-        }
-        else if event.getAction() == OAVTAction.END || event.getAction() == OAVTAction.STOP {
-            self.instrument?.stopPing(trackerId: trackerId!)
-        }
         
         // Set attributes from getters
         self.instrument?.useGetter(attribute: OAVTAttribute.TRACKER_TARGET, event: event, tracker: self)

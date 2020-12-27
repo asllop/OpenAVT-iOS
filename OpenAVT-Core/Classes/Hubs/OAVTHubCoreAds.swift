@@ -10,8 +10,8 @@ import Foundation
 
 open class OAVTHubCoreAds : OAVTHubCore {
     
-    var countAds = 0
-    var instrument: OAVTInstrument?
+    private var countAds = 0
+    private weak var instrument: OAVTInstrument?
     
     open override func processEvent(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> OAVTEvent? {
         if event.getAction() == OAVTAction.AD_BREAK_BEGIN {
@@ -26,10 +26,12 @@ open class OAVTHubCoreAds : OAVTHubCore {
             }
         }
         else if event.getAction() == OAVTAction.AD_BEGIN {
+            self.instrument?.startPing(trackerId: tracker.trackerId!, interval: 30.0)
             setInAdState(state: true)
             countAds = countAds + 1
         }
         else if event.getAction() == OAVTAction.AD_FINISH {
+            self.instrument?.stopPing(trackerId: tracker.trackerId!)
             if tracker.getState().inAd {
                 setInAdState(state: false)
             }
@@ -79,6 +81,7 @@ open class OAVTHubCoreAds : OAVTHubCore {
     }
     
     open override func instrumentReady(instrument: OAVTInstrument) {
+        super.instrumentReady(instrument: instrument)
         self.instrument = instrument
     }
     

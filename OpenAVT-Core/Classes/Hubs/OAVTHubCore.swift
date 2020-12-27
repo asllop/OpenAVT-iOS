@@ -19,6 +19,7 @@ open class OAVTHubCore : OAVTHubProtocol {
     private var streamId : String?
     private var playbackId : String?
     private var timestampOfLastEventOnPlayback : TimeInterval = 0
+    private weak var instrument: OAVTInstrument?
     
     public init() {
     }
@@ -70,6 +71,7 @@ open class OAVTHubCore : OAVTHubProtocol {
         }
         else if event.getAction() == OAVTAction.START {
             if !tracker.getState().didStart {
+                self.instrument?.startPing(trackerId: tracker.trackerId!, interval: 30.0)
                 tracker.getState().didStart = true
                 countStarts = countStarts + 1
             }
@@ -135,6 +137,7 @@ open class OAVTHubCore : OAVTHubProtocol {
         }
         else if event.getAction() == OAVTAction.END || event.getAction() == OAVTAction.STOP || event.getAction() == OAVTAction.NEXT {
             if tracker.getState().didStart && !tracker.getState().didFinish {
+                self.instrument?.stopPing(trackerId: tracker.trackerId!)
                 tracker.getState().didFinish = true
             }
             else {
@@ -180,7 +183,7 @@ open class OAVTHubCore : OAVTHubProtocol {
     }
     
     open func instrumentReady(instrument: OAVTInstrument) {
-        
+        self.instrument = instrument
     }
     
     open func endOfService() {
