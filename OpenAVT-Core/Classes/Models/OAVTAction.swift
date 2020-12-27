@@ -142,6 +142,10 @@ public extension OAVTAction {
     static let AD_PAUSE_BEGIN = OAVTAction(name: "AdPauseBegin")
     /// Ad Pause Finish action. Sent when the an ad is resumed.
     static let AD_PAUSE_FINISH = OAVTAction(name: "AdPauseFinish")
+    /// Ad Buffer Begin action. Sent when the ad starts buffering.
+    static let AD_BUFFER_BEGIN = OAVTAction(name: "AdBufferBegin")
+    /// Ad Buffer Finish action. Sent when the ad ends buffering.
+    static let AD_BUFFER_FINISH = OAVTAction(name: "AdBufferFinish")
     /// Ad Skip action. Sent when the an ad is skipped.
     static let AD_SKIP = OAVTAction(name: "AdSkip")
     /// Ad Click action. Sent when the an ad is clicked.

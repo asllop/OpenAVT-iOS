@@ -9,9 +9,6 @@
 import Foundation
 
 open class OAVTHubCore : OAVTHubProtocol {
-    
-    public var state = OAVTState()
-    
     private var countErrors = 0
     private var countStarts = 0
     private var accumPauseTime = 0
@@ -32,39 +29,39 @@ open class OAVTHubCore : OAVTHubProtocol {
     
     open func processEvent(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> OAVTEvent? {
         // In case of playing again the same stream after it finished
-        if state.didFinish {
-            state.didStart = false
-            state.isPaused = false
-            state.isBuffering = false
-            state.isSeeking = false
-            state.didFinish = false
+        if tracker.getState().didFinish {
+            tracker.getState().didStart = false
+            tracker.getState().isPaused = false
+            tracker.getState().isBuffering = false
+            tracker.getState().isSeeking = false
+            tracker.getState().didFinish = false
         }
         
         initPlaybackId(event: event)
         
-        if state.didStart && !state.isPaused && !state.isSeeking && !state.isBuffering {
+        if tracker.getState().didStart && !tracker.getState().isPaused && !tracker.getState().isSeeking && !tracker.getState().isBuffering {
             event.setAttribute(key: OAVTAttribute.DELTA_PLAY_TIME, value: Int((NSDate().timeIntervalSince1970 - timestampOfLastEventOnPlayback)*1000))
         }
         
         if event.getAction() == OAVTAction.MEDIA_REQUEST {
-            if !state.didMediaRequest {
-                state.didMediaRequest = true
+            if !tracker.getState().didMediaRequest {
+                tracker.getState().didMediaRequest = true
             }
             else {
                 return nil
             }
         }
         else if event.getAction() == OAVTAction.PLAYER_SET {
-            if !state.didPlayerSet {
-                state.didPlayerSet = true
+            if !tracker.getState().didPlayerSet {
+                tracker.getState().didPlayerSet = true
             }
             else {
                 return nil
             }
         }
         else if event.getAction() == OAVTAction.STREAM_LOAD {
-            if !state.didStreamLoad {
-                state.didStreamLoad = true
+            if !tracker.getState().didStreamLoad {
+                tracker.getState().didStreamLoad = true
                 streamId = UUID().uuidString
             }
             else {
@@ -72,8 +69,8 @@ open class OAVTHubCore : OAVTHubProtocol {
             }
         }
         else if event.getAction() == OAVTAction.START {
-            if !state.didStart {
-                state.didStart = true
+            if !tracker.getState().didStart {
+                tracker.getState().didStart = true
                 countStarts = countStarts + 1
             }
             else {
@@ -81,16 +78,16 @@ open class OAVTHubCore : OAVTHubProtocol {
             }
         }
         else if event.getAction() == OAVTAction.PAUSE_BEGIN {
-            if state.didStart && !state.isPaused {
-                state.isPaused = true
+            if tracker.getState().didStart && !tracker.getState().isPaused {
+                tracker.getState().isPaused = true
             }
             else {
                 return nil
             }
         }
         else if event.getAction() == OAVTAction.PAUSE_FINISH {
-            if state.didStart && state.isPaused {
-                state.isPaused = false
+            if tracker.getState().didStart && tracker.getState().isPaused {
+                tracker.getState().isPaused = false
                 let timeSincePauseBegin = event.getAttribute(key: OAVTAction.PAUSE_BEGIN.getTimeAttribute())
                 accumPauseTime = accumPauseTime + (timeSincePauseBegin as! Int)
             }
@@ -99,18 +96,18 @@ open class OAVTHubCore : OAVTHubProtocol {
             }
         }
         else if event.getAction() == OAVTAction.BUFFER_BEGIN {
-            if !state.isBuffering {
-                state.isBuffering = true
-                lastBufferBeginInPauseBlock = state.isPaused
-                lastBufferBeginInSeekBlock = state.isSeeking
+            if !tracker.getState().isBuffering {
+                tracker.getState().isBuffering = true
+                lastBufferBeginInPauseBlock = tracker.getState().isPaused
+                lastBufferBeginInSeekBlock = tracker.getState().isSeeking
             }
             else {
                 return nil
             }
         }
         else if event.getAction() == OAVTAction.BUFFER_FINISH {
-            if state.isBuffering {
-                state.isBuffering = false
+            if tracker.getState().isBuffering {
+                tracker.getState().isBuffering = false
                 let timeSinceBufferBegin = event.getAttribute(key: OAVTAction.BUFFER_BEGIN.getTimeAttribute())
                 accumBufferTime = accumBufferTime + (timeSinceBufferBegin as! Int)
             }
@@ -119,16 +116,16 @@ open class OAVTHubCore : OAVTHubProtocol {
             }
         }
         else if event.getAction() == OAVTAction.SEEK_BEGIN {
-            if !state.isSeeking {
-                state.isSeeking = true
+            if !tracker.getState().isSeeking {
+                tracker.getState().isSeeking = true
             }
             else {
                 return nil
             }
         }
         else if event.getAction() == OAVTAction.SEEK_FINISH {
-            if state.isSeeking {
-                state.isSeeking = false
+            if tracker.getState().isSeeking {
+                tracker.getState().isSeeking = false
                 let timeSinceSeekBegin = event.getAttribute(key: OAVTAction.SEEK_BEGIN.getTimeAttribute())
                 accumSeekTime = accumSeekTime + (timeSinceSeekBegin as! Int)
             }
@@ -137,8 +134,8 @@ open class OAVTHubCore : OAVTHubProtocol {
             }
         }
         else if event.getAction() == OAVTAction.END || event.getAction() == OAVTAction.STOP || event.getAction() == OAVTAction.NEXT {
-            if state.didStart && !state.didFinish {
-                state.didFinish = true
+            if tracker.getState().didStart && !tracker.getState().didFinish {
+                tracker.getState().didFinish = true
             }
             else {
                 return nil
@@ -163,11 +160,11 @@ open class OAVTHubCore : OAVTHubProtocol {
             event.setAttribute(key: OAVTAttribute.IN_SEEK_BLOCK, value: lastBufferBeginInSeekBlock)
         }
         else {
-            event.setAttribute(key: OAVTAttribute.IN_PAUSE_BLOCK, value: state.isPaused)
-            event.setAttribute(key: OAVTAttribute.IN_SEEK_BLOCK, value: state.isSeeking)
+            event.setAttribute(key: OAVTAttribute.IN_PAUSE_BLOCK, value: tracker.getState().isPaused)
+            event.setAttribute(key: OAVTAttribute.IN_SEEK_BLOCK, value: tracker.getState().isSeeking)
         }
-        event.setAttribute(key: OAVTAttribute.IN_BUFFER_BLOCK, value: state.isBuffering)
-        event.setAttribute(key: OAVTAttribute.IN_PLAYBACK_BLOCK, value: state.didStart && !state.didFinish)
+        event.setAttribute(key: OAVTAttribute.IN_BUFFER_BLOCK, value: tracker.getState().isBuffering)
+        event.setAttribute(key: OAVTAttribute.IN_PLAYBACK_BLOCK, value: tracker.getState().didStart && !tracker.getState().didFinish)
         
         if let streamId = self.streamId {
             event.setAttribute(key: OAVTAttribute.STREAM_ID, value: streamId)
@@ -180,10 +177,6 @@ open class OAVTHubCore : OAVTHubProtocol {
         updatePlaybackId(event: event)
         
         return event
-    }
-    
-    open func getState() -> OAVTState {
-        return self.state
     }
     
     open func instrumentReady(instrument: OAVTInstrument) {

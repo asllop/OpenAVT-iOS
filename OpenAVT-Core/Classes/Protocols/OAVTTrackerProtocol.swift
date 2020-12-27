@@ -19,6 +19,12 @@ public protocol OAVTTrackerProtocol: OAVTComponentProtocol {
      - Returns: The event or nil.
     */
     func initEvent(event: OAVTEvent) -> OAVTEvent?
+    /**
+     Returns the current state.
+     
+     - Returns: The state.
+    */
+    func getState() -> OAVTState
     /// Tracker ID.
     var trackerId : Int? { get set }
 }

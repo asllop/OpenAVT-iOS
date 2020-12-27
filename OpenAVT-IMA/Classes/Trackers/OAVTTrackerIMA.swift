@@ -12,6 +12,7 @@ import OpenAVT_Core
 
 open class OAVTTrackerIMA : OAVTTrackerProtocol {
     
+    public var state = OAVTState()
     public var trackerId: Int?
     
     private weak var instrument: OAVTInstrument?
@@ -33,6 +34,12 @@ open class OAVTTrackerIMA : OAVTTrackerProtocol {
             }
             self.errorMessage = nil
         }
+        else if event.getAction() == OAVTAction.AD_BEGIN {
+            self.instrument?.startPing(trackerId: self.trackerId!, interval: 30.0)
+        }
+        else if event.getAction() == OAVTAction.AD_FINISH {
+            self.instrument?.stopPing(trackerId: trackerId!)
+        }
         
         self.instrument?.useGetter(attribute: OAVTAttribute.TRACKER_TARGET, event: event, tracker: self)
         self.instrument?.useGetter(attribute: OAVTAttribute.AD_POSITION, event: event, tracker: self)
@@ -51,16 +58,11 @@ open class OAVTTrackerIMA : OAVTTrackerProtocol {
         self.instrument?.useGetter(attribute: OAVTAttribute.AD_SYSTEM, event: event, tracker: self)
         self.instrument?.useGetter(attribute: OAVTAttribute.IS_ADS_TRACKER, event: event, tracker: self)
         
-        // Try to find a player tracker that registered a getter for OAVTAttribute.POSITION
-        if let trackers = self.instrument?.getTrackers() {
-            for (trackerId, tracker) in trackers {
-                if trackerId != self.trackerId {
-                    instrument?.useGetter(attribute: OAVTAttribute.POSITION, event: event, tracker: tracker)
-                }
-            }
-        }
-        
         return event
+    }
+    
+    open func getState() -> OAVTState {
+        return self.state
     }
     
     open func instrumentReady(instrument: OAVTInstrument) {

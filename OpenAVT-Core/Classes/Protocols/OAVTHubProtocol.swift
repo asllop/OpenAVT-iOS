@@ -20,10 +20,4 @@ public protocol OAVTHubProtocol: OAVTComponentProtocol {
      - Returns: The event or nil.
     */
     func processEvent(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> OAVTEvent?
-    /**
-     Returns the current state.
-     
-     - Returns: The state.
-    */
-    func getState() -> OAVTState
 }
