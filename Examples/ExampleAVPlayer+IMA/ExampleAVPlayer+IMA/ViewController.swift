@@ -140,7 +140,7 @@ class ViewController: UIViewController, IMAAdsLoaderDelegate, IMAAdsManagerDeleg
     }
     
     func setupInstrument() {
-        self.instrument = OAVTInstrument(hub: OAVTHubIMA(), backend: DummyBackend())
+        self.instrument = OAVTInstrument(hub: OAVTHubCoreAds(), backend: DummyBackend())
         self.avpTrackerId = self.instrument?.addTracker(OAVTTrackerAVPlayer())
         self.imaTrackerId = self.instrument?.addTracker(OAVTTrackerIMA())
         self.instrument?.ready()
