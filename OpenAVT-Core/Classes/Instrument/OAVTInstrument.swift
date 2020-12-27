@@ -187,6 +187,9 @@ public class OAVTInstrument {
         if let backend = self.backend {
             backend.instrumentReady(instrument: self)
         }
+        if let metricalc = self.metricalc {
+            metricalc.instrumentReady(instrument: self)
+        }
         if let hub = self.hub {
             hub.instrumentReady(instrument: self)
         }
