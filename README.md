@@ -46,9 +46,9 @@ pod 'OpenAVT-IMA', :git => 'https://github.com/asllop/OpenAVT-iOS'
 
 In OpenAVT the central concept is the **Instrument**, implemented in the class `OAVTInstrument`. An instrument contains a chain of objects that captures, processes and transmits data from a multimedia player. Each of these three steps is represented by:
 
-- **Trackers**: classes conforming to `OAVTTrackerProtocol`, used to captured data from a specific player.
+- **Trackers**: classes conforming to `OAVTTrackerProtocol`, used to captured data from a specific player. A tracker also keeps its state, an instance of `OAVTState`.
 
-- **Hub**: class conforming to `OAVTHubProtocol`, used to process the data captured by a tracker. A hub also keeps a state, an instance of `OAVTState`.
+- **Hub**: class conforming to `OAVTHubProtocol`, used to process the data captured by a tracker.
 
 - **Metricalc**: class conforming to `OAVTMetricalcProtocol`, used to calculate metrics. This step is optional.
 
