@@ -43,6 +43,22 @@ open class OAVTHubCoreAds : OAVTHubCore {
                 return nil
             }
         }
+        else if event.getAction() == OAVTAction.AD_PAUSE_BEGIN {
+            if !tracker.getState().isPaused {
+                tracker.getState().isPaused = true
+            }
+            else {
+                return nil
+            }
+        }
+        else if event.getAction() == OAVTAction.AD_PAUSE_FINISH {
+            if tracker.getState().isPaused {
+                tracker.getState().isPaused = false
+            }
+            else {
+                return nil
+            }
+        }
         
         event.setAttribute(key: OAVTAttribute.IN_AD_BREAK_BLOCK, value: tracker.getState().inAdBreak)
         event.setAttribute(key: OAVTAttribute.IN_AD_BLOCK, value: tracker.getState().inAd)
