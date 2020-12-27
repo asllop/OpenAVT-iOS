@@ -62,10 +62,6 @@ class ViewController: UIViewController, IMAAdsLoaderDelegate, IMAAdsManagerDeleg
         }
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     func playVideo(_ videoSource: String) {
         OAVTLog.verbose("---> Start playing = \(videoSource)")
         
