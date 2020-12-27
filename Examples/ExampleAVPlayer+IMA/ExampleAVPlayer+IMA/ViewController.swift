@@ -52,8 +52,18 @@ class ViewController: UIViewController, IMAAdsLoaderDelegate, IMAAdsManagerDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
         OAVTLog.setLogLevel(OAVTLog.LogLevel.Verbose)
+    }
+    
+    @objc func appDidBecomeActive() {
+        if adsManager != nil {
+            adsManager.resume()
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func playVideo(_ videoSource: String) {
