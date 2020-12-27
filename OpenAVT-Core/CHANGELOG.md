@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v0.5.0 - 2020/12/27
+- Move PING logic to Hub.
+
 ## v0.4.0 - 2020/12/27
 - Update state management and minor changes.
 
