@@ -48,7 +48,7 @@ In OpenAVT the central concept is the **Instrument**, implemented in the class `
 
 - **Trackers**: classes conforming to `OAVTTrackerProtocol`, used to captured data from a specific player. A tracker also keeps its state, an instance of `OAVTState`.
 
-- **Hub**: class conforming to `OAVTHubProtocol`, used to process the data captured by a tracker.
+- **Hub**: class conforming to `OAVTHubProtocol`, it contains the business logic, used to process the data captured by a tracker, update states, tranform events, etc.
 
 - **Metricalc**: class conforming to `OAVTMetricalcProtocol`, used to calculate metrics. This step is optional.
 
