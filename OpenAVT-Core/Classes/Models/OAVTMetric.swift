@@ -8,7 +8,7 @@
 import Foundation
 
 /// An OpenAVT metric.
-open class OAVTMetric {
+open class OAVTMetric : OAVTSample {
     
     /// Metric types
     public enum MetricType: Int {
@@ -85,7 +85,7 @@ open class OAVTMetric {
     
     /// Generate a readable description.
     public var description : String {
-        return "<OAVTMetric : Name = \(metricName) , Type = \(self.metricType) , Value = \(self.getValue())>"
+        return "<OAVTMetric : Name = \(metricName) , Timestamp = \(getTimestamp()) , Type = \(self.metricType) , Value = \(self.getValue())>"
     }
 }
 

@@ -28,7 +28,7 @@ public class OAVTLog {
     
     private static func log(_ msg: String, _ cutLevel: LogLevel) {
         if self.logLevel.rawValue <= cutLevel.rawValue {
-            Swift.print("OAVTLog(\(Date.init().timeIntervalSince1970)): \(msg)")
+            Swift.print("OAVTLog(\(Date.init())): \(msg)")
         }
     }
 

@@ -9,7 +9,7 @@
 import Foundation
 
 /// An OpenAVT Event.
-public class OAVTEvent {
+public class OAVTEvent : OAVTSample {
     
     private var action: OAVTAction
     private var attributes: Dictionary<OAVTAttribute, Any> = [:]
@@ -84,6 +84,6 @@ public class OAVTEvent {
             attrString.append("\(k.getAttributeName()) = \(v) ; ")
         }
         attrString.append(" ]")
-        return "<OAVTEvent : Action = \(self.action.getActionName()) , Attributes = \(attrString)>"
+        return "<OAVTEvent : Action = \(self.action.getActionName()) , Timestamp = \(getTimestamp()) , Attributes = \(attrString)>"
     }
 }
