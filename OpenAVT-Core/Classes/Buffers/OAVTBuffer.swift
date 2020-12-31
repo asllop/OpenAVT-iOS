@@ -10,11 +10,8 @@ import Foundation
 /// OpenAVT buffer. Thread safe.
 open class OAVTBuffer {
     
-    /// Samples buffer
-    public var buffer : [OAVTSample] = []
-    /// Buffer size
-    public var size = 0
-    
+    private var buffer : [OAVTSample] = []
+    private var size = 0
     private let concurrentQueue = DispatchQueue(label: "OAVTBuffer", attributes: .concurrent)
     
     /**
@@ -39,6 +36,21 @@ open class OAVTBuffer {
         if usage() > 0 {
             concurrentQueue.sync {
                 buffer.append(sample)
+            }
+        }
+    }
+    
+    /**
+     Set sample at position.
+     
+     - Parameters:
+        - at: Position.
+        - sample: An OAVTSample instance.
+    */
+    open func set(at: Int, sample: OAVTSample) {
+        concurrentQueue.sync {
+            if at < buffer.count {
+                buffer[at] = sample
             }
         }
     }
@@ -82,6 +94,22 @@ open class OAVTBuffer {
         concurrentQueue.sync {
             let tmp = buffer
             buffer = []
+            return tmp
+        }
+    }
+    
+    /**
+     Obtain a copy of the buffer, ordered by timestamp, and flush.
+     
+     - Returns: Buffer.
+    */
+    open func retrieveInOrder() -> [OAVTSample] {
+        concurrentQueue.sync {
+            var tmp = buffer
+            buffer = []
+            tmp.sort { (A, B) -> Bool in
+                return A.getTimestamp() < B.getTimestamp()
+            }
             return tmp
         }
     }
