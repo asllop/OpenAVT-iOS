@@ -122,8 +122,7 @@ open class OAVTBuffer {
     */
     open func retrieveInOrder() -> [OAVTSample] {
         concurrentQueue.sync {
-            var tmp = buffer
-            buffer = []
+            var tmp = retrieve()
             tmp.sort { (A, B) -> Bool in
                 return A.getTimestamp() < B.getTimestamp()
             }

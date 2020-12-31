@@ -40,4 +40,10 @@ open class OAVTReservoirBuffer : OAVTBuffer {
             }
         }
     }
+    
+    open override func retrieve() -> [OAVTSample] {
+        let x = super.retrieve()
+        samplingIndex = Int64(size)
+        return x
+    }
 }
