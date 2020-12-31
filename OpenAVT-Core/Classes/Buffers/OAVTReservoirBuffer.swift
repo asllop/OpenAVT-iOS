@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// OpenAVT buffer with reservoir sampling. Thread safe.
+/// OpenAVT buffer with reservoir sampling, using the Algorithm R. Thread safe.
 open class OAVTReservoirBuffer : OAVTBuffer {
     
     /// Sampling index
