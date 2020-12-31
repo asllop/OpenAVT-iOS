@@ -10,9 +10,12 @@ import Foundation
 /// OpenAVT buffer. Thread safe.
 open class OAVTBuffer {
     
-    private var buffer : [OAVTSample] = []
-    private var size = 0
-    private let concurrentQueue = DispatchQueue(label: "OAVTBuffer", attributes: .concurrent)
+    /// Samples buffer
+    var buffer : [OAVTSample] = []
+    /// Buffer size
+    var size = 0
+    /// Dispatch queue
+    let concurrentQueue = DispatchQueue(label: "OAVTBuffer", attributes: .concurrent)
     
     /**
      Init a new OAVTBuffer, providing size.
