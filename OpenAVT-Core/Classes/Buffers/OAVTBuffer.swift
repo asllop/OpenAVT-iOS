@@ -27,15 +27,22 @@ open class OAVTBuffer {
     }
     
     /**
-     Add sample.
+     Put sample.
      
      - Parameters:
         - sample: An OAVTSample instance.
+     
+     - Returns: True if added, false otherwise.
     */
-    open func put(sample: OAVTSample) {
-        if usage() > 0 {
-            concurrentQueue.sync {
+    @discardableResult
+    open func put(sample: OAVTSample) -> Bool {
+        concurrentQueue.sync {
+            if remaining() > 0 {
                 buffer.append(sample)
+                return true
+            }
+            else {
+                return false
             }
         }
     }
@@ -46,11 +53,18 @@ open class OAVTBuffer {
      - Parameters:
         - at: Position.
         - sample: An OAVTSample instance.
+     
+     - Returns: True if set, false otherwise.
     */
-    open func set(at: Int, sample: OAVTSample) {
+    @discardableResult
+    open func set(at: Int, sample: OAVTSample) -> Bool {
         concurrentQueue.sync {
             if at < buffer.count {
                 buffer[at] = sample
+                return true
+            }
+            else {
+                return false
             }
         }
     }
@@ -75,11 +89,11 @@ open class OAVTBuffer {
     }
     
     /**
-     Obtain free space in the buffer.
+     Obtain remaining space in the buffer.
      
-     - Returns: Free space.
+     - Returns: Remaining space.
     */
-    open func usage() -> Int {
+    open func remaining() -> Int {
         concurrentQueue.sync {
             return size - buffer.count
         }
