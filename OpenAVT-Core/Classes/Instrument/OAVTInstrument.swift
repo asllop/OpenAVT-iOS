@@ -181,7 +181,7 @@ public class OAVTInstrument {
     /**
      Tell the instrument chain everything is ready to start.
      
-     It calls the `instrumentReady` method of all chain components (trackers, hub and backend).
+     It calls the `instrumentReady` method of all chain components (trackers, hub, metricalc and backend).
     */
     public func ready() {
         if let backend = self.backend {
@@ -195,6 +195,26 @@ public class OAVTInstrument {
         }
         for (_, tracker) in self.trackers {
             tracker.instrumentReady(instrument: self)
+        }
+    }
+    
+    /**
+     Tell the instrument chain the job is done and we are shutting down.
+     
+     It calls the `endOfService` method of all chain components (trackers, hub, metricalc and backend).
+    */
+    public func shutdown() {
+        for (_, tracker) in self.trackers {
+            tracker.endOfService()
+        }
+        if let hub = self.hub {
+            hub.endOfService()
+        }
+        if let metricalc = self.metricalc {
+            metricalc.endOfService()
+        }
+        if let backend = self.backend {
+            backend.endOfService()
         }
     }
     
