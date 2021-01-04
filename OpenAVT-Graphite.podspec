@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-  Open Audio-Video Telemetry, Graphite backend. It contains a backend for the Graphite metrics collector, it depends on OpenAVT-Core.
+  Open Audio-Video Telemetry, Graphite backend. It contains a backend for the Graphite metrics collector.
                        DESC
   s.swift_versions   = '5.0'
   s.homepage         = 'https://github.com/asllop/OpenAVT-iOS'

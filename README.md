@@ -39,6 +39,12 @@ pod 'OpenAVT-AVPlayer', :git => 'https://github.com/asllop/OpenAVT-iOS'
 pod 'OpenAVT-IMA', :git => 'https://github.com/asllop/OpenAVT-iOS'
 ```
 
+#### Graphite Backend
+
+```ruby
+pod 'OpenAVT-Graphite', :git => 'https://github.com/asllop/OpenAVT-iOS'
+```
+
 <a name="behav"></a>
 ## 3. Behaviour
 
