@@ -63,16 +63,11 @@ open class OAVTBackendGraphite : OAVTBackendProtocol {
         //pushMetrics()
     }
     
-    /**
-     Build a list of Graphite metrics using the plaintext format.
-     
-     - Returns: Array of formated metrics.
-     */
-    open func buildPlaintextMetrics() -> [String] {
+    func buildPlaintextMetrics() -> [String] {
         var metrics = [String]()
         for sample in buffer.retrieveInOrder() {
             if let metric = sample as? OAVTMetric {
-                metrics.append("\(buildMetricName(metric)) \(metric.getValue()) \(Int(metric.getTimestamp()))")
+                metrics.append(buildMetric(metric))
             }
         }
         return metrics
@@ -92,7 +87,21 @@ open class OAVTBackendGraphite : OAVTBackendProtocol {
         return "oavt.\(metric.getName())"
     }
     
-    open func setupTimer(time: TimeInterval) {
+    /**
+     Build a metric.
+     
+     Overwrite this method in a subclass to provide a custom metric format.
+     
+     - Parameters:
+     - metric: An OAVTMetric instance.
+     
+     - Returns: Metric.
+     */
+    open func buildMetric(_ metric: OAVTMetric) -> String {
+        return "\(buildMetricName(metric)) \(metric.getValue()) \(Int(metric.getTimestamp()))"
+    }
+    
+    func setupTimer(time: TimeInterval) {
         OAVTLog.verbose("Setup Timer")
         self.timer?.invalidate()
         self.timer = nil
@@ -104,7 +113,7 @@ open class OAVTBackendGraphite : OAVTBackendProtocol {
         pushMetrics()
     }
     
-    open func pushMetrics() {
+    func pushMetrics() {
         
         OAVTLog.verbose("Push Metrics! buffer remaining = \(buffer.remaining())")
         
