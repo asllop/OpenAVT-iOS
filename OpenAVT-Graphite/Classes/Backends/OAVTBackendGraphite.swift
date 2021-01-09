@@ -3,6 +3,7 @@
 //  OpenAVT-Graphite
 //
 //  Created by Andreu Santaren on 01/01/2021.
+//  Copyright © 2020 Open Audio-Video Telemetry. All rights reserved.
 //
 
 import Foundation

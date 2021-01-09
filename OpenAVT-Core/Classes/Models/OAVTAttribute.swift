@@ -1,6 +1,6 @@
 //
 //  OAVTAttribute.swift
-//  OpenAVT
+//  OpenAVT-Core
 //
 //  Created by Andreu Santaren on 09/09/2020.
 //  Copyright © 2020 Open Audio-Video Telemetry. All rights reserved.
