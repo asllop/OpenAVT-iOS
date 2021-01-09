@@ -101,7 +101,7 @@ class ViewController: UIViewController, IMAAdsLoaderDelegate, IMAAdsManagerDeleg
             if playerViewController.isBeingDismissed {
                 if let tracker = self.instrument?.getTracker(self.avpTrackerId ?? 0) as? OAVTTrackerAVPlayer {
                     self.instrument?.emit(action: OAVTAction.STOP, tracker: tracker)
-                    tracker.unregisterListeners()
+                    self.instrument?.shutdown()
                     if self.adsSwitch.isOn {
                         self.releaseAds()
                     }

@@ -31,7 +31,7 @@ class ViewController: UIViewController {
             if playerViewController.isBeingDismissed {
                 if let tracker = self.instrument?.getTracker(self.avpTrackerId ?? 0) as? OAVTTrackerAVPlayer {
                     self.instrument?.emit(action: OAVTAction.STOP, tracker: tracker)
-                    tracker.unregisterListeners()
+                    self.instrument?.shutdown()
                 }
             }
         }
