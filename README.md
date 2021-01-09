@@ -25,7 +25,7 @@ To install OpenAVT-iOS, simply add the following line to your Podfile:
 pod 'OpenAVT-Core', :git => 'https://github.com/asllop/OpenAVT-iOS'
 ```
 
-The `OpenAVT-Core` is the base package needed by all the rest, the following packages are available:
+Besides the Core, the following modules are available:
 
 #### AVPlayer Tracker
 
