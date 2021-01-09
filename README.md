@@ -115,6 +115,10 @@ Shows how to use the AVPlayer tracker.
 
 Shows how to use the AVPlayer tracker and the Google IMA ads tracker.
 
+#### ExamplePlayer-ObjC
+
+Simple example using AVPlayer tracker in Objective-C.
+
 <a name="doc"></a>
 ## 5. Documentation
 
