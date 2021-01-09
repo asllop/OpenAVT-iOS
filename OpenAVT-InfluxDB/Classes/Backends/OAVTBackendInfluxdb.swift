@@ -23,9 +23,9 @@ open class OAVTBackendInfluxdb : OAVTBackendProtocol {
      Init a new OAVTBackendInfluxdb.
      
      - Parameters:
-     - buffer: An OAVTBuffer instance.
-     - time: time interval between harvest cycles.
-     - host: InfludDB server host.
+        - buffer: An OAVTBuffer instance.
+        - time: time interval between harvest cycles.
+        - url: InfluxDB metric write URL.
      
      - Returns: A new OAVTBackendGraphite instance.
      */
@@ -72,7 +72,7 @@ open class OAVTBackendInfluxdb : OAVTBackendProtocol {
      Overwrite this method in a subclass to provide a custom metric format.
      
      - Parameters:
-     - metric: An OAVTMetric instance.
+        - metric: An OAVTMetric instance.
      
      - Returns: Metric.
      */
