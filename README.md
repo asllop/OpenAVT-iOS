@@ -45,6 +45,12 @@ pod 'OpenAVT-IMA', :git => 'https://github.com/asllop/OpenAVT-iOS'
 pod 'OpenAVT-Graphite', :git => 'https://github.com/asllop/OpenAVT-iOS'
 ```
 
+#### InfluxDB Backend
+
+```ruby
+pod 'OpenAVT-InfluxDB', :git => 'https://github.com/asllop/OpenAVT-iOS'
+```
+
 <a name="behav"></a>
 ## 3. Behaviour
 

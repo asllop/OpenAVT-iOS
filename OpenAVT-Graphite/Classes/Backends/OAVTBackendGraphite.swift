@@ -118,6 +118,8 @@ open class OAVTBackendGraphite : OAVTBackendProtocol {
     
     func pushMetrics() {
         
+        //TODO: take back metrics to buffer if push fails
+        
         OAVTLog.verbose("Push Metrics! buffer remaining = \(buffer.remaining())")
         
         DispatchQueue.global(qos: .background).async {

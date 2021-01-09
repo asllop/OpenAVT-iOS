@@ -107,6 +107,8 @@ open class OAVTBackendInfluxdb : OAVTBackendProtocol {
     }
     
     func pushMetrics() {
+        //TODO: take back metrics to buffer if push fails
+        
         // Prepare URL Request Object
         var request = URLRequest(url: self.url)
         request.httpMethod = "POST"
