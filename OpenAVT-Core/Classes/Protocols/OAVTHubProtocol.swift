@@ -2,7 +2,7 @@
 //  OAVTHubProtocol.swift
 //  OpenAVT-Core
 //
-//  Created by Andreu Santaren on 20/08/2020.
+//  Created by asllop on 20/08/2020.
 //  Copyright © 2020 Open Audio-Video Telemetry. All rights reserved.
 //
 

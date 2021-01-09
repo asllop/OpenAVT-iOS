@@ -2,7 +2,7 @@
 //  OAVTTrackerIMA.swift
 //  OpenAVT-IMA
 //
-//  Created by Andreu Santaren on 04/09/2020.
+//  Created by asllop on 04/09/2020.
 //  Copyright © 2020 Open Audio-Video Telemetry. All rights reserved.
 //
 

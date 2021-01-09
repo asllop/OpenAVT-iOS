@@ -2,7 +2,7 @@
 //  OAVTTrackerAVPlayer.swift
 //  OpenAVT-AVPlayer
 //
-//  Created by Andreu Santaren on 26/08/2020.
+//  Created by asllop on 26/08/2020.
 //  Copyright © 2020 Open Audio-Video Telemetry. All rights reserved.
 //
 
