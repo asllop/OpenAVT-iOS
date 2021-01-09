@@ -26,10 +26,10 @@ open class OAVTBackendGraphite : OAVTBackendProtocol {
      Init a new OAVTBackendGraphite.
      
      - Parameters:
-     - buffer: An OAVTBuffer instance.
-     - time: time interval between harvest cycles.
-     - host: Graphite server host.
-     - port: Graphite server port.
+        - buffer: An OAVTBuffer instance.
+        - time: time interval between harvest cycles.
+        - host: Graphite server host.
+        - port: Graphite server port.
      
      - Returns: A new OAVTBackendGraphite instance.
      */
@@ -82,7 +82,7 @@ open class OAVTBackendGraphite : OAVTBackendProtocol {
      Overwrite this method in a subclass to provide a custom metric path.
      
      - Parameters:
-     - metric: An OAVTMetric instance.
+        - metric: An OAVTMetric instance.
      
      - Returns: Metric path.
      */
@@ -96,7 +96,7 @@ open class OAVTBackendGraphite : OAVTBackendProtocol {
      Overwrite this method in a subclass to provide a custom metric format.
      
      - Parameters:
-     - metric: An OAVTMetric instance.
+        - metric: An OAVTMetric instance.
      
      - Returns: Metric.
      */
@@ -129,7 +129,7 @@ open class OAVTBackendGraphite : OAVTBackendProtocol {
                     case .success:
                         OAVTLog.verbose("Metric Sent")
                     case .failure(let error):
-                        OAVTLog.error("Failed sending m,etric to Graphite = \(error)")
+                        OAVTLog.error("Failed sending metric to Graphite = \(error)")
                     }
                 }
             case .failure(let error):
