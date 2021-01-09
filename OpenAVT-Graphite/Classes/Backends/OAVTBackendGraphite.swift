@@ -59,8 +59,10 @@ open class OAVTBackendGraphite : OAVTBackendProtocol {
         timer?.invalidate()
         timer = nil
         restartTimer = false
-        //TODO: only call if not currently running
-        //pushMetrics()
+        
+        OAVTLog.verbose("Final sync")
+        
+        pushMetrics()
     }
     
     func buildPlaintextMetrics() -> [String] {
