@@ -1,0 +1,11 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'ExamplePlayer-ObjC' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for ExamplePlayer-ObjC
+  pod 'OpenAVT-Core', :git => 'https://github.com/asllop/OpenAVT-iOS'
+  pod 'OpenAVT-AVPlayer', :git => 'https://github.com/asllop/OpenAVT-iOS'
+end
