@@ -51,6 +51,12 @@ pod 'OpenAVT-Graphite', :git => 'https://github.com/asllop/OpenAVT-iOS'
 pod 'OpenAVT-InfluxDB', :git => 'https://github.com/asllop/OpenAVT-iOS'
 ```
 
+#### New Relic Backend
+
+```ruby
+pod 'OpenAVT-NewRelic', :git => 'https://github.com/asllop/OpenAVT-iOS'
+```
+
 <a name="behav"></a>
 ## 3. Behaviour
 
