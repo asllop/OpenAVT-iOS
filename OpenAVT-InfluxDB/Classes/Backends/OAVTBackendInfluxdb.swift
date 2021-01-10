@@ -27,7 +27,7 @@ open class OAVTBackendInfluxdb : OAVTBackendProtocol {
         - time: time interval between harvest cycles.
         - url: InfluxDB metric write URL.
      
-     - Returns: A new OAVTBackendGraphite instance.
+     - Returns: A new OAVTBackendInfluxdb instance.
      */
     public init(buffer: OAVTBuffer = OAVTReservoirBuffer(size: 500), time: TimeInterval = 30.0, url: URL) {
         self.buffer = buffer
