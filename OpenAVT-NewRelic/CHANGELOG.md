@@ -1,4 +1,4 @@
 # CHANGELOG
 
-## v0.1.0 - 2021/01/09
+## v0.1.0 - 2021/01/10
 - Initial commit.
