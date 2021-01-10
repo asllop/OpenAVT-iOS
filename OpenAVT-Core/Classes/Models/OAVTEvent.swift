@@ -59,6 +59,19 @@ public class OAVTEvent : OAVTSample {
     }
     
     /**
+     Get dictionary of attributes.
+     
+     - Returns: Attributes.
+    */
+    public func getDictionary() -> [String:Any] {
+        var attr = [String:Any]()
+        for (k,v) in self.attributes {
+            attr[k.getAttributeName()] = v
+        }
+        return attr
+    }
+    
+    /**
      Remove attribute from event.
      
      - Parameters:

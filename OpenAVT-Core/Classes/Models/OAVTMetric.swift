@@ -84,6 +84,41 @@ open class OAVTMetric : OAVTSample {
         }
     }
     
+    /**
+     Get metric value as Int.
+     
+     - Returns: Value.
+    */
+    public func getIntValue() -> Int? {
+        return self.metricValueI
+    }
+    
+    /**
+     Get metric value as Double.
+     
+     - Returns: Value.
+    */
+    public func getDoubleValue() -> Double? {
+        return self.metricValueD
+    }
+    
+    /**
+     Get metric value as NSNumber.
+     
+     - Returns: value.
+    */
+    public func getNSNumberValue() -> NSNumber {
+        if let i = self.metricValueD {
+            return NSNumber(value: i)
+        }
+        else if let i = self.metricValueI {
+            return NSNumber(value: i)
+        }
+        else {
+            return NSNumber(value: Double.nan)
+        }
+    }
+    
     /// Generate a readable description.
     public var description : String {
         return "<OAVTMetric : Name = \(metricName) , Timestamp = \(getTimestamp()) , Type = \(self.metricType) , Value = \(self.getValue())>"
