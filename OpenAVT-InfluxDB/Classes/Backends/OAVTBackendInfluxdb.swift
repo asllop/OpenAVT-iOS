@@ -91,7 +91,7 @@ open class OAVTBackendInfluxdb : OAVTBackendProtocol {
      - Returns: Metric path.
      */
     open func buildMetricName(_ metric: OAVTMetric) -> String {
-        return "oavt"
+        return "OAVT"
     }
     
     func setupTimer(time: TimeInterval) {

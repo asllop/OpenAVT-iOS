@@ -87,7 +87,7 @@ open class OAVTBackendGraphite : OAVTBackendProtocol {
      - Returns: Metric path.
      */
     open func buildMetricName(_ metric: OAVTMetric) -> String {
-        return "oavt.\(metric.getName())"
+        return "OAVT.\(metric.getName())"
     }
     
     /**
