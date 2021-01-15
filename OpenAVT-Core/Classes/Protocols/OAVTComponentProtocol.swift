@@ -17,6 +17,7 @@ public protocol OAVTComponentProtocol {
         - instrument: Instrument.
     */
     func instrumentReady(instrument: OAVTInstrument)
-    /// End of service. Called when an instrument component is removed from the instrument.
+    
+    /// End of service. Called when a component is removed from the instrument or when `OAVTInstrument.shutdown()` is called.
     func endOfService()
 }

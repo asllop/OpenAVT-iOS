@@ -47,6 +47,16 @@ public class OAVTInstrument {
         setBackend(backend)
     }
     
+    /**
+     Init a new OAVTInstrument, providing hub, metricalc and backend.
+     
+     - Parameters:
+        - hub: An object conforming to OAVTHubProtocol.
+        - metricalc: An object conforming to OAVTMetricalcProtocol.
+        - backend: An object conforming to OAVTBackendProtocol.
+     
+     - Returns: A new OAVTInstrument instance.
+    */
     public convenience init(hub: OAVTHubProtocol, metricalc: OAVTMetricalcProtocol, backend: OAVTBackendProtocol) {
         self.init(hub: hub, backend: backend)
         setMetricalc(metricalc)
