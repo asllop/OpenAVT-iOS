@@ -25,6 +25,10 @@ open class OAVTBackendGraphite : OAVTBackendProtocol {
     /**
      Init a new OAVTBackendGraphite.
      
+     You have to specify the host where the Graphite server resides:
+     
+        OAVTBackendGraphite(host: "192.168.1.100")
+     
      - Parameters:
         - buffer: An OAVTBuffer instance.
         - time: time interval between harvest cycles.

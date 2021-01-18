@@ -22,6 +22,10 @@ open class OAVTBackendInfluxdb : OAVTBackendProtocol {
     /**
      Init a new OAVTBackendInfluxdb.
      
+     You have to specify an InfluxDB write URL. A tipical URL for a server located in the local machine, listening on port 8086 and with a database called "test":
+     
+        OAVTBackendInfluxdb(url: URL(string: "http://192.168.0.100:8086/write?db=test")!)
+     
      - Parameters:
         - buffer: An OAVTBuffer instance.
         - time: time interval between harvest cycles.
