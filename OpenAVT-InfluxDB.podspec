@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'OpenAVT-InfluxDB/Classes/**/*'
+  s.source_files = 'Sources/OpenAVT-InfluxDB/Classes/**/*'
   
   # s.resource_bundles = {
   #   'OpenAVT-InfluxDB' => ['OpenAVT-InfluxDB/Assets/*.png']

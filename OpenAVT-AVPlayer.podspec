@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'OpenAVT-AVPlayer/Classes/**/*'
+  s.source_files = 'Sources/OpenAVT-AVPlayer/Classes/**/*'
   
   # s.resource_bundles = {
   #   'OpenAVT-AVPlayer' => ['OpenAVT-AVPlayer/Assets/*.png']

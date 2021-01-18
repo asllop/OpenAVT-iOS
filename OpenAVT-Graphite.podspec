@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'OpenAVT-Graphite/Classes/**/*'
+  s.source_files = 'Sources/OpenAVT-Graphite/Classes/**/*'
   
   # s.resource_bundles = {
   #   'OpenAVT-Graphite' => ['OpenAVT-Graphite/Assets/*.png']
