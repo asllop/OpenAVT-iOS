@@ -56,14 +56,22 @@ open class OAVTBackendInfluxdb : OAVTBackendProtocol {
         pushMetrics()
     }
     
-    func buildLineMetrics() -> String {
+    func buildLineMetrics(samples: [OAVTSample]) -> String {
         var metrics = ""
-        for sample in buffer.retrieveInOrder() {
+        for sample in samples {
             if let metric = sample as? OAVTMetric {
                 metrics.append(buildMetric(metric) + "\n")
             }
         }
         return metrics
+    }
+    
+    func putBackMetrics(samples: [OAVTSample]) {
+        for sample in samples {
+            if let metric = sample as? OAVTMetric {
+                buffer.put(sample: metric)
+            }
+        }
     }
     
     /**
@@ -107,27 +115,24 @@ open class OAVTBackendInfluxdb : OAVTBackendProtocol {
     }
     
     func pushMetrics() {
-        //TODO: take back metrics to buffer if push fails
+        OAVTLog.verbose("Push Metrics! buffer remaining = \(buffer.remaining())")
         
-        // Prepare URL Request Object
         var request = URLRequest(url: self.url)
         request.httpMethod = "POST"
         
-        // HTTP Request Parameters which will be sent in HTTP Request Body
-        let postString = buildLineMetrics()
-        // Set HTTP Request Body
+        let samples = buffer.retrieveInOrder()
+        let postString = buildLineMetrics(samples: samples)
+        
         request.httpBody = postString.data(using: String.Encoding.utf8);
-        // Perform HTTP Request
+        
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             
-            // Check for Error
             if let error = error {
                 OAVTLog.error("Error pushing metrics to InflusDB = \(error)")
-                return
+                //Put back all samples to buffer
+                self.putBackMetrics(samples: samples)
             }
-            
-            // Convert HTTP Response Data to a String
-            if let data = data, let dataString = String(data: data, encoding: .utf8) {
+            else if let data = data, let dataString = String(data: data, encoding: .utf8) {
                 OAVTLog.verbose("Sent metric to InfluxDB, response = \(dataString)")
             }
             
@@ -137,6 +142,7 @@ open class OAVTBackendInfluxdb : OAVTBackendProtocol {
                 }
             }
         }
+        
         task.resume()
     }
 }

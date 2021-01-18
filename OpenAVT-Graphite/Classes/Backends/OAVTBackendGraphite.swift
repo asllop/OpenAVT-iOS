@@ -66,16 +66,6 @@ open class OAVTBackendGraphite : OAVTBackendProtocol {
         pushMetrics()
     }
     
-    func buildPlaintextMetrics() -> [String] {
-        var metrics = [String]()
-        for sample in buffer.retrieveInOrder() {
-            if let metric = sample as? OAVTMetric {
-                metrics.append(buildMetric(metric))
-            }
-        }
-        return metrics
-    }
-    
     /**
      Build a metric name.
      
@@ -117,21 +107,24 @@ open class OAVTBackendGraphite : OAVTBackendProtocol {
     }
     
     func pushMetrics() {
-        
-        //TODO: take back metrics to buffer if push fails
-        
         OAVTLog.verbose("Push Metrics! buffer remaining = \(buffer.remaining())")
         
         DispatchQueue.global(qos: .background).async {
             switch self.client.connect(timeout: 10) {
             case .success:
                 OAVTLog.verbose("Connected to Graphite")
-                for m in self.buildPlaintextMetrics() {
-                    switch self.client.send(string: "\(m)\n" ) {
-                    case .success:
-                        OAVTLog.verbose("Metric Sent")
-                    case .failure(let error):
-                        OAVTLog.error("Failed sending metric to Graphite = \(error)")
+                for sample in self.buffer.retrieveInOrder() {
+                    if let metric = sample as? OAVTMetric {
+                        let graphiteMetric = self.buildMetric(metric)
+                        
+                        switch self.client.send(string: "\(graphiteMetric)\n" ) {
+                        case .success:
+                            OAVTLog.verbose("Metric Sent")
+                        case .failure(let error):
+                            OAVTLog.error("Failed sending metric to Graphite = \(error)")
+                            //Put back failed sample to buffer
+                            self.buffer.put(sample: metric)
+                        }
                     }
                 }
             case .failure(let error):
