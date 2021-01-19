@@ -134,11 +134,15 @@ Simple example using AVPlayer tracker in Objective-C.
 <a name="doc"></a>
 ## 5. Documentation
 
-All classes and methods are documented with annotations. To generate the docs in HTML you can use [Jazzy](https://github.com/realm/jazzy), like this:
+All classes and methods are documented with annotations. To generate the docs in HTML or Markdown you can use [swift-doc](https://github.com/SwiftDocOrg/swift-doc), like this:
 
 ```bash
-jazzy --podspec OpenAVT-Core.podspec --theme fullwidth
+$ swift doc generate Sources/ --module-name OpenAVT --format html -o docs
+$ cd docs
+$ python -m SimpleHTTPServer 8000
 ```
+
+And now open [http://localhost:8000](http://localhost:8000) with your preferred browser.
 
 <a name="auth"></a>
 ## 6. Author
