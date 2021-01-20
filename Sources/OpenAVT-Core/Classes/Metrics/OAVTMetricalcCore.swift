@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// OAVT metricalc for generic player metric calculations.
 open class OAVTMetricalcCore : OAVTMetricalcProtocol {
     
     public init() {

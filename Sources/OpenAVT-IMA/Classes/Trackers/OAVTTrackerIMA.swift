@@ -10,6 +10,7 @@ import Foundation
 import GoogleInteractiveMediaAds
 import OpenAVT_Core
 
+/// OAVT tracker for Google IMA ads.
 open class OAVTTrackerIMA : OAVTTrackerProtocol {
     
     public var state = OAVTState()

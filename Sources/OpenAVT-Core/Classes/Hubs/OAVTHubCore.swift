@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// OAVT hub for generic content players.
 open class OAVTHubCore : OAVTHubProtocol {
     private var countErrors = 0
     private var countStarts = 0

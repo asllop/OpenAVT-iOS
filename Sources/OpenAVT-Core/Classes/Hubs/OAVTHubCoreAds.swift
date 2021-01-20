@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// OAVT hub for generic content players with ads.
 open class OAVTHubCoreAds : OAVTHubCore {
     
     private var countAds = 0

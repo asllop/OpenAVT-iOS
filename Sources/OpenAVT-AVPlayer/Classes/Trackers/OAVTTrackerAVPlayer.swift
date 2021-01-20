@@ -10,6 +10,7 @@ import Foundation
 import AVKit
 import OpenAVT_Core
 
+/// OAVT tracker for AVPlayer.
 open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
     
     public var state = OAVTState()
