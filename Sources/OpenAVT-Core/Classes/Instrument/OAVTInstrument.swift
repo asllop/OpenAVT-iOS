@@ -140,12 +140,7 @@ public class OAVTInstrument {
      - Returns: A tracker.
     */
     public func getTracker(_ trackerId: Int) -> OAVTTrackerProtocol? {
-        if let val = self.trackers[trackerId] {
-            return val
-        }
-        else {
-            return nil
-        }
+        return self.trackers[trackerId]
     }
     
     /**
@@ -155,6 +150,15 @@ public class OAVTInstrument {
     */
     public func getHub() -> OAVTHubProtocol? {
         return self.hub
+    }
+    
+    /**
+     Get the metricalc.
+     
+     - Returns: A metricalc.
+    */
+    public func getMetricalc() -> OAVTMetricalcProtocol? {
+        return self.metricalc
     }
     
     /**
