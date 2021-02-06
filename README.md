@@ -64,21 +64,21 @@ pod 'OpenAVT-NewRelic', :git => 'https://github.com/asllop/OpenAVT-iOS'
 
 In OpenAVT the central concept is the **Instrument**, implemented in the class `OAVTInstrument`. An instrument contains a chain of objects that captures, processes and transmits data from a multimedia player. Each of these three steps is represented by:
 
-- **Trackers**: classes conforming to `OAVTTrackerProtocol`, used to captured data from a specific player. A tracker also keeps its state, an instance of `OAVTState`.
+- **Trackers**: classes conforming to `OAVTTrackerProtocol`, used to capture data from a specific player. A tracker also keeps its state in an instance of `OAVTState` (but shouldn't modify it, this is a job for the Hub).
 
-- **Hub**: class conforming to `OAVTHubProtocol`, it contains the business logic, used to process the data captured by a tracker, update states, tranform events, etc.
+- **Hub**: class conforming to `OAVTHubProtocol`, it contains the business logic. Is used to process the data captured by a tracker, update states and tranform events if necessary.
 
 - **Metricalc**: class conforming to `OAVTMetricalcProtocol`, used to calculate metrics. This step is optional.
 
-- **Backend**: class conforming to `OAVTBackendProtocol`, used to transmit data to a data service, database, business intelligence system, storage media, etc.
+- **Backend**: class conforming to `OAVTBackendProtocol`, used to transmit data to a data service, database, business intelligence system, storage media or similar.
 
-These objects represents a chain because the data goes from one step to the next in a straight line. The data captured by a tracker is sent to a hub that process it, pass it to a metric calculator and finally it is passed to a backend.
+These objects represents a chain because the data goes from one step to the next in a straight line. The data captured by a tracker is sent to the hub, then it goes to the metric calculator and finally to the backend.
 
 One instrument can contain multiple trackers, but only one hub, one metricalc and one backend.
 
 ![Alt text](./oavtinstrument_diag.svg)
 
-An instrument is defined like this:
+An instrument like the one in the figure would be defined like this:
 
 ```swift
 let instrument = OAVTInstrument(hub: AnyHub(), metricalc: AnyMetricalc(), backend: AnyBackend())
