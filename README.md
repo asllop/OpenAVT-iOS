@@ -29,11 +29,15 @@ Besides the Core, the following modules are available:
 
 #### AVPlayer Tracker
 
+Tracker for the AVPlayer video and audio player.
+
 ```ruby
 pod 'OpenAVT-AVPlayer', :git => 'https://github.com/asllop/OpenAVT-iOS'
 ```
 
 #### Google IMA Tracker
+
+Tracker for the Google IMA ads library.
 
 ```ruby
 pod 'OpenAVT-IMA', :git => 'https://github.com/asllop/OpenAVT-iOS'
@@ -41,17 +45,23 @@ pod 'OpenAVT-IMA', :git => 'https://github.com/asllop/OpenAVT-iOS'
 
 #### Graphite Backend
 
+Backend for the Graphite metrics database.
+
 ```ruby
 pod 'OpenAVT-Graphite', :git => 'https://github.com/asllop/OpenAVT-iOS'
 ```
 
 #### InfluxDB Backend
 
+Backend for the InfluxDB metrics database.
+
 ```ruby
 pod 'OpenAVT-InfluxDB', :git => 'https://github.com/asllop/OpenAVT-iOS'
 ```
 
 #### New Relic Backend
+
+Backend for the New Relic data ingest service.
 
 ```ruby
 pod 'OpenAVT-NewRelic', :git => 'https://github.com/asllop/OpenAVT-iOS'
@@ -110,7 +120,7 @@ The instrument chain describes the steps followed by an event from the moment it
 
 1. The journey of an event starts with a call to `OAVTInstrument.emit(...)`, that can be called from anywhere, but it's usually called from within a tracker. This function takes an action and a tracker, and generates en event. Initially the event only contains few attributes: the sender ID (that identifies a tracker within an instrument), the timer attributes of previous events and the custom attributes of the instrument created with `OAVTInstrument.addAttribute(...)`.
 2. Once the event is created it is sent to the tracker, calling the method `OAVTTrackerProtocol.initEvent(...)`. This method receives an event and returns it, in between it can be tranformed by adding/changing attributes (calling `OAVTEvent.setAttribute(...)`), or even it can stop the chain by returning a nil.
-3. The event passed by the tracker is sent to the hub, calling `OAVTHubProtocol.processEvent(...)`. This method works like the previous, it can change the event or block it.
+3. The event passed by the tracker is sent to the hub, calling `OAVTHubProtocol.processEvent(...)`. This method works like the previous, it takes an event and returns it and in between it can be tranformed, blocked, etc.
 4. If a metricalc is defined, the event is passed to it by calling `OAVTMetricalcProtocol.processMetric(...)`. This method returns an array of metrics (instances of `OAVTMetric`). The array can be empty if no metrics are generated.
 5. Finally the event and the metrics are passed to the backend by calling `OAVTBackendProtocol.sendEvent(...)` and `OAVTBackendProtocol.sendMetric(...)`. These methods return nothing, and the chain ends here.
 
