@@ -158,7 +158,7 @@ And now open [http://localhost:8000](http://localhost:8000) with your preferred 
 ## 6. Author
 
 Andreu Santarén Llop<br>
-<andreu.santaren@gmail.com>
+andreu.santaren at gmail.com
 
 <a name="lice"></a>
 ## 7. License
