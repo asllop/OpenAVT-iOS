@@ -61,7 +61,7 @@ pod 'OpenAVT-InfluxDB', :git => 'https://github.com/asllop/OpenAVT-iOS'
 
 #### New Relic Backend
 
-Backend for the New Relic data ingest service.
+Backend for the New Relic data ingestion service.
 
 ```ruby
 pod 'OpenAVT-NewRelic', :git => 'https://github.com/asllop/OpenAVT-iOS'
@@ -152,7 +152,7 @@ $ cd docs
 $ python -m SimpleHTTPServer 8000
 ```
 
-And now open [http://localhost:8000](http://localhost:8000) with your preferred browser.
+And then open [http://localhost:8000](http://localhost:8000) with your preferred browser.
 
 <a name="auth"></a>
 ## 6. Author
