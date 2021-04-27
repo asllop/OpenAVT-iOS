@@ -5,16 +5,18 @@
 
 1. [ Introduction ](#intro)
 2. [ Installation ](#install)
-3. [ Behaviour ](#behav)
-4. [ Examples ](#examp)
-5. [ Documentation ](#doc)
-6. [ Author ](#auth)
-7. [ License ](#lice)
+3. [ Setup ](#setup)
+4. [ Behaviour ](#behav)
+5. [ Data Model ](#model)
+6. [ Examples ](#examp)
+7. [ Documentation ](#doc)
+8. [ Author ](#auth)
+9. [ License ](#lice)
 
 <a name="intro"></a>
 ## 1. Introduction
 
-The Open Audio-Video Telemetry is a set of tools for performance monitoring in multimedia applications. The objectives are similar to those of the OpenTelemetry project, but specifically for sensing data from audio and video players. OpenAVT can be configured to generate Events and Metrics, only Events, only Metrics or a combination of both.
+The Open Audio-Video Telemetry is a set of tools for performance monitoring in multimedia applications. The objectives are similar to those of the OpenTelemetry project, but specifically for sensing data from audio and video players. OpenAVT can be configured to generate Events, Metrics or a combination of both.
 
 <a name="install"></a>
 ## 2. Installation
@@ -67,8 +69,13 @@ Backend for the New Relic data ingest service.
 pod 'OpenAVT-NewRelic', :git => 'https://github.com/asllop/OpenAVT-iOS'
 ```
 
+<a name="setup"></a>
+## 3. Setup
+
+TODO: show how to starts a simple video telemetry for AVPlayer, AVPlayer + IMA and all possible backends.
+
 <a name="behav"></a>
-## 3. Behaviour
+## 4. Behaviour
 
 #### The Instrument
 
@@ -124,8 +131,21 @@ The instrument chain describes the steps followed by an event from the moment it
 4. If a metricalc is defined, the event is passed to it by calling `OAVTMetricalcProtocol.processMetric(...)`. This method returns an array of metrics (instances of `OAVTMetric`). The array can be empty if no metrics are generated.
 5. Finally the event and the metrics are passed to the backend by calling `OAVTBackendProtocol.sendEvent(...)` and `OAVTBackendProtocol.sendMetric(...)`. These methods return nothing, and the chain ends here.
 
+<a name="model"></a>
+## 5. Data Model
+
+TODO: explain events, attributes and metrics. Also explain the event player event workflow and talk about most common video KPIs and how to calculate them using the data model. 
+
+#### The telemetry dilemma: Events or Metrics?
+
+#### Events
+
+#### Attributes
+
+#### Metrics
+
 <a name="examp"></a>
-## 4. Examples
+## 6. Examples
 
 Inside the `Examples` folder you will find multiple usage examples. To run them execute `pod install` from each example directory.
 
@@ -142,7 +162,7 @@ Shows how to use the AVPlayer tracker and the Google IMA ads tracker.
 Simple example using AVPlayer tracker in Objective-C.
 
 <a name="doc"></a>
-## 5. Documentation
+## 7. Documentation
 
 All classes and methods are documented with annotations. To generate the docs in HTML or Markdown you can use [swift-doc](https://github.com/SwiftDocOrg/swift-doc), like this:
 
@@ -155,12 +175,12 @@ $ python -m SimpleHTTPServer 8000
 And now open [http://localhost:8000](http://localhost:8000) with your preferred browser.
 
 <a name="auth"></a>
-## 6. Author
+## 8. Author
 
-Andreu Santarén Llop<br>
-andreu.santaren at gmail.com
+Andreu Santarén Llop (asllop)<br>
+andreu.santaren at gmail .com
 
 <a name="lice"></a>
-## 7. License
+## 9. License
 
 OpenAVT-iOS is available under the MIT license. See the LICENSE file for more info.
