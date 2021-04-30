@@ -5,7 +5,7 @@
 
 1. [ Introduction ](#intro)
 2. [ Installation ](#install)
-3. [ Setup ](#setup)
+3. [ Usage ](#usage)
 4. [ Behaviour ](#behav)
 5. [ Data Model ](#model)
 6. [ Examples ](#examp)
@@ -69,10 +69,93 @@ Backend for the New Relic data ingestion service.
 pod 'OpenAVT-NewRelic', :git => 'https://github.com/asllop/OpenAVT-iOS'
 ```
 
-<a name="setup"></a>
-## 3. Setup
+<a name="usage"></a>
+## 3. Usage
 
-TODO: show how to starts a simple video telemetry for AVPlayer, AVPlayer + IMA and all possible backends.
+There are many ways to use the OpenAVT library, depending on the use case, here we will cover the most common combinations. We won't explain all the possible arguments passed to the constructors, only the essential ones. For the rest check out the [documentation](#doc).
+
+### Choosing a Backend
+
+The first step is chosing the backend where the data will be sent. We currenly support OOTB three different backends: Graphite, InfluxDB and New Relic. Let's see how to init them:
+
+#### Init the Graphite Backend
+
+```swift
+let backend = OAVTBackendGraphite(host: "192.168.99.100")
+```
+
+`host` is the address of the Graphite server.
+
+#### Init the InfluxDB Backend
+
+```swift
+let backend = OAVTBackendInfluxdb(url: URL(string: "http://192.168.99.100:8086/write?db=test")!)
+```
+
+`host` is the URL of the InfluxDB server used to write data to a particular database (in this case named `test`).
+
+#### Init the New Relic Backend
+
+```swift
+let backend = OAVTBackendNewrelic()
+```
+
+The New Relic Mobile Agent must be installed and setup to use this backend.
+
+### Choosing a Hub
+
+Next we will choose a Hub. This element is used to obtain the data comming from the trackers and process it to pass the proper events to the backend. Users can implement their own logic for this and use their own custom hubs, but OpenAVT provides a default implementation that works for most cases.
+
+For instruments with video tracker only, we will chose:
+
+```swift
+let hub = OAVTHubCore()
+```
+
+And for instruments with video and ads tracker:
+
+```swift
+let hub = OAVTHubCoreAds()
+```
+
+### Choosing a Metricalc
+
+This step is optional and only necessary if we want to generate metrics, if we only need events this section can be omitted. A Metricalc is something like a Hub but for metrics, it gets events and process them to generate metrics. Again, users can provide custom implementation, but the OpenAVT library provides a default one:
+
+```swift
+let metricalc = OAVTMetricalcCore()
+```
+
+### Choosing Trackers
+
+And finally, the trackers, the piece that actually generates the data. Currently OpenAVT provides two trackers: AVPlayer and Google IMA Ads. We won't cover how to setup the AVPlayer and IMA libraries, for this checkout the correspondig documentation or the [examples](#examp).
+
+#### Init the AVPlayer Tracker
+
+```swift
+let tracker = OAVTTrackerAVPlayer(player: avplayer)
+```
+
+Where `player` is an instance of the AVPlayer.
+
+#### Init the IMA Tracker
+
+```swift
+let adTracker = OAVTTrackerIMA()
+```
+
+### Creating the Instrument
+
+Once we have all the elements, the only step left is putting everything together:
+
+```swift
+let instrument = OAVTInstrument(hub: hub, metricalc: metricalc, backend: backend)
+instrument.addTracker(tracker)
+instrument.addTracker(adTracker)
+instrument.ready()
+```
+
+Here we have created a new instrument that contains all the elements, and once all are present, we called `ready()` to initialize everything. Now the instrument is ready to start generating data.
 
 <a name="behav"></a>
 ## 4. Behaviour
