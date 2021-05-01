@@ -385,9 +385,32 @@ For OpenAVT these types are purely semantical, they have no implications in how 
 
 #### KPIs
 
-In this section we are going to expose general terms of how to calculate the most common audio-video KPIs using the OpenAVT data model. But not the exact practice of KPI calculation, because this is something that depends on the platform where our data is recorded. Is totally different a query made for InfluxDB than a query for New Relic.
+The most common indicators for audio and video telemetry are the following.
+<!--
+TODO: explain how to calculate them using the OpenAVT data model.
 
-TODO: most common KPIs for audio and video ansd how to calculate them using the OpenAVT data model.
+In this section we are going to expose general terms of how to calculate the most common audio-video KPIs using the OpenAVT data model. But not the exact practice of KPI calculation, because this is something that depends on the platform where our data is recorded. Is totally different a query made for InfluxDB than a query for New Relic.
+-->
+
+**Start Time**
+
+Time elapsed since the stream starts loading until it starts playing.
+
+**Playbacks**
+
+Number of playbacks started during a certain period of time. Also the number of concurrent playbacks at a certain moment.
+
+**Aborted Before Video Start**
+
+The proportion (or number) of streams that started loading but never started playing.
+
+**Rebuffering**
+
+Total time spend in buffering blocks that are not the initial stream loading. And also the number of rebuffering blocks.
+
+**Errors**
+
+The proportion of playbacks that had en error. Also the proportion of initial errors (errors that happen after the media starts or right after it) and mid-stream errors.
 
 <!--
 ## 6. Advanced Topics
