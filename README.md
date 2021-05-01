@@ -293,6 +293,19 @@ The common workflow of events for most playbacks is as follows:
 
 An `ERROR` can happen at any time during the player lifecycle. An error usually implies the end of the playback, so use to be followed by an `END`.
 
+An ad block can happen at any time during the content playback. The workflow of ads is as follows:
+
+1. `AD_BREAK_BEGIN` when the block starts.
+2. `AD_BEGIN` when an ad starts.
+3. `AD_FIRST_QUARTILE`, `AD_SECOND_QUARTILE` and `AD_THIRD_QUARTILE` when the corresponding quartiles are reached.
+4. `AD_END` when the ad reaches the end.
+5. After it, if there are more ads in the block, the workflow start again on 2.
+6. When all ads are played, an `AD_BREAK_FINISH` is sent.
+
+An `AD_SKIP` when the user skips the ad can happen at any time.
+An `AD_CLICK` when the user taps the ad can happen at any time.
+An `AD_ERROR` can happen at any time and is usually followed by `AD_END`.
+
 #### Attributes
 
 TODO: list of attributes.
