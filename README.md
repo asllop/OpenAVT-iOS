@@ -365,7 +365,23 @@ Not all attributes are always present in all trackers. Some information may not 
 
 #### Metrics
 
-TODO: list of metrics.
+Metrics represent a numerical value that varies over time. OpenAVT supports two types of metrics: Gauge and Counter.
+
+**Counter** measures the number of occurrences.<br>
+**Gauge** represents a value that can increase or decrease.
+
+For OpenAVT these types are purely semantical, they have no implications in how the system behaves. But some backends support this types and it has implications in how metrics are stored and queried.
+
+| Metric | Type | Description |
+| ------ | :--: | ----------- |
+| `START_TIME` | Gauge | The time that takes a stream to start playing since it is requested until the first frame is shown. |
+| `NUM_PLAYS` | Counter | Number of plays. |
+| `REBUFFER_TIME` | Gauge | Time of rebuffering, that is the time buffering after the initial load. |
+| `NUM_REBUFFERS` | Counter | Number of rebuffering events. |
+| `PLAY_TIME` | Gauge | Time playing. |
+| `NUM_REQUESTS` | Counter | Number of stream requests. |
+| `NUM_LOADS` | Counter | Number of stream loads. |
+| `NUM_ENDS` | Counter | Number of stream ends. |
 
 #### KPIs
 
@@ -382,15 +398,21 @@ OpenAVT provides a set of trackers, hubs, metricalcs and backends, that cover a 
 
 TODO: explain how to create custom stuff.
 
-#### Trackers
+#### Custom Events
 
-#### Hubs
+#### Custom Attributes
 
-#### Metricalcs
+#### Custom Metrics
 
-#### Backends
+#### Custom Trackers
 
-#### Buffers
+#### Custom Hubs
+
+#### Custom Metricalcs
+
+#### Custom Backends
+
+#### Custom Buffers
 -->
 
 <a name="examp"></a>
