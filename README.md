@@ -92,7 +92,7 @@ let backend = OAVTBackendGraphite(host: "192.168.99.100")
 let backend = OAVTBackendInfluxdb(url: URL(string: "http://192.168.99.100:8086/write?db=test")!)
 ```
 
-`host` is the URL of the InfluxDB server used to write data to a particular database (in this case named `test`).
+`url` is the URL of the InfluxDB server used to write data to a particular database (in this case named `test`).
 
 #### Init the New Relic Backend
 
@@ -158,7 +158,7 @@ instrument.ready()
 Here we have created a new instrument that contains all the elements, and once all are present, we called `ready()` to initialize everything. Now the instrument is ready to start generating data.
 
 <a name="behav"></a>
-## 4. Behaviour
+## 4. Behavior
 
 #### The Instrument
 
@@ -217,15 +217,117 @@ The instrument chain describes the steps followed by an event from the moment it
 <a name="model"></a>
 ## 5. Data Model
 
-TODO: explain events, attributes and metrics. Also explain the event player event workflow and talk about most common video KPIs and how to calculate them using the data model. 
+The Data Model describes all the data an instrument could generate and the meaning of each piece of information.
 
 #### The telemetry dilemma: Events or Metrics?
 
+First let's define what are Events and Metrics in the context of OpenAVT. Both are time series data, but there are some differences:
+
+An **Event** is an heterogeneous structure of data. It contains a list of key-value pairs, where the key is always a string but the value could be of any type: integer, float, string or boolean. Two events of the same type (or how they are called in OpenAVT, same **Action**), may contain different combinations of key-value pairs (**Attributes**, as they are called in OpenAVT).
+
+A **Metric** on the other side is homogeneous, there is one single value per metric and it's always numeric (integer or float). Two metrics of the same type have always the same kind of data.
+
+Choosing between events and metrics depends on many factors: the kind of calculations we want to do, the amount of data we can store, how often we are going to update our KPIs, where we are going to store our data (the choosen backend), etc.
+
+In general events offer more flexibility to calculate important indicators. We have almost "raw" information, so if we want to make some KPI calculations today, but our needs changes over time, it's possible to update the queries on the recorded data without having to change the instrument code. The main disadvantage of events is that they consume lots of space, so our database will grow rapidly.
+
+Metrics are small and doesn't get too much space on a database. Queries over metrics are also much faster to process. But the information we store is very specific and, in general, with metrics we have to hardcode the KPIs we want to generate in the instrument side. If these needs change, we will face the problem of updating the instrument code. In OpenAVT this jobs is done in the **Metricalc**.
+
+Also, some backends can work better with (or only support) one kind of data. For example, Graphite only offers support for metrics (that's actually not true, it supports events, but they are so limited that doesn't fit the needs of OpenAVT Events).
+
 #### Events
+
+Events indicate that something happened in the tracker lifecycle and player workflow. Each event has a type, that in OpenAVT is called Action. The following is an exhaustive list of the available actions.
+
+| Action | Description |
+| ------ | ----------- |
+| `TRACKER_INIT` | A tracker has been initialized. |
+| `PLAYER_SET` | A player instance has been passed to the tracker. |
+| `PLAYER_READY` | The player instance is ready to start generating events. |
+| `MEDIA_REQUEST` | An audio/video stream has been requested, usually by the user (tapping an hypothetical play button or similar in the app). |
+| `PREPARE_ITEM` | The player is preparing an item to be loaded/played. Not all players support this action. |
+| `MANIFEST_LOAD` | The manifest is being loaed. Not all players support this action. |
+| `STREAM_LOAD` | An audio/video stream is being loaded. |
+| `START` | Stream has started, first frame shown. |
+| `BUFFER_BEGIN` | Player started buffering. |
+| `BUFFER_FINISH` | Player ended buffering. |
+| `SEEK_BEGIN` | Started seeking. |
+| `SEEK_FINISH` | Ended seeking. |
+| `PAUSE_BEGIN` | Stream paused. |
+| `PAUSE_FINISH` | Stream resumed. |
+| `FORWARD_BEGIN` | Fast forward begin. Not all players support this action. |
+| `FORWARD_FINISH` | Fast forward finish. Not all players support this action. |
+| `REWIND_BEGIN` | Fast rewind begin. Not all players support this action. |
+| `REWING_FINISH` | Fast rewind finish. Not all players support this action. |
+| `QUALITY_CHANGE_UP` | Stream quality (resolution) increased. |
+| `QUALITY_CHANGE_DOWN` | Stream quality (resolution) degraded. |
+| `STOP` | Playback has been stopped. |
+| `END` | Stream reached the end. |
+| `NEXT` | Next stream in a playlist is going to be loaded. Not all players support this action. |
+| `ERROR` | An error happened. |
+| `PING` | Sent every 30 seconds from `START` to `END`/`STOP`. |
+| `AD_BREAK_BEGIN` | An ad break (block) has started. An ad break may contain multiple ads. |
+| `AD_BREAK_FINISH` | Ad break finished. |
+| `AD_BEGIN` | Ad started, first framr shown. |
+| `AD_FINISH` | Ad ended. |
+| `AD_PAUSE_BEGIN` | Ad paused. |
+| `AD_PAUSE_FINISH` | Ad resumed. |
+| `AD_BUFFER_BEGIN` | Ad started buffering. |
+| `AD_BUFFER_FINISH` | Ad ended buffering. |
+| `AD_SKIP` | Ad skipped. |
+| `AD_CLICK` | User tapped on the ad. |
+| `AD_FIRST_QUARTILE` | Ad reched the first quartile. |
+| `AD_SECOND_QUARTILE` | Ad reched the second quartile. |
+| `AD_THIRD_QUARTILE` | Ad reched the third quartile. |
+| `AD_ERROR` | An error happened during ad playback. |
+
+The common workflow of events for most playbacks is as follows:
+
+1. `TRACKER_INIT` when the tracker is ready.
+2. `PLAYER_SET` when the player instance is passed to the tracker.
+3. `PLAYER_READY` when all listeners has been set and the player is ready to generate events.
+4. `STREAM_LOAD` when a stream starts loading.
+5. `START` when the stream ends loading and starts playing.
+6. After it, can happen any number of the following blocks: `BUFFER_BEGIN`/`BUFFER_FINISH`, `PAUSE_BEGIN`/`PAUSE_FINISH` or `SEEK_BEGIN`/`SEEK_FINISH`. Also can hapen quality changes (`QUALITY_CHANGE_UP`, `QUALITY_CHANGE_DOWN`).
+7. Finally a `STOP` or an `END` will happen when the stream is stopped by the user or it ends.
+
+An `ERROR` can happen at any time during the player lifecycle. An error usually implies the end of the playback, so use to be followed by an `END`.
 
 #### Attributes
 
+TODO: list of attributes.
+
+Note: Times are in milliseconds.
+
 #### Metrics
+
+TODO: list of metrics.
+
+#### KPIs
+
+In this section we are going to expose general terms of how to calculate the most common audio-video KPIs using the OpenAVT data model. But not the exact practice of KPI calculation, because this is something that depends on the platform where our data is recorded. Is totally different a query made for InfluxDB than a query for New Relic.
+
+TODO: most common KPIs for audio and video ansd how to calculate them using the OpenAVT data model.
+
+<!--
+## 6. Advanced Topics
+
+#### Custom Instrument Elements
+
+OpenAVT provides a set of trackers, hubs, metricalcs and backends, that cover a wide range os possibilities, but not all. For this reason the most inetresting capability it offers is its flexibility to accept custom implementations of these elements.
+
+TODO: explain how to create custom stuff.
+
+#### Trackers
+
+#### Hubs
+
+#### Metricalcs
+
+#### Backends
+
+#### Buffers
+-->
 
 <a name="examp"></a>
 ## 6. Examples
