@@ -152,6 +152,8 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
                 }
             }
         }
+        
+        self.instrument?.emit(action: OAVTAction.PLAYER_READY, tracker: self)
     }
     
     open func unregisterListeners() {
