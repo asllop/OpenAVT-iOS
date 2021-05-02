@@ -131,11 +131,11 @@ public extension OAVTMetric {
     /// Number of streams played metric name (counter).
     static func NUM_PLAYS(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "numPlays", type: MetricType.Counter, value: value) }
     /// Rebuffer time metric name (counter).
-    static func REBUFFER_TIME(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "rebufferTime", type: MetricType.Counter, value: value) }
+    static func REBUFFER_TIME(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "rebufferTime", type: MetricType.Gauge, value: value) }
     /// Number of rebufers metric name (counter).
     static func NUM_REBUFFERS(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "numRebuffers", type: MetricType.Counter, value: value) }
     /// Playtime since last event (counter).
-    static func PLAY_TIME(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "playTime", type: MetricType.Counter, value: value) }
+    static func PLAY_TIME(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "playTime", type: MetricType.Gauge, value: value) }
     /// Number of streams requested metric name (counter).
     static func NUM_REQUESTS(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "numRequests", type: MetricType.Counter, value: value) }
     /// Number of streams loaded metric name (counter).
