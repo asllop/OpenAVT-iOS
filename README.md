@@ -29,7 +29,7 @@ pod 'OpenAVT-Core', :git => 'https://github.com/asllop/OpenAVT-iOS'
 
 Besides the Core, the following modules are available:
 
-#### AVPlayer Tracker
+#### 2.1 AVPlayer Tracker
 
 Tracker for the AVPlayer video and audio player.
 
@@ -37,7 +37,7 @@ Tracker for the AVPlayer video and audio player.
 pod 'OpenAVT-AVPlayer', :git => 'https://github.com/asllop/OpenAVT-iOS'
 ```
 
-#### Google IMA Tracker
+#### 2.2 Google IMA Tracker
 
 Tracker for the Google IMA ads library.
 
@@ -45,7 +45,7 @@ Tracker for the Google IMA ads library.
 pod 'OpenAVT-IMA', :git => 'https://github.com/asllop/OpenAVT-iOS'
 ```
 
-#### Graphite Backend
+#### 2.3 Graphite Backend
 
 Backend for the Graphite metrics database.
 
@@ -53,7 +53,7 @@ Backend for the Graphite metrics database.
 pod 'OpenAVT-Graphite', :git => 'https://github.com/asllop/OpenAVT-iOS'
 ```
 
-#### InfluxDB Backend
+#### 2.4 InfluxDB Backend
 
 Backend for the InfluxDB metrics database.
 
@@ -61,7 +61,7 @@ Backend for the InfluxDB metrics database.
 pod 'OpenAVT-InfluxDB', :git => 'https://github.com/asllop/OpenAVT-iOS'
 ```
 
-#### New Relic Backend
+#### 2.5 New Relic Backend
 
 Backend for the New Relic data ingestion service.
 
@@ -74,11 +74,11 @@ pod 'OpenAVT-NewRelic', :git => 'https://github.com/asllop/OpenAVT-iOS'
 
 There are many ways to use the OpenAVT library, depending on the use case, here we will cover the most common combinations. We won't explain all the possible arguments passed to the constructors, only the essential ones. For the rest check out the [documentation](#doc).
 
-### Choosing a Backend
+### 3.1 Choosing a Backend
 
 The first step is chosing the backend where the data will be sent. We currenly support OOTB three different backends: Graphite, InfluxDB and New Relic. Let's see how to init them:
 
-#### Init the Graphite Backend
+#### 3.1.1 Init the Graphite Backend
 
 ```swift
 let backend = OAVTBackendGraphite(host: "192.168.99.100")
@@ -86,7 +86,7 @@ let backend = OAVTBackendGraphite(host: "192.168.99.100")
 
 `host` is the address of the Graphite server.
 
-#### Init the InfluxDB Backend
+#### 3.1.2 Init the InfluxDB Backend
 
 ```swift
 let backend = OAVTBackendInfluxdb(url: URL(string: "http://192.168.99.100:8086/write?db=test")!)
@@ -94,7 +94,7 @@ let backend = OAVTBackendInfluxdb(url: URL(string: "http://192.168.99.100:8086/w
 
 `url` is the URL of the InfluxDB server used to write data to a particular database (in this case named `test`).
 
-#### Init the New Relic Backend
+#### 3.1.3 Init the New Relic Backend
 
 ```swift
 let backend = OAVTBackendNewrelic()
@@ -102,7 +102,7 @@ let backend = OAVTBackendNewrelic()
 
 The New Relic Mobile Agent must be installed and setup to use this backend.
 
-### Choosing a Hub
+### 3.2 Choosing a Hub
 
 Next we will choose a Hub. This element is used to obtain the data comming from the trackers and process it to pass the proper events to the backend. Users can implement their own logic for this and use their own custom hubs, but OpenAVT provides a default implementation that works for most cases.
 
@@ -118,7 +118,7 @@ And for instruments with video and ads tracker:
 let hub = OAVTHubCoreAds()
 ```
 
-### Choosing a Metricalc
+### 3.3 Choosing a Metricalc
 
 This step is optional and only necessary if we want to generate metrics, if we only need events this section can be omitted. A Metricalc is something like a Hub but for metrics, it gets events and process them to generate metrics. Again, users can provide custom implementation, but the OpenAVT library provides a default one:
 
@@ -126,11 +126,11 @@ This step is optional and only necessary if we want to generate metrics, if we o
 let metricalc = OAVTMetricalcCore()
 ```
 
-### Choosing Trackers
+### 3.4 Choosing Trackers
 
 And finally, the trackers, the piece that actually generates the data. Currently OpenAVT provides two trackers: AVPlayer and Google IMA Ads. We won't cover how to setup the AVPlayer and IMA libraries, for this checkout the correspondig documentation or the [examples](#examp).
 
-#### Init the AVPlayer Tracker
+#### 3.4.1 Init the AVPlayer Tracker
 
 ```swift
 let tracker = OAVTTrackerAVPlayer(player: avplayer)
@@ -138,13 +138,13 @@ let tracker = OAVTTrackerAVPlayer(player: avplayer)
 
 Where `player` is an instance of the AVPlayer.
 
-#### Init the IMA Tracker
+#### 3.4.2 Init the IMA Tracker
 
 ```swift
 let adTracker = OAVTTrackerIMA()
 ```
 
-### Creating the Instrument
+### 3.5 Creating the Instrument
 
 Once we have all the elements, the only step left is putting everything together:
 
@@ -160,7 +160,7 @@ Here we have created a new instrument that contains all the elements, and once a
 <a name="behav"></a>
 ## 4. Behavior
 
-#### The Instrument
+#### 4.1 The Instrument
 
 In OpenAVT the central concept is the **Instrument**, implemented in the class `OAVTInstrument`. An instrument contains a chain of objects that captures, processes and transmits data from a multimedia player. Each of these three steps is represented by:
 
@@ -190,7 +190,7 @@ instrument.ready()
 
 The method `OAVTInstrument.ready()` must be called once all the components of the instrument chain are in place. This will cause the execution of the method `OAVTComponentProtocol.instrumentReady(...)` in all trackers, hub, metricalc and backend.
 
-#### The Data
+#### 4.2 The Data
 
 We talked about data being captured and passed along the instrument chain, but what is the nature of this data?
 
@@ -204,7 +204,7 @@ OpenAVT can also generate **Metrics**, using an specific step called metricalc (
 
 Both, `OAVTEvent` and `OAVTMetric`, are **Samples**, subclasses of `OAVTSample`. A sample essentially defines a datum captured at a certain moment, and its sole property is the timestamp.
 
-#### The Chain
+#### 4.3 The Chain
 
 The instrument chain describes the steps followed by an event from the moment it is created untill the end of its life.
 
@@ -219,7 +219,7 @@ The instrument chain describes the steps followed by an event from the moment it
 
 The Data Model describes all the data an instrument could generate and the meaning of each piece of information.
 
-#### The telemetry dilemma: Events or Metrics?
+#### 5.1 The telemetry dilemma: Events or Metrics?
 
 First let's define what are Events and Metrics in the context of OpenAVT. Both are time series data, but there are some differences:
 
@@ -235,7 +235,7 @@ Metrics are small and doesn't get too much space on a database. Queries over met
 
 Also, some backends can work better with (or only support) one kind of data. For example, Graphite only offers support for metrics (that's actually not true, it supports events, but they are so limited that doesn't fit the needs of OpenAVT Events).
 
-#### Events
+#### 5.2 Events
 
 Events indicate that something happened in the tracker lifecycle and player workflow. Each event has a type, that in OpenAVT is called Action. The following is an exhaustive list of the available actions. Not all actions are used in all contexts and some players doesn't support certain actions.
 
@@ -306,7 +306,7 @@ An `AD_SKIP` when the user skips the ad can happen at any time.
 An `AD_CLICK` when the user taps the ad can happen at any time.
 An `AD_ERROR` can happen at any time and is usually followed by `AD_FINISH` and also commonly by an `AD_BREAK_FINISH`.
 
-#### Attributes
+#### 5.3 Attributes
 
 As we already said, en event is composed out of an action and a list of attributes. Here we present the list of attributes generated by OpenAVT. Again, like in events, not all attributes are always present in all trackers. Some information may not be available in certain players.
 
@@ -363,7 +363,7 @@ Note: Times are in milliseconds.
 
 The is also a family of attributes called time-since attributes. They indicate the time elapsed since a certain event was sent. For example `timeSinceTrackerInit` is the time since `TRACKER_INIT` was sent. Every event has a time-since attribute associated.
 
-#### Metrics
+#### 5.4 Metrics
 
 Metrics represent a numerical value that varies over time. OpenAVT supports two types of metrics: Gauge and Counter.
 
@@ -383,66 +383,68 @@ For OpenAVT these types are purely semantical, they have no implications in how 
 | `NUM_LOADS` | Counter | Number of stream loads. |
 | `NUM_ENDS` | Counter | Number of stream ends. |
 
-#### KPIs
+#### 5.5 KPIs
 
 In this section we are going to expose general terms of how to calculate the most common audio-video KPIs using the OpenAVT data model. But not the exact practice of KPI calculation, because this is something that depends on the platform where our data is recorded. Is totally different a query made for InfluxDB than a query for New Relic.
 
-**Start Time**
+**5.5.1 Start Time**
 
 Time elapsed since the stream starts loading until it starts playing.
 
 Is the `timeSinceStreamLoad` (or `timeSinceMediaRequest`) value of the `START` event. This one is probably the most used KPI in audio & video telemetry.
 
-**Number of Playbacks**
+**5.5.2 Number of Playbacks**
 
 Number of playback started during a certain period of time.
 
 The simple count of `START` events.
 
-**Concurrent Playbacks**
+**5.5.3 Concurrent Playbacks**
 
 Number of concurrent playbacks at a certain moment.
 
 The count of `PING` events. To be accurated the time range selected must be of 30 seconds, because is the ping period. We could improve the granularity by sending pings more often, at the cost of increasing the traffic and database size.
 
-**Aborted Before Video Start**
+**5.5.4 Aborted Before Video Start**
 
 The proportion (or number) of streams that started loading but never started playing.
 
 Is the difference between the number of `STREAM_LOAD` and the number of `START` events.
 
-**Rebuffering Time**
+**5.5.5 Rebuffering Time**
 
 Total time spend in buffering blocks that are not the initial stream loading.
 
 Is the `ACCUM_BUFFER_TIME` attribute minus the start time.
 
-**Number of Rebufferings**
+**5.5.6 Number of Rebufferings**
 
 The number of rebuffering blocks.
 
 Number of `BUFFER_BEGIN` events minus one (the initial).
 
-**Number of Quality Changes**
+**5.5.7 Number of Quality Changes**
 
 The number of quality changes during the playback.
 
 It's a simple count of the number of `QUALITY_CHANGE_UP` and `QUALITY_CHANGE_DOWN` events. Normally the quality changes happen at the begining of a playback, when the player is adjusting the quality to the current connection conditions. But this changes use to happen in 1 to 3 steps. If there are a lot of quality changes during a playback and specially if they happen long after the begining, it usually denotes a unstable connection.
 
-**Ended Playbacks without errors**
+**5.5.8 Ended Playbacks without errors**
 
 The number or proportion of playbacks that ended normally, without errors.
 
 We use the value of `COUNT_ERROR` when `END` or `STOP` happens. For sessions without error this value must be 0.
 
-**Initial vs Mid-stream errors**
+**5.5.9 Initial vs Mid-stream errors**
 
 The proportion of initial errors (errors that happen before the `START` or short after it) and mid-stream errors.
 
 We can distinguish initial `ERROR` events because the value of `timeSinceStart` won't be present or will be very small. For mid-stream `ERROR` events this value will be present and bigger. A common threshold is 1 second.
 
 <!--
-## 6. Advanced Topics
+NOTE: Should we put all this in a separate .md file?
+
+## Advanced Topics
 
 #### Custom Instrument Elements
 
@@ -465,6 +467,10 @@ TODO: explain how to create custom stuff.
 #### Custom Backends
 
 #### Custom Buffers
+
+## Use Cases
+
+TODO: how to modify the OpenAVT compoonents, creating custom stuff or subclassing, to support certain use cases.
 -->
 
 <a name="examp"></a>
@@ -472,15 +478,15 @@ TODO: explain how to create custom stuff.
 
 Inside the `Examples` folder you will find multiple usage examples. To run them execute `pod install` from each example directory.
 
-#### ExampleAVPlayer
+#### 6.1 ExampleAVPlayer
 
 Shows how to use the AVPlayer tracker.
 
-#### ExampleAVPlayer+IMA
+#### 6.2 ExampleAVPlayer+IMA
 
 Shows how to use the AVPlayer tracker and the Google IMA ads tracker.
 
-#### ExamplePlayer-ObjC
+#### 6.3 ExamplePlayer-ObjC
 
 Simple example using AVPlayer tracker in Objective-C.
 
