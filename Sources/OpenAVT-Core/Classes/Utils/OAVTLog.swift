@@ -10,7 +10,7 @@ import Foundation
 
 /// OpenAVT logging.
 public class OAVTLog {
-    private static var logLevel = LogLevel.None
+    private static var logLevel = LogLevel.Warning
     
     /// Log levels.
     public enum LogLevel: Int {
@@ -28,7 +28,7 @@ public class OAVTLog {
     
     private static func log(_ msg: String, _ cutLevel: LogLevel) {
         if self.logLevel.rawValue <= cutLevel.rawValue {
-            Swift.print("OAVTLog(\(Date.init())): \(msg)")
+            Swift.print("\(Date.init()) OAVTLog\(msg)")
         }
     }
 
@@ -39,7 +39,7 @@ public class OAVTLog {
         - msg: Message.
     */
     public static func verbose(_ msg: String) {
-        self.log(msg, LogLevel.Verbose)
+        self.log("[VERBOSE] \(msg)", LogLevel.Verbose)
     }
     
     /**
