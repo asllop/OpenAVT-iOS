@@ -9,7 +9,7 @@
 import Foundation
 
 /// An OpenAVT metric.
-open class OAVTMetric : OAVTSample {
+public class OAVTMetric : OAVTSample {
     
     /// Metric types
     public enum MetricType: Int {

@@ -45,108 +45,8 @@ open class OAVTHubCore : OAVTHubProtocol {
             event.setAttribute(key: OAVTAttribute.DELTA_PLAY_TIME, value: Int((NSDate().timeIntervalSince1970 - timestampOfLastEventOnPlayback)*1000))
         }
         
-        if event.getAction() == OAVTAction.MEDIA_REQUEST {
-            if !tracker.getState().didMediaRequest {
-                tracker.getState().didMediaRequest = true
-            }
-            else {
-                return nil
-            }
-        }
-        else if event.getAction() == OAVTAction.PLAYER_SET {
-            if !tracker.getState().didPlayerSet {
-                tracker.getState().didPlayerSet = true
-            }
-            else {
-                return nil
-            }
-        }
-        else if event.getAction() == OAVTAction.STREAM_LOAD {
-            if !tracker.getState().didStreamLoad {
-                tracker.getState().didStreamLoad = true
-                streamId = UUID().uuidString
-            }
-            else {
-                return nil
-            }
-        }
-        else if event.getAction() == OAVTAction.START {
-            if !tracker.getState().didStart {
-                self.instrument?.startPing(trackerId: tracker.trackerId!, interval: 30.0)
-                tracker.getState().didStart = true
-                countStarts = countStarts + 1
-            }
-            else {
-                return nil
-            }
-        }
-        else if event.getAction() == OAVTAction.PAUSE_BEGIN {
-            if tracker.getState().didStart && !tracker.getState().isPaused {
-                tracker.getState().isPaused = true
-            }
-            else {
-                return nil
-            }
-        }
-        else if event.getAction() == OAVTAction.PAUSE_FINISH {
-            if tracker.getState().didStart && tracker.getState().isPaused {
-                tracker.getState().isPaused = false
-                let timeSincePauseBegin = event.getAttribute(key: OAVTAction.PAUSE_BEGIN.getTimeAttribute())
-                accumPauseTime = accumPauseTime + (timeSincePauseBegin as! Int)
-            }
-            else {
-                return nil
-            }
-        }
-        else if event.getAction() == OAVTAction.BUFFER_BEGIN {
-            if !tracker.getState().isBuffering {
-                tracker.getState().isBuffering = true
-                lastBufferBeginInPauseBlock = tracker.getState().isPaused
-                lastBufferBeginInSeekBlock = tracker.getState().isSeeking
-            }
-            else {
-                return nil
-            }
-        }
-        else if event.getAction() == OAVTAction.BUFFER_FINISH {
-            if tracker.getState().isBuffering {
-                tracker.getState().isBuffering = false
-                let timeSinceBufferBegin = event.getAttribute(key: OAVTAction.BUFFER_BEGIN.getTimeAttribute())
-                accumBufferTime = accumBufferTime + (timeSinceBufferBegin as! Int)
-            }
-            else {
-                return nil
-            }
-        }
-        else if event.getAction() == OAVTAction.SEEK_BEGIN {
-            if !tracker.getState().isSeeking {
-                tracker.getState().isSeeking = true
-            }
-            else {
-                return nil
-            }
-        }
-        else if event.getAction() == OAVTAction.SEEK_FINISH {
-            if tracker.getState().isSeeking {
-                tracker.getState().isSeeking = false
-                let timeSinceSeekBegin = event.getAttribute(key: OAVTAction.SEEK_BEGIN.getTimeAttribute())
-                accumSeekTime = accumSeekTime + (timeSinceSeekBegin as! Int)
-            }
-            else {
-                return nil
-            }
-        }
-        else if event.getAction() == OAVTAction.END || event.getAction() == OAVTAction.STOP || event.getAction() == OAVTAction.NEXT {
-            if tracker.getState().didStart && !tracker.getState().didFinish {
-                self.instrument?.stopPing(trackerId: tracker.trackerId!)
-                tracker.getState().didFinish = true
-            }
-            else {
-                return nil
-            }
-        }
-        else if event.getAction() == OAVTAction.ERROR {
-            countErrors = countErrors + 1
+        if !acceptOrRejectEvent(event: event, tracker: tracker) {
+            return nil
         }
         
         // Once we get here, the event has been accepted by the Hub
@@ -189,6 +89,126 @@ open class OAVTHubCore : OAVTHubProtocol {
     
     open func endOfService() {
         
+    }
+    
+    /**
+     Setup ping timer.
+     
+     - Parameters:
+        - tracker: Tracker instance.
+    */
+    open func startPing(tracker: OAVTTrackerProtocol) {
+        self.instrument?.startPing(trackerId: tracker.trackerId!, interval: 30.0)
+    }
+    
+    /**
+     Process event, accepting or rejecting, and mutate states if necessary.
+     
+     - Parameters:
+        - event: Event object.
+        - tracker: Tracker instance.
+     
+     - Returns: True if accept, false if reject.
+    */
+    open func acceptOrRejectEvent(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> Bool {
+        
+        switch event.getAction() {
+        case OAVTAction.MEDIA_REQUEST:
+            if !tracker.getState().didMediaRequest {
+                tracker.getState().didMediaRequest = true
+            }
+            else {
+                return false
+            }
+        case OAVTAction.PLAYER_SET:
+            if !tracker.getState().didPlayerSet {
+                tracker.getState().didPlayerSet = true
+            }
+            else {
+                return false
+            }
+        case OAVTAction.STREAM_LOAD:
+            if !tracker.getState().didStreamLoad {
+                tracker.getState().didStreamLoad = true
+                streamId = UUID().uuidString
+            }
+            else {
+                return false
+            }
+        case OAVTAction.START:
+            if !tracker.getState().didStart {
+                startPing(tracker: tracker)
+                tracker.getState().didStart = true
+                countStarts = countStarts + 1
+            }
+            else {
+                return false
+            }
+        case OAVTAction.PAUSE_BEGIN:
+            if tracker.getState().didStart && !tracker.getState().isPaused {
+                tracker.getState().isPaused = true
+            }
+            else {
+                return false
+            }
+        case OAVTAction.PAUSE_FINISH:
+            if tracker.getState().didStart && tracker.getState().isPaused {
+                tracker.getState().isPaused = false
+                let timeSincePauseBegin = event.getAttribute(key: OAVTAction.PAUSE_BEGIN.getTimeAttribute())
+                accumPauseTime = accumPauseTime + (timeSincePauseBegin as! Int)
+            }
+            else {
+                return false
+            }
+        case OAVTAction.BUFFER_BEGIN:
+            if !tracker.getState().isBuffering {
+                tracker.getState().isBuffering = true
+                lastBufferBeginInPauseBlock = tracker.getState().isPaused
+                lastBufferBeginInSeekBlock = tracker.getState().isSeeking
+            }
+            else {
+                return false
+            }
+        case OAVTAction.BUFFER_FINISH:
+            if tracker.getState().isBuffering {
+                tracker.getState().isBuffering = false
+                let timeSinceBufferBegin = event.getAttribute(key: OAVTAction.BUFFER_BEGIN.getTimeAttribute())
+                accumBufferTime = accumBufferTime + (timeSinceBufferBegin as! Int)
+            }
+            else {
+                return false
+            }
+        case OAVTAction.SEEK_BEGIN:
+            if !tracker.getState().isSeeking {
+                tracker.getState().isSeeking = true
+            }
+            else {
+                return false
+            }
+        case OAVTAction.SEEK_FINISH:
+            if tracker.getState().isSeeking {
+                tracker.getState().isSeeking = false
+                let timeSinceSeekBegin = event.getAttribute(key: OAVTAction.SEEK_BEGIN.getTimeAttribute())
+                accumSeekTime = accumSeekTime + (timeSinceSeekBegin as! Int)
+            }
+            else {
+                return false
+            }
+        case OAVTAction.END, OAVTAction.STOP, OAVTAction.NEXT:
+            if tracker.getState().didStart && !tracker.getState().didFinish {
+                self.instrument?.stopPing(trackerId: tracker.trackerId!)
+                tracker.getState().didFinish = true
+            }
+            else {
+                return false
+            }
+        case OAVTAction.ERROR:
+            countErrors = countErrors + 1
+        default:
+            return true
+        }
+        
+        return true
     }
 
     private func initPlaybackId(event: OAVTEvent) {
