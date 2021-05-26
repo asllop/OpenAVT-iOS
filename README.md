@@ -13,7 +13,7 @@
 <a name="intro"></a>
 ## 1. Introduction
 
-The Open Audio-Video Telemetry is a set of tools for performance monitoring in multimedia applications. The objectives are similar to those of the OpenTelemetry project, but specifically for sensing data from audio and video players. OpenAVT can be configured to generate Events, Metrics or a combination of both.
+The Open Audio-Video Telemetry is a set of tools for performance monitoring in multimedia applications. The objectives are similar to those of the OpenTelemetry project, but specifically for sensing data from audio and video players. OpenAVT can be configured to generate Events, Metrics, or a combination of both.
 
 <a name="install"></a>
 ## 2. Installation
@@ -73,7 +73,7 @@ There are many ways to use the OpenAVT library, depending on the use case, here 
 
 ### 3.1 Choosing a Backend
 
-The first step is chosing the backend where the data will be sent. We currenly support OOTB three different backends: Graphite, InfluxDB and New Relic. Let's see how to init them:
+The first step is choosing the backend where the data will be sent. We currently support OOTB three different backends: Graphite, InfluxDB, and New Relic. Let's see how to init them:
 
 #### 3.1.1 Init the Graphite Backend
 
@@ -97,13 +97,13 @@ let backend = OAVTBackendInfluxdb(url: URL(string: "http://192.168.99.100:8086/w
 let backend = OAVTBackendNewrelic()
 ```
 
-The New Relic Mobile Agent must be installed and setup to use this backend.
+The New Relic Mobile Agent must be installed and set up to use this backend.
 
 ### 3.2 Choosing a Hub
 
-Next we will choose a Hub. This element is used to obtain the data comming from the trackers and process it to pass the proper events to the backend. Users can implement their own logic for this and use their own custom hubs, but OpenAVT provides a default implementation that works for most cases.
+Next, we will choose a Hub. This element is used to obtain the data coming from the trackers and process it to pass the proper events to the backend. Users can implement their logic for this and use their custom hubs, but OpenAVT provides a default implementation that works for most cases.
 
-For instruments with video tracker only, we will chose:
+For instruments with video tracker only, we will choose:
 
 ```swift
 let hub = OAVTHubCore()
@@ -117,7 +117,7 @@ let hub = OAVTHubCoreAds()
 
 ### 3.3 Choosing a Metricalc
 
-This step is optional and only necessary if we want to generate metrics, if we only need events this section can be omitted. A Metricalc is something like a Hub but for metrics, it gets events and process them to generate metrics. Again, users can provide custom implementation, but the OpenAVT library provides a default one:
+This step is optional and only necessary if we want to generate metrics, if we only need events this section can be omitted. A Metricalc is something like a Hub but for metrics, it gets events and processes them to generate metrics. Again, users can provide custom implementation, but the OpenAVT library provides a default one:
 
 ```swift
 let metricalc = OAVTMetricalcCore()
@@ -125,7 +125,7 @@ let metricalc = OAVTMetricalcCore()
 
 ### 3.4 Choosing Trackers
 
-And finally, the trackers, the piece that actually generates the data. Currently OpenAVT provides two trackers: AVPlayer and Google IMA Ads. We won't cover how to setup the AVPlayer and IMA libraries, for this checkout the correspondig documentation or the [examples](#examp).
+And finally, the trackers, the piece that generates the data. Currently, OpenAVT provides two trackers: AVPlayer and Google IMA Ads. We won't cover how to set up the AVPlayer and IMA libraries, for this check out the corresponding documentation or the [examples](#examp).
 
 #### 3.4.1 Init the AVPlayer Tracker
 
@@ -161,7 +161,7 @@ NOTE: Should we put all this in a separate .md file?
 
 #### Custom Instrument Elements
 
-OpenAVT provides a set of trackers, hubs, metricalcs and backends, that cover a wide range os possibilities, but not all. For this reason the most inetresting capability it offers is its flexibility to accept custom implementations of these elements.
+OpenAVT provides a set of trackers, hubs, metricalcs, and backends, that cover a wide range of possibilities, but not all. For this reason, the most interesting capability it offers is its flexibility to accept custom implementations of these elements.
 
 TODO: explain how to create custom stuff.
 
@@ -189,7 +189,7 @@ TODO: how to modify the OpenAVT compoonents, creating custom stuff or subclassin
 <a name="examp"></a>
 ## 4. Examples
 
-Inside the `Examples` folder you will find multiple usage examples. To run them execute `pod install` from each example directory.
+Inside the `Examples` folder, you will find multiple usage examples. To run them execute `pod install` from each example directory.
 
 #### 4.1 ExampleAVPlayer
 
@@ -206,7 +206,7 @@ Simple example using AVPlayer tracker in Objective-C.
 <a name="doc"></a>
 ## 5. Documentation
 
-**Checkout the [Documentation Repository](https://github.com/asllop/OpenAVT-Docs) for general and platform independent documentation.**
+**Check out the [Documentation Repository](https://github.com/asllop/OpenAVT-Docs) for general and platform-independent documentation.**
 
 All classes and methods are documented with annotations. To generate the docs in HTML or Markdown you can use [swift-doc](https://github.com/SwiftDocOrg/swift-doc), like this:
 
