@@ -5,11 +5,10 @@
 1. [ Introduction ](#intro)
 2. [ Installation ](#install)
 3. [ Usage ](#usage)
-4. [ Behaviour ](#behav)
-5. [ Examples ](#examp)
-6. [ Documentation ](#doc)
-7. [ Author ](#auth)
-8. [ License ](#lice)
+4. [ Examples ](#examp)
+5. [ Documentation ](#doc)
+6. [ Author ](#auth)
+7. [ License ](#lice)
 
 <a name="intro"></a>
 ## 1. Introduction
@@ -153,64 +152,7 @@ let adTrackerId = instrument.addTracker(adTracker)
 instrument.ready()
 ```
 
-Here we have created a new instrument that contains all the elements, and once all are present, we called `ready()` to initialize everything. Now the instrument is ready to start generating data.
-
-<a name="behav"></a>
-## 4. Behavior
-
-#### 4.1 The Instrument
-
-In OpenAVT the central concept is the **Instrument**, implemented in the class `OAVTInstrument`. An instrument contains a chain of objects that captures, processes and transmits data from a multimedia player. Each of these three steps is represented by:
-
-- **Trackers**: classes conforming to `OAVTTrackerProtocol`, used to capture data from a specific player. A tracker also keeps its state in an instance of `OAVTState` (but shouldn't modify it, this is a job for the Hub).
-
-- **Hub**: class conforming to `OAVTHubProtocol`, it contains the business logic. Is used to process the data captured by a tracker, update states and tranform events if necessary.
-
-- **Metricalc**: class conforming to `OAVTMetricalcProtocol`, used to calculate metrics. This step is optional.
-
-- **Backend**: class conforming to `OAVTBackendProtocol`, used to transmit data to a data service, database, business intelligence system, storage media or similar.
-
-These objects represents a chain because the data goes from one step to the next in a straight line. The data captured by a tracker is sent to the hub, then it goes to the metric calculator and finally to the backend.
-
-One instrument can contain multiple trackers, but only one hub, one metricalc and one backend.
-
-![Alt text](./oavtinstrument_diag.svg)
-
-An instrument like the one in the figure would be defined like this:
-
-```swift
-let instrument = OAVTInstrument(hub: AnyHub(), metricalc: AnyMetricalc(), backend: AnyBackend())
-let tracker1Id = instrument.addTracker(AnyTracker1())
-let tracker2Id = instrument.addTracker(AnyTracker2())
-let trackerNId = instrument.addTracker(AnyTrackerN())
-instrument.ready()
-```
-
-The method `OAVTInstrument.ready()` must be called once all the components of the instrument chain are in place. This will cause the execution of the method `OAVTComponentProtocol.instrumentReady(...)` in all trackers, hub, metricalc and backend.
-
-#### 4.2 The Data
-
-We talked about data being captured and passed along the instrument chain, but what is the nature of this data?
-
-In OpenAVT the main data unit is the **Event**, implemented in the class `OAVTEvent`. An event contains an **Action** (class `OAVTAction`) and a list of **Attributes** (class `OAVTAttribute`).
-
-The action tells us what is the event about, for example when a video starts, an event with the action `OAVTAction.START` is sent.
-
-The attributes offers context for the actions. For example, the attribute `OAVTAttribute.DURATION` informs the stream duration in milliseconds.
-
-OpenAVT can also generate **Metrics**, using an specific step called metricalc (Metric Calculator). A metric is represented by an instance of the class `OAVTMetric`, and is defined by three propeties: name (`String`), value (`Double` or `Int`) and type (`OAVTMetric.MetricType`). An example of metric is `OAVTMetric.START_TIME`, that informs the time elapsed between a video is requested and it actually starts playing.
-
-Both, `OAVTEvent` and `OAVTMetric`, are **Samples**, subclasses of `OAVTSample`. A sample essentially defines a datum captured at a certain moment, and its sole property is the timestamp.
-
-#### 4.3 The Chain
-
-The instrument chain describes the steps followed by an event from the moment it is created untill the end of its life.
-
-1. The journey of an event starts with a call to `OAVTInstrument.emit(...)`, that can be called from anywhere, but it's usually called from within a tracker. This function takes an action and a tracker, and generates en event. Initially the event only contains few attributes: the sender ID (that identifies a tracker within an instrument), the timer attributes of previous events and the custom attributes of the instrument created with `OAVTInstrument.addAttribute(...)`.
-2. Once the event is created it is sent to the tracker, calling the method `OAVTTrackerProtocol.initEvent(...)`. This method receives an event and returns it, in between it can be tranformed by adding/changing attributes (calling `OAVTEvent.setAttribute(...)`), or even it can stop the chain by returning a nil.
-3. The event passed by the tracker is sent to the hub, calling `OAVTHubProtocol.processEvent(...)`. This method works like the previous, it takes an event and returns it and in between it can be tranformed, blocked, etc.
-4. If a metricalc is defined, the event is passed to it by calling `OAVTMetricalcProtocol.processMetric(...)`. This method returns an array of metrics (instances of `OAVTMetric`). The array can be empty if no metrics are generated.
-5. Finally the event and the metrics are passed to the backend by calling `OAVTBackendProtocol.sendEvent(...)` and `OAVTBackendProtocol.sendMetric(...)`. These methods return nothing, and the chain ends here.
+Here we have created a new instrument that contains all the elements, and once all are present, we called `ready()` to initialize everything, This will cause the execution of the method `OAVTComponentProtocol.instrumentReady(...)` in all trackers, hub, metricalc and backend. Now the instrument is ready to start generating data.
 
 <!--
 NOTE: Should we put all this in a separate .md file?
@@ -245,24 +187,24 @@ TODO: how to modify the OpenAVT compoonents, creating custom stuff or subclassin
 -->
 
 <a name="examp"></a>
-## 5. Examples
+## 4. Examples
 
 Inside the `Examples` folder you will find multiple usage examples. To run them execute `pod install` from each example directory.
 
-#### 5.1 ExampleAVPlayer
+#### 4.1 ExampleAVPlayer
 
 Shows how to use the AVPlayer tracker.
 
-#### 5.2 ExampleAVPlayer+IMA
+#### 4.2 ExampleAVPlayer+IMA
 
 Shows how to use the AVPlayer tracker and the Google IMA ads tracker.
 
-#### 5.3 ExamplePlayer-ObjC
+#### 4.3 ExamplePlayer-ObjC
 
 Simple example using AVPlayer tracker in Objective-C.
 
 <a name="doc"></a>
-## 6. Documentation
+## 5. Documentation
 
 **Checkout the [Documentation Repository](https://github.com/asllop/OpenAVT-Docs) for platform independent documentation.**
 
@@ -277,12 +219,12 @@ $ python -m SimpleHTTPServer 8000
 And then open [http://localhost:8000](http://localhost:8000) with your preferred browser.
 
 <a name="auth"></a>
-## 7. Author
+## 6. Author
 
 Andreu Santarén Llop (asllop)<br>
 andreu.santaren at gmail .com
 
 <a name="lice"></a>
-## 8. License
+## 7. License
 
 OpenAVT-iOS is available under the MIT license. See the LICENSE file for more info.
