@@ -206,7 +206,7 @@ Simple example using AVPlayer tracker in Objective-C.
 <a name="doc"></a>
 ## 5. Documentation
 
-**Checkout the [Documentation Repository](https://github.com/asllop/OpenAVT-Docs) for platform independent documentation.**
+**Checkout the [Documentation Repository](https://github.com/asllop/OpenAVT-Docs) for general and platform independent documentation.**
 
 All classes and methods are documented with annotations. To generate the docs in HTML or Markdown you can use [swift-doc](https://github.com/SwiftDocOrg/swift-doc), like this:
 
