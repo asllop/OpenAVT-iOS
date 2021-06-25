@@ -40,11 +40,15 @@ open class OAVTBackendInfluxdb : OAVTBackendProtocol {
         setupTimer(time: time)
     }
     
-    public func sendEvent(event: OAVTEvent) {}
+    public func sendEvent(event: OAVTEvent) {
+        if buffer.put(sample: event) {
+            OAVTLog.verbose("---> OAVTBackendInfluxdb SEND EVENT = \(event.description)")
+        }
+    }
     
     public func sendMetric(metric: OAVTMetric) {
         if buffer.put(sample: metric) {
-            OAVTLog.verbose("---> SEND METRIC = \(metric.description)")
+            OAVTLog.verbose("---> OAVTBackendInfluxdb SEND METRIC = \(metric.description)")
         }
     }
     
@@ -66,15 +70,16 @@ open class OAVTBackendInfluxdb : OAVTBackendProtocol {
             if let metric = sample as? OAVTMetric {
                 metrics.append(buildMetric(metric) + "\n")
             }
+            else if let event = sample as? OAVTEvent {
+                metrics.append(buildEventMetric(event) + "\n")
+            }
         }
         return metrics
     }
     
     func putBackMetrics(samples: [OAVTSample]) {
         for sample in samples {
-            if let metric = sample as? OAVTMetric {
-                buffer.put(sample: metric)
-            }
+            buffer.put(sample: sample)
         }
     }
     
@@ -89,21 +94,58 @@ open class OAVTBackendInfluxdb : OAVTBackendProtocol {
      - Returns: Metric.
      */
     open func buildMetric(_ metric: OAVTMetric) -> String {
-        return "\(buildMetricName(metric)) \(metric.getName())=\(metric.getValue()) \(Int64(metric.getTimestamp() * 1000000000.0))"
+        return "\(getInfluxDBPath(metric)) \(metric.getName())=\(metric.getValue()) \(Int64(metric.getTimestamp() * 1000000000.0))"
     }
     
     /**
-     Build a metric name.
+     Build an event metric.
+     
+     Overwrite this method in a subclass to provide a custom metric format.
+     
+     - Parameters:
+        - metric: An OAVTEvent instance.
+     
+     - Returns: Metric.
+     */
+    open func buildEventMetric(_ event: OAVTEvent) -> String {
+        // Header
+        var line = "\(getInfluxDBPath(event)) action=\"\(event.getAction().getActionName())\","
+        // Body
+        for (key, val) in event.getDictionary() {
+            if let _ = val as? String {
+                line += "\(key)=\"\(val)\","
+            }
+            else {
+                //TODO: check if default float representation is OK for InfluxDB
+                line += "\(key)=\(val),"
+            }
+        }
+        line = String(line.dropLast())
+        // Tail
+        line += " \(Int64(event.getTimestamp() * 1000000000.0))"
+        return line
+    }
+    
+    /**
+     Generates the InfluxDB metric path.
      
      Overwrite this method in a subclass to provide a custom metric path.
      
      - Parameters:
-        - metric: An OAVTMetric instance.
+        - metric: An OAVTSample instance.
      
      - Returns: Metric path.
      */
-    open func buildMetricName(_ metric: OAVTMetric) -> String {
-        return "OAVT"
+    open func getInfluxDBPath(_ sample: OAVTSample) -> String {
+        if let _ = sample as? OAVTMetric {
+            return "OAVT_METRICS"
+        }
+        else if let _ = sample as? OAVTEvent {
+            return "OAVT_EVENTS"
+        }
+        else {
+            return "OAVT"
+        }
     }
     
     func setupTimer(time: TimeInterval) {
