@@ -13,37 +13,23 @@ import NewRelic
 /// OAVT backend for NewRelic
 open class OAVTBackendNewrelic : OAVTBackendProtocol {
     
-    private let useEvents : Bool
-    private let useMetrics : Bool
-    
     /**
      Init a new OAVTBackendNewrelic.
      
-     - Parameters:
-        - useEvents: Send events to New Relic.
-        - useMetrics: Send metrics to New Relic.
-     
      - Returns: A new OAVTBackendNewrelic instance.
      */
-    public init(useEvents: Bool = true, useMetrics: Bool = true) {
-        self.useEvents = useEvents
-        self.useMetrics = useMetrics
-    }
+    public init() {}
     
     public func sendEvent(event: OAVTEvent) {
-        if useEvents {
-            var attr = event.getDictionary()
-            attr["actionName"] = buildActionName(event: event)
-            if !NewRelic.recordCustomEvent(buildEventType(event: event), attributes: attr) {
-                OAVTLog.error("OAVTBackendNewrelic: Could not record custom event.")
-            }
+        var attr = event.getDictionary()
+        attr["actionName"] = buildActionName(event: event)
+        if !NewRelic.recordCustomEvent(buildEventType(event: event), attributes: attr) {
+            OAVTLog.error("OAVTBackendNewrelic: Could not record custom event.")
         }
     }
     
     public func sendMetric(metric: OAVTMetric) {
-        if useMetrics {
-            NewRelic.recordMetric(withName: buildMetricName(metric: metric), category: buildMetricCategory(metric: metric), value: metric.getNSNumberValue())
-        }
+        NewRelic.recordMetric(withName: buildMetricName(metric: metric), category: buildMetricCategory(metric: metric), value: metric.getNSNumberValue())
     }
     
     public func instrumentReady(instrument: OAVTInstrument) {}
