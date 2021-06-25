@@ -127,19 +127,19 @@ public class OAVTMetric : OAVTSample {
 
 public extension OAVTMetric {
     /// Start time metric name (gauge).
-    static func START_TIME(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "startTime", type: MetricType.Gauge, value: value) }
+    static func StartTime(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "StartTime", type: MetricType.Gauge, value: value) }
     /// Number of streams played metric name (counter).
-    static func NUM_PLAYS(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "numPlays", type: MetricType.Counter, value: value) }
+    static func NumPlays(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "NumPlays", type: MetricType.Counter, value: value) }
     /// Rebuffer time metric name (counter).
-    static func REBUFFER_TIME(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "rebufferTime", type: MetricType.Gauge, value: value) }
+    static func RebufferTime(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "RebufferTime", type: MetricType.Gauge, value: value) }
     /// Number of rebufers metric name (counter).
-    static func NUM_REBUFFERS(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "numRebuffers", type: MetricType.Counter, value: value) }
+    static func NumRebuffers(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "NumRebuffers", type: MetricType.Counter, value: value) }
     /// Playtime since last event (counter).
-    static func PLAY_TIME(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "playTime", type: MetricType.Gauge, value: value) }
+    static func PlayTime(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "PlayTime", type: MetricType.Gauge, value: value) }
     /// Number of streams requested metric name (counter).
-    static func NUM_REQUESTS(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "numRequests", type: MetricType.Counter, value: value) }
+    static func NumRequests(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "NumRequests", type: MetricType.Counter, value: value) }
     /// Number of streams loaded metric name (counter).
-    static func NUM_LOADS(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "numLoads", type: MetricType.Counter, value: value) }
+    static func NumLoads(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "NumLoads", type: MetricType.Counter, value: value) }
     /// Number of streams ended metric name (counter).
-    static func NUM_ENDS(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "numEnds", type: MetricType.Counter, value: value) }
+    static func NumEnds(_ value: Int) -> OAVTMetric { return OAVTMetric(name: "NumEnds", type: MetricType.Counter, value: value) }
 }

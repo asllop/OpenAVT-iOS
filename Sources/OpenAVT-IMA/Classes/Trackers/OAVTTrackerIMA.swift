@@ -29,29 +29,29 @@ open class OAVTTrackerIMA : OAVTTrackerProtocol {
     
     open func initEvent(event: OAVTEvent) -> OAVTEvent? {
         // Set event specific attributes
-        if event.getAction() == OAVTAction.AD_ERROR {
+        if event.getAction() == OAVTAction.AdError {
             if let error = self.errorMessage {
-                event.setAttribute(key: OAVTAttribute.ERROR_DESCRIPTION, value: error)
+                event.setAttribute(key: OAVTAttribute.errorDescription, value: error)
             }
             self.errorMessage = nil
         }
         
-        self.instrument?.useGetter(attribute: OAVTAttribute.TRACKER_TARGET, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.AD_POSITION, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.AD_DURATION, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.AD_BUFFERED_TIME, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.AD_VOLUME, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.AD_ROLL, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.AD_DESCRIPTION, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.AD_ID, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.AD_TITLE, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.AD_ADVERTISER_NAME, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.AD_CREATIVE_ID, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.AD_BITRATE, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.AD_RESOLUTION_WIDTH, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.AD_RESOLUTION_HEIGHT, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.AD_SYSTEM, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.IS_ADS_TRACKER, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.trackerTarget, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.adPosition, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.adDuration, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.adBufferedTime, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.adVolume, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.adRoll, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.adDescription, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.adId, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.adTitle, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.adAdvertiserName, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.adCreativeId, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.adBitrate, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.adResolutionWidth, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.adResolutionHeight, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.adSystem, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.isAdsTracker, event: event, tracker: self)
         
         return event
     }
@@ -64,7 +64,7 @@ open class OAVTTrackerIMA : OAVTTrackerProtocol {
         if self.instrument == nil {
             self.instrument = instrument
             registerGetters()
-            self.instrument?.emit(action: OAVTAction.TRACKER_INIT, tracker: self)
+            self.instrument?.emit(action: OAVTAction.TrackerInit, tracker: self)
         }
     }
     
@@ -72,30 +72,30 @@ open class OAVTTrackerIMA : OAVTTrackerProtocol {
     }
     
     open func registerGetters() {
-        self.instrument?.registerGetter(attribute: OAVTAttribute.TRACKER_TARGET, getter: self.getTrackerTarget, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.AD_POSITION, getter: self.getAdPosition, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.AD_DURATION, getter: self.getAdDuration, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.AD_BUFFERED_TIME, getter: self.getAdBufferedTime, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.AD_VOLUME, getter: self.getAdVolume, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.AD_ROLL, getter: self.getAdRoll, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.AD_DESCRIPTION, getter: self.getAdDescription, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.AD_ID, getter: self.getAdId, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.AD_TITLE, getter: self.getAdTitle, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.AD_ADVERTISER_NAME, getter: self.getAdAdvertiserName, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.AD_CREATIVE_ID, getter: self.getAdCreativeID, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.AD_BITRATE, getter: self.getAdBitrate, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.AD_RESOLUTION_WIDTH, getter: self.getAdWidth, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.AD_RESOLUTION_HEIGHT, getter: self.getAdHeight, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.AD_SYSTEM, getter: self.getAdSystem, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.IS_ADS_TRACKER, getter: self.getIsAdsTracker, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.trackerTarget, getter: self.getTrackerTarget, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.adPosition, getter: self.getAdPosition, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.adDuration, getter: self.getAdDuration, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.adBufferedTime, getter: self.getAdBufferedTime, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.adVolume, getter: self.getAdVolume, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.adRoll, getter: self.getAdRoll, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.adDescription, getter: self.getAdDescription, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.adId, getter: self.getAdId, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.adTitle, getter: self.getAdTitle, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.adAdvertiserName, getter: self.getAdAdvertiserName, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.adCreativeId, getter: self.getAdCreativeID, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.adBitrate, getter: self.getAdBitrate, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.adResolutionWidth, getter: self.getAdWidth, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.adResolutionHeight, getter: self.getAdHeight, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.adSystem, getter: self.getAdSystem, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.isAdsTracker, getter: self.getIsAdsTracker, tracker: self)
     }
     
     open func adBreakBegin() {
-        self.instrument?.emit(action: OAVTAction.AD_BREAK_BEGIN, tracker: self)
+        self.instrument?.emit(action: OAVTAction.AdBreakBegin, tracker: self)
     }
     
     open func adBreakFinish() {
-        self.instrument?.emit(action: OAVTAction.AD_BREAK_FINISH, tracker: self)
+        self.instrument?.emit(action: OAVTAction.AdBreakFinish, tracker: self)
     }
 
     open func adEvent(event: IMAAdEvent, adsManager: IMAAdsManager? = nil) {
@@ -103,23 +103,23 @@ open class OAVTTrackerIMA : OAVTTrackerProtocol {
         self.adsManager = adsManager
         switch event.typeString {
         case "Started":
-            self.instrument?.emit(action: OAVTAction.AD_BEGIN, tracker: self)
+            self.instrument?.emit(action: OAVTAction.AdBegin, tracker: self)
         case "Complete":
-            self.instrument?.emit(action: OAVTAction.AD_FINISH, tracker: self)
+            self.instrument?.emit(action: OAVTAction.AdFinish, tracker: self)
         case "First Quartile":
-            self.instrument?.emit(action: OAVTAction.AD_FIRST_QUARTILE, tracker: self)
+            self.instrument?.emit(action: OAVTAction.AdFirstQuartile, tracker: self)
         case "Midpoint":
-            self.instrument?.emit(action: OAVTAction.AD_SECOND_QUARTILE, tracker: self)
+            self.instrument?.emit(action: OAVTAction.AdSecondQuartile, tracker: self)
         case "Third Quartile":
-            self.instrument?.emit(action: OAVTAction.AD_THIRD_QUARTILE, tracker: self)
+            self.instrument?.emit(action: OAVTAction.AdThirdQuartile, tracker: self)
         case "Tapped", "Clicked":
-            self.instrument?.emit(action: OAVTAction.AD_CLICK, tracker: self)
+            self.instrument?.emit(action: OAVTAction.AdClick, tracker: self)
         case "Skipped":
-            self.instrument?.emit(action: OAVTAction.AD_SKIP, tracker: self)
+            self.instrument?.emit(action: OAVTAction.AdSkip, tracker: self)
         case "Pause":
-            self.instrument?.emit(action: OAVTAction.AD_PAUSE_BEGIN, tracker: self)
+            self.instrument?.emit(action: OAVTAction.AdPauseBegin, tracker: self)
         case "Resume":
-            self.instrument?.emit(action: OAVTAction.AD_PAUSE_FINISH, tracker: self)
+            self.instrument?.emit(action: OAVTAction.AdPauseFinish, tracker: self)
         default:
             OAVTLog.verbose("Not handled event")
         }
@@ -129,7 +129,7 @@ open class OAVTTrackerIMA : OAVTTrackerProtocol {
     
     open func adError(message: String) {
         self.errorMessage = message
-        self.instrument?.emit(action: OAVTAction.AD_ERROR, tracker: self)
+        self.instrument?.emit(action: OAVTAction.AdError, tracker: self)
     }
     
     // MARK: - Attribute Getters

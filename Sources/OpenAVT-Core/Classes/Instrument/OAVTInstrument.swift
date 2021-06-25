@@ -259,7 +259,7 @@ public class OAVTInstrument {
     
     @objc private func pingTimerMethod(timer: Timer) {
         if let trackerId: Int = timer.userInfo as? Int {
-            emit(action: OAVTAction.PING, trackerId: trackerId)
+            emit(action: OAVTAction.Ping, trackerId: trackerId)
         }
     }
     
@@ -392,7 +392,7 @@ public class OAVTInstrument {
     
     private func generateSenderId(tracker: OAVTTrackerProtocol, event: OAVTEvent) {
         if let tId = tracker.trackerId {
-            event.setAttribute(key: OAVTAttribute.SENDER_ID, value: "\(self.instrumentId)-\(tId)")
+            event.setAttribute(key: OAVTAttribute.senderId, value: "\(self.instrumentId)-\(tId)")
         }
     }
     

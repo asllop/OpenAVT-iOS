@@ -15,10 +15,10 @@ open class OAVTHubCoreAds : OAVTHubCore {
     private weak var instrument: OAVTInstrument?
     
     open override func processEvent(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> OAVTEvent? {
-        if event.getAction() == OAVTAction.AD_BREAK_BEGIN {
+        if event.getAction() == OAVTAction.AdBreakBegin {
             setInAdBreakState(state: true)
         }
-        else if event.getAction() == OAVTAction.AD_BREAK_FINISH {
+        else if event.getAction() == OAVTAction.AdBreakFinish {
             if tracker.getState().inAdBreak {
                 setInAdBreakState(state: false)
             }
@@ -26,12 +26,12 @@ open class OAVTHubCoreAds : OAVTHubCore {
                 return nil
             }
         }
-        else if event.getAction() == OAVTAction.AD_BEGIN {
+        else if event.getAction() == OAVTAction.AdBegin {
             self.instrument?.startPing(trackerId: tracker.trackerId!, interval: 30.0)
             setInAdState(state: true)
             countAds = countAds + 1
         }
-        else if event.getAction() == OAVTAction.AD_FINISH {
+        else if event.getAction() == OAVTAction.AdFinish {
             self.instrument?.stopPing(trackerId: tracker.trackerId!)
             if tracker.getState().inAd {
                 setInAdState(state: false)
@@ -40,13 +40,13 @@ open class OAVTHubCoreAds : OAVTHubCore {
                 return nil
             }
         }
-        else if event.getAction() == OAVTAction.END {
+        else if event.getAction() == OAVTAction.End {
             // To avoid content end when an ad break happens
             if tracker.getState().inAdBreak {
                 return nil
             }
         }
-        else if event.getAction() == OAVTAction.AD_PAUSE_BEGIN {
+        else if event.getAction() == OAVTAction.AdPauseBegin {
             if !tracker.getState().isPaused {
                 tracker.getState().isPaused = true
             }
@@ -54,7 +54,7 @@ open class OAVTHubCoreAds : OAVTHubCore {
                 return nil
             }
         }
-        else if event.getAction() == OAVTAction.AD_PAUSE_FINISH {
+        else if event.getAction() == OAVTAction.AdPauseFinish {
             if tracker.getState().isPaused {
                 tracker.getState().isPaused = false
             }
@@ -63,16 +63,16 @@ open class OAVTHubCoreAds : OAVTHubCore {
             }
         }
         
-        event.setAttribute(key: OAVTAttribute.IN_AD_BREAK_BLOCK, value: tracker.getState().inAdBreak)
-        event.setAttribute(key: OAVTAttribute.IN_AD_BLOCK, value: tracker.getState().inAd)
-        event.setAttribute(key: OAVTAttribute.COUNT_ADS, value: countAds)
+        event.setAttribute(key: OAVTAttribute.inAdBreakBlock, value: tracker.getState().inAdBreak)
+        event.setAttribute(key: OAVTAttribute.inAdBlock, value: tracker.getState().inAd)
+        event.setAttribute(key: OAVTAttribute.countAds, value: countAds)
         
         // Get current content video position
         if let trackers = self.instrument?.getTrackers() {
             for (_, tracker) in trackers {
-                if let isAdsTracker = self.instrument?.callGetter(attribute: OAVTAttribute.IS_ADS_TRACKER, tracker: tracker) as? Bool {
+                if let isAdsTracker = self.instrument?.callGetter(attribute: OAVTAttribute.isAdsTracker, tracker: tracker) as? Bool {
                     if !isAdsTracker {
-                        instrument?.useGetter(attribute: OAVTAttribute.POSITION, event: event, tracker: tracker)
+                        instrument?.useGetter(attribute: OAVTAttribute.position, event: event, tracker: tracker)
                     }
                 }
             }

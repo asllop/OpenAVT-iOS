@@ -42,7 +42,7 @@ open class OAVTHubCore : OAVTHubProtocol {
         initPlaybackId(event: event)
         
         if tracker.getState().didStart && !tracker.getState().isPaused && !tracker.getState().isSeeking && !tracker.getState().isBuffering {
-            event.setAttribute(key: OAVTAttribute.DELTA_PLAY_TIME, value: Int((NSDate().timeIntervalSince1970 - timestampOfLastEventOnPlayback)*1000))
+            event.setAttribute(key: OAVTAttribute.deltaPlayTime, value: Int((NSDate().timeIntervalSince1970 - timestampOfLastEventOnPlayback)*1000))
         }
         
         if !acceptOrRejectEvent(event: event, tracker: tracker) {
@@ -53,29 +53,29 @@ open class OAVTHubCore : OAVTHubProtocol {
         
         timestampOfLastEventOnPlayback = NSDate().timeIntervalSince1970
         
-        event.setAttribute(key: OAVTAttribute.COUNT_ERRORS, value: countErrors)
-        event.setAttribute(key: OAVTAttribute.COUNT_STARTS, value: countStarts)
-        event.setAttribute(key: OAVTAttribute.ACCUM_PAUSE_TIME, value: accumPauseTime)
-        event.setAttribute(key: OAVTAttribute.ACCUM_BUFFER_TIME, value: accumBufferTime)
-        event.setAttribute(key: OAVTAttribute.ACCUM_SEEK_TIME, value: accumSeekTime)
-        // In case the BUFFER_BEGIN happens inside a block, we want the BUFFER_FINISH be flagged as belonging to the same block, even if it happened outside of it
-        if event.getAction() == OAVTAction.BUFFER_FINISH {
-            event.setAttribute(key: OAVTAttribute.IN_PAUSE_BLOCK, value: lastBufferBeginInPauseBlock)
-            event.setAttribute(key: OAVTAttribute.IN_SEEK_BLOCK, value: lastBufferBeginInSeekBlock)
+        event.setAttribute(key: OAVTAttribute.countErrors, value: countErrors)
+        event.setAttribute(key: OAVTAttribute.countStarts, value: countStarts)
+        event.setAttribute(key: OAVTAttribute.accumPauseTime, value: accumPauseTime)
+        event.setAttribute(key: OAVTAttribute.accumBufferTime, value: accumBufferTime)
+        event.setAttribute(key: OAVTAttribute.accumSeekTime, value: accumSeekTime)
+        // In case the BufferBegin happens inside a block, we want the BufferFinish be flagged as belonging to the same block, even if it happened outside of it
+        if event.getAction() == OAVTAction.BufferFinish {
+            event.setAttribute(key: OAVTAttribute.inPauseBlock, value: lastBufferBeginInPauseBlock)
+            event.setAttribute(key: OAVTAttribute.inSeekBlock, value: lastBufferBeginInSeekBlock)
         }
         else {
-            event.setAttribute(key: OAVTAttribute.IN_PAUSE_BLOCK, value: tracker.getState().isPaused)
-            event.setAttribute(key: OAVTAttribute.IN_SEEK_BLOCK, value: tracker.getState().isSeeking)
+            event.setAttribute(key: OAVTAttribute.inPauseBlock, value: tracker.getState().isPaused)
+            event.setAttribute(key: OAVTAttribute.inSeekBlock, value: tracker.getState().isSeeking)
         }
-        event.setAttribute(key: OAVTAttribute.IN_BUFFER_BLOCK, value: tracker.getState().isBuffering)
-        event.setAttribute(key: OAVTAttribute.IN_PLAYBACK_BLOCK, value: tracker.getState().didStart && !tracker.getState().didFinish)
+        event.setAttribute(key: OAVTAttribute.inBufferBlock, value: tracker.getState().isBuffering)
+        event.setAttribute(key: OAVTAttribute.inPlaybackBlock, value: tracker.getState().didStart && !tracker.getState().didFinish)
         
         if let streamId = self.streamId {
-            event.setAttribute(key: OAVTAttribute.STREAM_ID, value: streamId)
+            event.setAttribute(key: OAVTAttribute.streamId, value: streamId)
         }
         
         if let playbackId = self.playbackId {
-            event.setAttribute(key: OAVTAttribute.PLAYBACK_ID, value: playbackId)
+            event.setAttribute(key: OAVTAttribute.playbackId, value: playbackId)
         }
         
         updatePlaybackId(event: event)
@@ -113,21 +113,21 @@ open class OAVTHubCore : OAVTHubProtocol {
     open func acceptOrRejectEvent(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> Bool {
         
         switch event.getAction() {
-        case OAVTAction.MEDIA_REQUEST:
+        case OAVTAction.MediaRequest:
             if !tracker.getState().didMediaRequest {
                 tracker.getState().didMediaRequest = true
             }
             else {
                 return false
             }
-        case OAVTAction.PLAYER_SET:
+        case OAVTAction.PlayerSet:
             if !tracker.getState().didPlayerSet {
                 tracker.getState().didPlayerSet = true
             }
             else {
                 return false
             }
-        case OAVTAction.STREAM_LOAD:
+        case OAVTAction.StreamLoad:
             if !tracker.getState().didStreamLoad {
                 tracker.getState().didStreamLoad = true
                 streamId = UUID().uuidString
@@ -135,7 +135,7 @@ open class OAVTHubCore : OAVTHubProtocol {
             else {
                 return false
             }
-        case OAVTAction.START:
+        case OAVTAction.Start:
             if !tracker.getState().didStart {
                 startPing(tracker: tracker)
                 tracker.getState().didStart = true
@@ -144,23 +144,23 @@ open class OAVTHubCore : OAVTHubProtocol {
             else {
                 return false
             }
-        case OAVTAction.PAUSE_BEGIN:
+        case OAVTAction.PauseBegin:
             if tracker.getState().didStart && !tracker.getState().isPaused {
                 tracker.getState().isPaused = true
             }
             else {
                 return false
             }
-        case OAVTAction.PAUSE_FINISH:
+        case OAVTAction.PauseFinish:
             if tracker.getState().didStart && tracker.getState().isPaused {
                 tracker.getState().isPaused = false
-                let timeSincePauseBegin = event.getAttribute(key: OAVTAction.PAUSE_BEGIN.getTimeAttribute())
+                let timeSincePauseBegin = event.getAttribute(key: OAVTAction.PauseBegin.getTimeAttribute())
                 accumPauseTime = accumPauseTime + (timeSincePauseBegin as! Int)
             }
             else {
                 return false
             }
-        case OAVTAction.BUFFER_BEGIN:
+        case OAVTAction.BufferBegin:
             if !tracker.getState().isBuffering {
                 tracker.getState().isBuffering = true
                 lastBufferBeginInPauseBlock = tracker.getState().isPaused
@@ -169,32 +169,32 @@ open class OAVTHubCore : OAVTHubProtocol {
             else {
                 return false
             }
-        case OAVTAction.BUFFER_FINISH:
+        case OAVTAction.BufferFinish:
             if tracker.getState().isBuffering {
                 tracker.getState().isBuffering = false
-                let timeSinceBufferBegin = event.getAttribute(key: OAVTAction.BUFFER_BEGIN.getTimeAttribute())
+                let timeSinceBufferBegin = event.getAttribute(key: OAVTAction.BufferBegin.getTimeAttribute())
                 accumBufferTime = accumBufferTime + (timeSinceBufferBegin as! Int)
             }
             else {
                 return false
             }
-        case OAVTAction.SEEK_BEGIN:
+        case OAVTAction.SeekBegin:
             if !tracker.getState().isSeeking {
                 tracker.getState().isSeeking = true
             }
             else {
                 return false
             }
-        case OAVTAction.SEEK_FINISH:
+        case OAVTAction.SeekFinish:
             if tracker.getState().isSeeking {
                 tracker.getState().isSeeking = false
-                let timeSinceSeekBegin = event.getAttribute(key: OAVTAction.SEEK_BEGIN.getTimeAttribute())
+                let timeSinceSeekBegin = event.getAttribute(key: OAVTAction.SeekBegin.getTimeAttribute())
                 accumSeekTime = accumSeekTime + (timeSinceSeekBegin as! Int)
             }
             else {
                 return false
             }
-        case OAVTAction.END, OAVTAction.STOP, OAVTAction.NEXT:
+        case OAVTAction.End, OAVTAction.Stop, OAVTAction.Next:
             if tracker.getState().didStart && !tracker.getState().didFinish {
                 self.instrument?.stopPing(trackerId: tracker.trackerId!)
                 tracker.getState().didFinish = true
@@ -202,7 +202,7 @@ open class OAVTHubCore : OAVTHubProtocol {
             else {
                 return false
             }
-        case OAVTAction.ERROR:
+        case OAVTAction.Error:
             countErrors = countErrors + 1
         default:
             return true
@@ -212,7 +212,7 @@ open class OAVTHubCore : OAVTHubProtocol {
     }
 
     private func initPlaybackId(event: OAVTEvent) {
-        if event.getAction() == OAVTAction.MEDIA_REQUEST || event.getAction() == OAVTAction.STREAM_LOAD {
+        if event.getAction() == OAVTAction.MediaRequest || event.getAction() == OAVTAction.StreamLoad {
             if playbackId == nil {
                 playbackId = UUID().uuidString
             }
@@ -220,7 +220,7 @@ open class OAVTHubCore : OAVTHubProtocol {
     }
     
     private func updatePlaybackId(event: OAVTEvent) {
-        if event.getAction() == OAVTAction.END || event.getAction() == OAVTAction.STOP || event.getAction() == OAVTAction.NEXT {
+        if event.getAction() == OAVTAction.End || event.getAction() == OAVTAction.Stop || event.getAction() == OAVTAction.Next {
             playbackId = UUID().uuidString
         }
     }

@@ -17,41 +17,41 @@ open class OAVTMetricalcCore : OAVTMetricalcProtocol {
     public func processMetric(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> [OAVTMetric] {
         var metricArray : [OAVTMetric] = []
         
-        if event.getAction() == OAVTAction.START {
-            if let timeSinceMediaRequest = event.getAttribute(key: OAVTAction.MEDIA_REQUEST.getTimeAttribute()) as? Int {
-                metricArray.append(OAVTMetric.START_TIME(timeSinceMediaRequest))
+        if event.getAction() == OAVTAction.Start {
+            if let timeSinceMediaRequest = event.getAttribute(key: OAVTAction.MediaRequest.getTimeAttribute()) as? Int {
+                metricArray.append(OAVTMetric.StartTime(timeSinceMediaRequest))
             }
-            else if let timeSinceStreamLoad = event.getAttribute(key: OAVTAction.STREAM_LOAD.getTimeAttribute()) as? Int {
-                metricArray.append(OAVTMetric.START_TIME(timeSinceStreamLoad))
+            else if let timeSinceStreamLoad = event.getAttribute(key: OAVTAction.StreamLoad.getTimeAttribute()) as? Int {
+                metricArray.append(OAVTMetric.StartTime(timeSinceStreamLoad))
             }
-            metricArray.append(OAVTMetric.NUM_PLAYS(1))
+            metricArray.append(OAVTMetric.NumPlays(1))
         }
-        else if event.getAction() == OAVTAction.BUFFER_FINISH {
-            if let inPlaybackBlock = event.getAttribute(key: OAVTAttribute.IN_PLAYBACK_BLOCK) as? Bool {
-                if let inPauseBlock = event.getAttribute(key: OAVTAttribute.IN_PAUSE_BLOCK) as? Bool {
-                    if let inSeekBlock = event.getAttribute(key: OAVTAttribute.IN_SEEK_BLOCK) as? Bool {
+        else if event.getAction() == OAVTAction.BufferFinish {
+            if let inPlaybackBlock = event.getAttribute(key: OAVTAttribute.inPlaybackBlock) as? Bool {
+                if let inPauseBlock = event.getAttribute(key: OAVTAttribute.inPauseBlock) as? Bool {
+                    if let inSeekBlock = event.getAttribute(key: OAVTAttribute.inSeekBlock) as? Bool {
                         if (inPlaybackBlock && !inPauseBlock && !inSeekBlock) {
-                            if let timeSinceBufferBegin = event.getAttribute(key: OAVTAction.BUFFER_BEGIN.getTimeAttribute()) as? Int {
-                                metricArray.append(OAVTMetric.REBUFFER_TIME(timeSinceBufferBegin))
-                                metricArray.append(OAVTMetric.NUM_REBUFFERS(1))
+                            if let timeSinceBufferBegin = event.getAttribute(key: OAVTAction.BufferBegin.getTimeAttribute()) as? Int {
+                                metricArray.append(OAVTMetric.RebufferTime(timeSinceBufferBegin))
+                                metricArray.append(OAVTMetric.NumRebuffers(1))
                             }
                         }
                     }
                 }
             }
         }
-        else if event.getAction() == OAVTAction.MEDIA_REQUEST {
-            metricArray.append(OAVTMetric.NUM_REQUESTS(1))
+        else if event.getAction() == OAVTAction.MediaRequest {
+            metricArray.append(OAVTMetric.NumRequests(1))
         }
-        else if event.getAction() == OAVTAction.STREAM_LOAD {
-            metricArray.append(OAVTMetric.NUM_LOADS(1))
+        else if event.getAction() == OAVTAction.StreamLoad {
+            metricArray.append(OAVTMetric.NumLoads(1))
         }
-        else if event.getAction() == OAVTAction.END || event.getAction() == OAVTAction.STOP || event.getAction() == OAVTAction.NEXT  {
-            metricArray.append(OAVTMetric.NUM_ENDS(1))
+        else if event.getAction() == OAVTAction.End || event.getAction() == OAVTAction.Stop || event.getAction() == OAVTAction.Next  {
+            metricArray.append(OAVTMetric.NumEnds(1))
         }
         
-        if let deltaPlayTime = event.getAttribute(key: OAVTAttribute.DELTA_PLAY_TIME) as? Int {
-            metricArray.append(OAVTMetric.PLAY_TIME(deltaPlayTime))
+        if let deltaPlayTime = event.getAttribute(key: OAVTAttribute.deltaPlayTime) as? Int {
+            metricArray.append(OAVTMetric.PlayTime(deltaPlayTime))
         }
         
         return metricArray

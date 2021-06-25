@@ -43,33 +43,33 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
             unregisterListeners()
         }
         self.player = player
-        self.instrument?.emit(action: OAVTAction.PLAYER_SET, tracker: self)
+        self.instrument?.emit(action: OAVTAction.PlayerSet, tracker: self)
         registerListeners()
     }
     
     open func initEvent(event: OAVTEvent) -> OAVTEvent? {
         // Set event specific attributes
-        if event.getAction() == OAVTAction.ERROR {
+        if event.getAction() == OAVTAction.Error {
             if let error = self.lastError {
-                event.setAttribute(key: OAVTAttribute.ERROR_DESCRIPTION, value: error.userInfo["NSDescription"] ?? error.localizedDescription)
+                event.setAttribute(key: OAVTAttribute.errorDescription, value: error.userInfo["NSDescription"] ?? error.localizedDescription)
             }
             self.lastError = nil
         }
         
         // Set attributes from getters
-        self.instrument?.useGetter(attribute: OAVTAttribute.TRACKER_TARGET, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.POSITION, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.DURATION, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.RESOLUTION_HEIGHT, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.RESOLUTION_WIDTH, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.IS_MUTED, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.VOLUME, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.FPS, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.SOURCE, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.BITRATE, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.LANGUAGE, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.SUBTITLES, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.IS_ADS_TRACKER, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.trackerTarget, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.position, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.duration, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.resolutionHeight, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.resolutionWidth, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.isMuted, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.volume, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.fps, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.source, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.bitrate, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.language, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.subtitles, event: event, tracker: self)
+        self.instrument?.useGetter(attribute: OAVTAttribute.isAdsTracker, event: event, tracker: self)
         
         return event
     }
@@ -82,7 +82,7 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
         if self.instrument == nil {
             self.instrument = instrument
             registerGetters()
-            self.instrument?.emit(action: OAVTAction.TRACKER_INIT, tracker: self)
+            self.instrument?.emit(action: OAVTAction.TrackerInit, tracker: self)
         }
     }
     
@@ -91,19 +91,19 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
     }
     
     open func registerGetters() {
-        self.instrument?.registerGetter(attribute: OAVTAttribute.TRACKER_TARGET, getter: self.getTrackerTarget, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.POSITION, getter: self.getPosition, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.DURATION, getter: self.getDuration, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.RESOLUTION_HEIGHT, getter: self.getResolutionHeight, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.RESOLUTION_WIDTH, getter: self.getResolutionWidth, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.IS_MUTED, getter: self.getIsMuted, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.VOLUME, getter: self.getVolume, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.FPS, getter: self.getFps, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.SOURCE, getter: self.getSource, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.BITRATE, getter: self.getBitrate, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.LANGUAGE, getter: self.getLanguage, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.SUBTITLES, getter: self.getSubtitles, tracker: self)
-        self.instrument?.registerGetter(attribute: OAVTAttribute.IS_ADS_TRACKER, getter: self.getIsAdsTracker, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.trackerTarget, getter: self.getTrackerTarget, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.position, getter: self.getPosition, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.duration, getter: self.getDuration, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.resolutionHeight, getter: self.getResolutionHeight, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.resolutionWidth, getter: self.getResolutionWidth, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.isMuted, getter: self.getIsMuted, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.volume, getter: self.getVolume, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.fps, getter: self.getFps, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.source, getter: self.getSource, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.bitrate, getter: self.getBitrate, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.language, getter: self.getLanguage, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.subtitles, getter: self.getSubtitles, tracker: self)
+        self.instrument?.registerGetter(attribute: OAVTAttribute.isAdsTracker, getter: self.getIsAdsTracker, tracker: self)
     }
     
     open func registerListeners() {
@@ -135,25 +135,25 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
                 
                 if player.rate == 1.0 {
                     if self.getState().didStart == false {
-                        self.instrument?.emit(action: OAVTAction.START, tracker: self)
+                        self.instrument?.emit(action: OAVTAction.Start, tracker: self)
                     }
                     if self.getState().isSeeking == true {
-                        self.instrument?.emit(action: OAVTAction.SEEK_FINISH, tracker: self)
+                        self.instrument?.emit(action: OAVTAction.SeekFinish, tracker: self)
                     }
                     if self.getState().isPaused == true {
-                        self.instrument?.emit(action: OAVTAction.PAUSE_FINISH, tracker: self)
+                        self.instrument?.emit(action: OAVTAction.PauseFinish, tracker: self)
                     }
                 }
                 else if player.rate == 0.0 {
                     if self.getState().isPaused == false {
                         self.pauseBeginPosition = self.getPosition()
-                        self.instrument?.emit(action: OAVTAction.PAUSE_BEGIN, tracker: self)
+                        self.instrument?.emit(action: OAVTAction.PauseBegin, tracker: self)
                     }
                 }
             }
         }
         
-        self.instrument?.emit(action: OAVTAction.PLAYER_READY, tracker: self)
+        self.instrument?.emit(action: OAVTAction.PlayerReady, tracker: self)
     }
     
     open func unregisterListeners() {
@@ -188,7 +188,7 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
     @objc private func itemDidPlayToEndTimeNotification(notification: NSNotification) {
         OAVTLog.verbose("---> itemDidPlayToEndTimeNotification")
         if !self.getState().inAdBreak {
-            self.instrument?.emit(action: OAVTAction.END, tracker: self)
+            self.instrument?.emit(action: OAVTAction.End, tracker: self)
         }
     }
     
@@ -198,7 +198,7 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
         if self.lastError == nil {
             self.lastError = self.player?.currentItem?.error as NSError?
         }
-        self.instrument?.emit(action: OAVTAction.ERROR, tracker: self)
+        self.instrument?.emit(action: OAVTAction.Error, tracker: self)
         self.instrument?.stopPing(trackerId: trackerId!)
     }
     
@@ -209,23 +209,23 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
         switch keyPath ?? "" {
         case "status":
             if self.player?.status == AVPlayer.Status.readyToPlay {
-                self.instrument?.emit(action: OAVTAction.STREAM_LOAD, tracker: self)
+                self.instrument?.emit(action: OAVTAction.StreamLoad, tracker: self)
             }
             else if self.player?.status == AVPlayer.Status.failed {
                 self.lastError = self.player?.error as NSError?
-                self.instrument?.emit(action: OAVTAction.ERROR, tracker: self)
+                self.instrument?.emit(action: OAVTAction.Error, tracker: self)
             }
         case "currentItem.status":
             if self.player?.currentItem?.status == AVPlayerItem.Status.failed {
                 self.lastError = self.player?.currentItem?.error as NSError?
-                self.instrument?.emit(action: OAVTAction.ERROR, tracker: self)
+                self.instrument?.emit(action: OAVTAction.Error, tracker: self)
             }
         case "timeControlStatus":
             if #available(iOS 10.0, *) {
                 switch self.player?.timeControlStatus {
                 case .waitingToPlayAtSpecifiedRate:
                     OAVTLog.verbose("---> timeControlStatus waitingToPlayAtSpecifiedRate")
-                    self.instrument?.emit(action: OAVTAction.BUFFER_BEGIN, tracker: self)
+                    self.instrument?.emit(action: OAVTAction.BufferBegin, tracker: self)
                     switch self.player?.reasonForWaitingToPlay {
                     case AVPlayer.WaitingReason.toMinimizeStalls:
                         OAVTLog.verbose("---> reasonForWaitingToPlay toMinimizeStalls")
@@ -238,10 +238,10 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
                     }
                 case .paused:
                     OAVTLog.verbose("---> timeControlStatus pause")
-                    self.instrument?.emit(action: OAVTAction.BUFFER_FINISH, tracker: self)
+                    self.instrument?.emit(action: OAVTAction.BufferFinish, tracker: self)
                 case .playing:
                     OAVTLog.verbose("---> timeControlStatus playing")
-                    self.instrument?.emit(action: OAVTAction.BUFFER_FINISH, tracker: self)
+                    self.instrument?.emit(action: OAVTAction.BufferFinish, tracker: self)
                 default:
                     OAVTLog.verbose("---> timeControlStatus other")
                 }
@@ -253,7 +253,7 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
                 OAVTLog.verbose("Current position = \(getPosition() ?? 0) , PauseBeginPosition = \(self.pauseBeginPosition ?? 0)")
                 if let pos = getPosition(), let pausePos = self.pauseBeginPosition {
                     if pos > pausePos {
-                        self.instrument?.emit(action: OAVTAction.SEEK_BEGIN, tracker: self)
+                        self.instrument?.emit(action: OAVTAction.SeekBegin, tracker: self)
                     }
                 }
             }
@@ -273,10 +273,10 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
                 let currMul = currH * currW
                 
                 if lastMul > currMul {
-                    self.instrument?.emit(action: OAVTAction.QUALITY_CHANGE_DOWN, tracker: self)
+                    self.instrument?.emit(action: OAVTAction.QualityChangeDown, tracker: self)
                 }
                 else if lastMul < currMul {
-                    self.instrument?.emit(action: OAVTAction.QUALITY_CHANGE_UP, tracker: self)
+                    self.instrument?.emit(action: OAVTAction.QualityChangeUp, tracker: self)
                 }
                 
                 lastResolutionHeight = currH
