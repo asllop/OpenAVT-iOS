@@ -19,7 +19,6 @@ public class OAVTInstrument {
     private var trackers : Dictionary<Int, OAVTTrackerProtocol> = [:]
     private var nextTrackerId : Int = 0
     private var timeSince : Dictionary<OAVTAttribute, TimeInterval> = [:]
-    private var customAttributes : Dictionary<String, Dictionary<OAVTAttribute, Any>> = [:]
     private var pingTrackerTimers: Dictionary<Int, Timer> = [:]
     private var trackerGetters : Dictionary<Int, Dictionary<OAVTAttribute, () -> Any?>> = [:]
     
@@ -312,53 +311,6 @@ public class OAVTInstrument {
     }
     
     /**
-     Add an attribute for current instrument.
-     
-     All the attributes added to the instrument are included automatically into every event passing though the chain.
-     
-     - Parameters:
-        - key: An OAVTAttribute.
-        - value: Value for the attribute.
-        - action: (optional) Action.  The attribute will be only added to the events with the specified action.
-        - trackerId: (optional) Tracker ID. The attribute will be only added to the events comming from the specified tracker..
-    */
-    public func addAttribute(key: OAVTAttribute, value: Any, action: OAVTAction? = nil, trackerId: Int? = nil) {
-        let k = generateCustomAttributeId(action: action, trackerId: trackerId)
-        if self.customAttributes[k] == nil {
-            self.customAttributes[k] = [:]
-        }
-        self.customAttributes[k]![key] = value
-    }
-    
-    /**
-     Remove attribute for current instrument.
-     
-     - Parameters:
-        - key: An OAVTAttribute.
-        - value: Value for the attribute.
-        - action: (optional) Action.  The attribute will be only added to the events with the specified action.
-        - trackerId: (optional) Tracker ID. The attribute will be only added to the events comming from the specified tracker..
-     
-     - Returns: True if removed, False otherwise.
-    */
-    @discardableResult
-    public func removeAttribute(key: OAVTAttribute, action: OAVTAction? = nil, trackerId: Int? = nil) -> Bool{
-        let k = generateCustomAttributeId(action: action, trackerId: trackerId)
-        if self.customAttributes[k] != nil {
-            if self.customAttributes[k]![key] != nil {
-                self.customAttributes[k]!.removeValue(forKey: key)
-                return true
-            }
-            else {
-                return false
-            }
-        }
-        else {
-            return false
-        }
-    }
-    
-    /**
      Register an attribute getter for a tracker.
      
      - Parameters:
@@ -434,7 +386,6 @@ public class OAVTInstrument {
         // Generate attributes
         generateSenderId(tracker: tracker, event: event)
         generateTimeSince(event: event)
-        generateCustomAttributes(tracker: tracker, event: event)
         
         return event
     }
@@ -449,35 +400,6 @@ public class OAVTInstrument {
         for (attribute, timestamp) in self.timeSince {
             let timeSince = Int(1000.0 * (Date.init().timeIntervalSince1970 - timestamp))
             event.setAttribute(key: attribute, value: timeSince)
-        }
-    }
-    
-    private func generateCustomAttributes(tracker: OAVTTrackerProtocol, event: OAVTEvent) {
-        if let tId = tracker.trackerId {
-            let allKey = generateCustomAttributeId()
-            if let allAttrs = self.customAttributes[allKey] {
-                for (k,v) in allAttrs {
-                    event.setAttribute(key: k, value: v)
-                }
-            }
-            let trackerIdKey = generateCustomAttributeId(trackerId: tId)
-            if let trackerIdAttrs = self.customAttributes[trackerIdKey] {
-                for (k,v) in trackerIdAttrs {
-                    event.setAttribute(key: k, value: v)
-                }
-            }
-            let actionKey = generateCustomAttributeId(action: event.getAction())
-            if let actionKeyAttrs = self.customAttributes[actionKey] {
-                for (k,v) in actionKeyAttrs {
-                    event.setAttribute(key: k, value: v)
-                }
-            }
-            let actionTrackerIdKey = generateCustomAttributeId(action: event.getAction(), trackerId: tId)
-            if let actionTrackerIdKeyAttrs = self.customAttributes[actionTrackerIdKey] {
-                for (k,v) in actionTrackerIdKeyAttrs {
-                    event.setAttribute(key: k, value: v)
-                }
-            }
         }
     }
 }
