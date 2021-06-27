@@ -8,80 +8,48 @@
 
 import Foundation
 
-/// An OpenAVT metric.
-public class OAVTMetric : OAVTSample {
-    
-    /// Metric types
-    public enum MetricType: Int {
-        /// Type counter. Sum all the values.
-        case Counter = 0
-        /// Type gauge. Use the last value.
-        case Gauge = 1
+/// An OpenAVT metric value.
+public class OAVTMetricValue: CustomStringConvertible {
+    /// Metric value types
+    public enum MetricValueType: Int {
+        /// Type integer.
+        case Integer = 0
+        /// Type float.
+        case Float = 1
     }
     
-    private let metricName: String
-    private let metricType: MetricType
     private let metricValueD: Double?
     private let metricValueI: Int?
+    private let metricValueType: MetricValueType
     
     /**
-     Init a new OAVTMetric, providing name, type and value.
+     Init a new OAVTMetricValue, providing name, type and value.
      
      - Parameters:
         - name: Metric name.
-        - type: Metric type.
         - value: Metric value, double.
      
-     - Returns: A new OAVTMetric instance.
+     - Returns: A new OAVTMetricValue instance.
     */
-    public init(name: String, type: MetricType, value: Double) {
-        self.metricName = name
-        self.metricType = type
+    public init(value: Double) {
         self.metricValueD = value
-        self.metricValueI = nil
+        self.metricValueI = Int(value)
+        self.metricValueType = .Float
     }
     
     /**
-     Init a new OAVTMetric, providing name, type and value.
+     Init a new OAVTMetricValue, providing name, type and value.
      
      - Parameters:
         - name: Metric name.
-        - type: Metric type.
         - value: Metric value, integer.
      
-     - Returns: A new OAVTMetric instance.
+     - Returns: A new OAVTMetricValue instance.
     */
-    public init(name: String, type: MetricType, value: Int) {
-        self.metricName = name
-        self.metricType = type
+    public init(value: Int) {
         self.metricValueI = value
-        self.metricValueD = nil
-    }
-
-    /**
-     Get metric name.
-     
-     - Returns: Name.
-    */
-    public func getName() -> String {
-        return self.metricName
-    }
-    
-    /**
-     Get metric value.
-     
-     - Returns: Value.
-    */
-    public func getValue() -> Any {
-        if let i = self.metricValueD {
-            return i
-        }
-        else if let i = self.metricValueI {
-            return i
-        }
-        else {
-            return Double.nan
-        }
+        self.metricValueD = Double(value)
+        self.metricValueType = .Integer
     }
     
     /**
@@ -102,21 +70,107 @@ public class OAVTMetric : OAVTSample {
         return self.metricValueD
     }
     
+    /// Generate a readable description.
+    public var description : String {
+        switch self.metricValueType {
+        case .Float:
+            return "\(self.metricValueD ?? 0.0)"
+        case .Integer:
+            return "\(self.metricValueI ?? 0)"
+        }
+    }
+    
+    public func getType() -> MetricValueType {
+        return self.metricValueType
+    }
+}
+
+/// An OpenAVT metric.
+public class OAVTMetric : OAVTSample {
+    
+    /// Metric types
+    public enum MetricType: Int {
+        /// Type counter. Sum all the values.
+        case Counter = 0
+        /// Type gauge. Use the last value.
+        case Gauge = 1
+    }
+    
+    private let metricName: String
+    private let metricType: MetricType
+    private let metricValue: OAVTMetricValue?
+    
     /**
-     Get metric value as NSNumber.
+     Init a new OAVTMetric, providing name, type and value.
      
-     - Returns: value.
+     - Parameters:
+        - name: Metric name.
+        - type: Metric type.
+        - value: Metric value, double.
+     
+     - Returns: A new OAVTMetric instance.
     */
-    public func getNSNumberValue() -> NSNumber {
-        if let i = self.metricValueD {
-            return NSNumber(value: i)
+    public init(name: String, type: MetricType, value: Double) {
+        self.metricName = name
+        self.metricType = type
+        self.metricValue = OAVTMetricValue(value: value)
+    }
+    
+    /**
+     Init a new OAVTMetric, providing name, type and value.
+     
+     - Parameters:
+        - name: Metric name.
+        - type: Metric type.
+        - value: Metric value, integer.
+     
+     - Returns: A new OAVTMetric instance.
+    */
+    public init(name: String, type: MetricType, value: Int) {
+        self.metricName = name
+        self.metricType = type
+        self.metricValue = OAVTMetricValue(value: value)
+    }
+
+    /**
+     Get metric name.
+     
+     - Returns: Name.
+    */
+    public func getName() -> String {
+        return self.metricName
+    }
+    
+    /**
+     Get metric value.
+     
+     - Returns: Value.
+    */
+    public func getValue() -> OAVTMetricValue {
+        return self.metricValue ?? OAVTMetricValue(value: 0)
+    }
+    
+    /**
+     Get metric value in NSNumber.
+     
+     - Returns: Value.
+    */
+    public func getNSValue() -> NSNumber {
+        switch getValue().getType() {
+        case .Integer:
+            return NSNumber(value: getValue().getIntValue() ?? 0)
+        case .Float:
+            return NSNumber(value: getValue().getDoubleValue() ?? 0.0)
         }
-        else if let i = self.metricValueI {
-            return NSNumber(value: i)
-        }
-        else {
-            return NSNumber(value: Double.nan)
-        }
+    }
+    
+    /**
+     Get metric type.
+     
+     - Returns: Type.
+    */
+    public func getType() -> MetricType {
+        return self.metricType
     }
     
     /// Generate a readable description.

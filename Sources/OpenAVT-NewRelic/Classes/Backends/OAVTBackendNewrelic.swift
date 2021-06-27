@@ -29,7 +29,7 @@ open class OAVTBackendNewrelic : OAVTBackendProtocol {
     }
     
     public func sendMetric(metric: OAVTMetric) {
-        NewRelic.recordMetric(withName: buildMetricName(metric: metric), category: buildMetricCategory(metric: metric), value: metric.getNSNumberValue())
+        NewRelic.recordMetric(withName: buildMetricName(metric: metric), category: buildMetricCategory(metric: metric), value: metric.getNSValue())
     }
     
     public func instrumentReady(instrument: OAVTInstrument) {}
