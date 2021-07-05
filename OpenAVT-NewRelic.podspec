@@ -1,4 +1,4 @@
-# OpenAVT-Newrelic podspec
+# OpenAVT-NewRelic podspec
 
 Pod::Spec.new do |s|
   s.name             = 'OpenAVT-NewRelic'
