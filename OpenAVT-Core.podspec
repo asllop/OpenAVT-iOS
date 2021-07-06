@@ -2,7 +2,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'OpenAVT-Core'
-  s.version          = '0.5.0'
+  s.version          = '0.6.0'
   s.summary          = 'Open Audio-Video Telemetry, core library.'
   s.description      = <<-DESC
   Open Audio-Video Telemetry, core library. It contains the base classes to build player specific trackers and vendor specific backends.

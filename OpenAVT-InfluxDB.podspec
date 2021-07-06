@@ -2,7 +2,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'OpenAVT-InfluxDB'
-  s.version          = '0.5.0'
+  s.version          = '0.6.0'
   s.summary          = 'Open Audio-Video Telemetry, InfluxDB backend.'
   s.description      = <<-DESC
   Open Audio-Video Telemetry, InfluxDB backend. It contains a backend for the InfluxDB metrics collector.

@@ -2,7 +2,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'OpenAVT-AVPlayer'
-  s.version          = '0.5.0'
+  s.version          = '0.6.0'
   s.summary          = 'Open Audio-Video Telemetry, AVPlayer tracker.'
   s.description      = <<-DESC
   Open Audio-Video Telemetry, AVPlayer tracker. It contains a tracker for the AVPlayer.
