@@ -182,6 +182,7 @@ public class OAVTInstrument {
         if self.trackers[trackerId] != nil {
             if let tracker = getTracker(trackerId) {
                 tracker.endOfService()
+                self.trackerGetters.removeValue(forKey: trackerId)
             }
             self.trackers.removeValue(forKey: trackerId)
             return true
@@ -217,8 +218,9 @@ public class OAVTInstrument {
      It calls the `endOfService` method of all chain components (trackers, hub, metricalc and backend).
     */
     public func shutdown() {
-        for (_, tracker) in self.trackers {
+        for (trackerId, tracker) in self.trackers {
             tracker.endOfService()
+            self.trackerGetters.removeValue(forKey: trackerId)
         }
         if let hub = self.hub {
             hub.endOfService()
@@ -328,6 +330,21 @@ public class OAVTInstrument {
     }
     
     /**
+     Unegister an attribute getter for a tracker.
+     
+     - Parameters:
+        - attribute: An OAVTAttribute.
+        - tracker: Tracker.
+    */
+    public func unregisterGetter(attribute: OAVTAttribute, tracker: OAVTTrackerProtocol) {
+        if let trackerId = tracker.trackerId {
+            if self.trackerGetters[trackerId] != nil {
+                self.trackerGetters[trackerId]!.removeValue(forKey: attribute)
+            }
+        }
+    }
+    
+    /**
      Call an attribute getter.
      
      - Parameters:
@@ -358,25 +375,6 @@ public class OAVTInstrument {
     public func useGetter(attribute: OAVTAttribute, event: OAVTEvent, tracker: OAVTTrackerProtocol) {
         if let val = callGetter(attribute: attribute, tracker: tracker) {
             event.setAttribute(key: attribute, value: val)
-        }
-    }
-    
-    private func generateCustomAttributeId(action: OAVTAction? = nil, trackerId: Int? = nil) -> String {
-        if action == nil && trackerId == nil {
-            // For all
-            return "5fb1f955b45e38e31789286a1790398d"  // MD5 of string "ALL"
-        }
-        else if action == nil && trackerId != nil {
-            // For specific tracker
-            return String(trackerId!)
-        }
-        else if trackerId == nil && action != nil {
-            // For specific action
-            return action!.getActionName()
-        }
-        else {
-            // For specific action and tracker
-            return action!.getActionName() + "-" + String(trackerId!)
         }
     }
     
