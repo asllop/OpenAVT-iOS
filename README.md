@@ -160,7 +160,11 @@ Here we have created a new instrument that contains all the elements, and once a
 
 OpenAVT provides a set of elements that cover a wide range of possibilities, but not all. For this reason, the most interesting capability it offers is its flexibility to accept custom implementations of these elements.
 
-### 4.1 Custom Actions
+### 4.1 Custom Models
+
+Creating custom models we can extend the data model, adding information that is useful for our specific use case and is not directly covered by OpenAVT.
+
+#### 4.1.1 Custom Actions
 
 Actions are instances of the class `OAVTAction`, and generatic a custom action is as easy as creating a new instance, providing the action name in the constructor:
 
@@ -176,7 +180,7 @@ Now we can use it normally as any other action, for examplem, on an `emit`:
 instrument.emit(action: myAction, trackerId: trackerId)
 ```
 
-### 4.2 Custom Attributes
+#### 4.1.2 Custom Attributes
 
 Attributes are instances of the class `OAVTAttribute`. We build a custom attribute by creating a new instance of the class, providing the name in the constructor:
 
@@ -201,7 +205,7 @@ A custom attribute can be used as any other attribute, for example, setting it o
 event.setAttribute(key: myAttr, value: "any value")
 ```
 
-### 4.3 Custom Metrics
+#### 4.1.3 Custom Metrics
 
 Metrics are instances of the class `OAVTMetric`, and we build custom metrics by creating new instances of the class, providing the metric name, type and value in the constructor:
 
@@ -211,19 +215,196 @@ let myMetric = OAVTMetric(name: "CustomMetric", type: .Gauge, value: 10.1)
 
 > By convention, metric names are in upper camel case, like action names.
 
-<!--
-TODO
+### 4.2 Custom Components
 
-### 4.4 Custom Trackers
+Components are objects that are part of an instrument, and conform to one of the derived protocols of `OAVTComponentProtocol`. In OpenAVT there are four types of components: Trackers, Hubs, Metricalcs and Backends.
 
-### 4.5 Custom Hubs
+Instruments allow hot-plugging of components, by using the lifecycle methods defined in the `OAVTComponentProtocol`. With `OAVTInstrument.addTracker(...)` and `OAVTInstrument.removeTracker(...)` we can add and remove tracker, and with `OAVTInstrument.setHub(...)`, `OAVTInstrument.setMetrical(...)` and `OAVTInstrument.setBackend(...)` we can set and overwrite hubs, metricals and backends. When this happens, the instrument calls `OAVTComponentProtocol.endOfService()` on the removed component. After any change on the instrument is made, we must call `OAVTInstrument.ready()`, that will call `OAVTComponentProtocol.ready()` on each component.
 
-### 4.6 Custom Metricalcs
+#### 4.2.1 Custom Trackers
 
-### 4.7 Custom Backends
+A tracker is the element that knows about specific players, reading properties, registering observers, etc. In OpenAVT a tracker is a class that conforms to the `OAVTTrackerProtocol`, that in turn extends the `OAVTComponentProtocol`. So, the simplest possible tracker will look like:
 
-### 4.8 Custom Buffers
--->
+```Swift
+class DummyTracker: OAVTTrackerProtocol {
+    private var state = OAVTState()
+    
+    func initEvent(event: OAVTEvent) -> OAVTEvent? {
+        // Called when an emit(...) happens. It receives the event and must return an event or nil.
+        // If an event is returned, it will be passed to the Hub.
+        return event
+    }
+    
+    func getState() -> OAVTState {
+        // Return the state object
+        return self.state
+    }
+    
+    // Tracker ID, set by the instrument when the tracker is created.
+    var trackerId: Int?
+    
+    func instrumentReady(instrument: OAVTInstrument) {
+        // Called when ready() is called on the instrument.
+    }
+    
+    func endOfService() {
+        // Called when the tracker is removed from the instrument or when shutdown() is called.
+    }
+}
+```
+
+This tracker does almost nothing, just bypass the events received. But we could improve it a bit, let's say we want to send an event when the instrument is ready:
+
+```Swift
+    // Note that this must be a weak reference, otherwise we will have a retain cycle, because the instrument owns a reference to the tracker.
+    private weak var instrument: OAVTInstrument?
+
+    ...
+
+    func instrumentReady(instrument: OAVTInstrument) {
+        if self.instrument == nil {
+            self.instrument = instrument
+            self.instrument?.emit(action: OAVTAction.TrackerInit, tracker: self)
+        }
+    }
+```
+
+And now maybe we want to set a custom attribute to that event, but only that, no other one:
+
+```Swift
+    func initEvent(event: OAVTEvent) -> OAVTEvent? {
+        if event.getAction() == OAVTAction.TrackerInit {
+            event.setAttribute(key: OAVTAttribute(name: "myCustomAttr"), value: 1000)
+        }
+        return event
+    }
+```
+
+Any event generated calling `emit` will pass thought this method (if the tracker argument of `emit` points to this tracker). Most events will be generated from within the tracker, when something happens in the player (a stream starts, the user pauses the playback, etc), but we can also call `emit` from any other place.
+
+Generally, `instrumentReady` is used to do initializations, like registering observers in the player, set up states, send starting events, etc. And `endOfService` is used to undo all this, unregister observers, etc.
+
+A tracker can also register attribute getters. An attribute getter binds a tracker method with an `OAVTAttribute`. Let's say our player reports the current playback position, and we want to include this attribute on every event. OpenAVT offers a pre-defined attribute to report this information: `OAVTAttribute.position`. We can define a method in our tracker that returns that position:
+
+```Swift
+    func getPosition() -> Int? {
+        let p = ... //do whatever with the supported player to get the position.
+        return p
+    }
+```
+
+> By convention, times are reported as integers in milliseconds.
+
+Now we need to bind this method to the attribute:
+
+```Swift
+    func instrumentReady(instrument: OAVTInstrument) {
+        ...
+        
+        self.instrument?.registerGetter(attribute: OAVTAttribute.position, getter: self.getPosition, tracker: self)
+    }
+```
+
+And finally, apply the attribute getter to every event we receive:
+
+```Swift
+    func initEvent(event: OAVTEvent) -> OAVTEvent? {
+        ...
+        
+        self.instrument?.useGetter(attribute: OAVTAttribute.position, event: event, tracker: self)
+        
+        return event
+    }
+```
+
+But, why all this complexity, when it would be much easier to just call the `getPosition` method, and then set the attribute using `OAVTEvent.setAttribute`?
+
+Certainly we could do that and it would work. But by registering attribute getters, any element outside the tracker, for example a Hub, can query for a specific attribute value (using `OAVTInstrument.callGetter(...)`), doesn't matter the class and the interface. And if the  queried getter is not defined, it will just return nil and no attribute will be created.
+
+#### 4.2.2 Custom Hubs
+
+A hub is the element that contains the bussiness logic. It receives events from the tracker and according to the type, state, and other conditions, it decides what to do. It can also act over other components, for example updating trackers state. In OpenAVT a hub is a class that conforms to the `OAVTHubProtocol`, that in turn extends the `OAVTComponentProtocol`. A simple hub could look like:
+
+```Swift
+class DummyHub: OAVTHubProtocol {
+    func processEvent(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> OAVTEvent? {
+        // Called with the result of tracker's initEvent. It receives the event and must return an event or nil.
+        // If an event is returned, it will be sent to the Metricalc and the Backend.
+        return event
+    }
+    
+    func instrumentReady(instrument: OAVTInstrument) {
+        // Called when ready() is called on the instrument.
+    }
+    
+    func endOfService() {
+        // Called when the tracker is removed from the instrument or when shutdown() is called.
+    }
+}
+```
+
+The main method for a hub is the `processEvent`, that is called with the event returned by a tracker. Along with the event, it receives the tracker that generated it.
+
+This simple hub does nothing more than bypassing the events received, but it could implement complex logics: It could update the tracker's state depending on the received events, block an event that is not supposed to happen (for example a `OAVTAction.PauseBegin` when the stream is already paused), add or modify attributes, start or stop timers, etc. It's up to your particular use case.
+
+#### 4.2.3 Custom Metricalcs
+
+A metricalc is similar to a hub, but for metrics, it handles the business logic to generate metrics. A metricalc is a class that conforms to the `OAVTMetricalcProtocol`:
+
+```Swift
+class DummyMetricalc: OAVTMetricalcProtocol {
+    func processMetric(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> [OAVTMetric] {
+        // Called with the result of hub's processEvent. It receives the event and returns an array of metrics.
+        // If any metric is returned, it will be sent to the Backend.
+        return []
+    }
+    
+    func instrumentReady(instrument: OAVTInstrument) {
+        // Called when ready() is called on the instrument.
+    }
+    
+    func endOfService() {
+        // Called when the tracker is removed from the instrument or when shutdown() is called.
+    }
+}
+```
+
+This metricalc does nothing, it generates no metrics. Let's imagine we want to generate a metric that counts the total number of events sent. We could do something like:
+
+```Swift
+    private var eventCounter = 0
+    
+    func processMetric(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> [OAVTMetric] {
+        self.eventCounter += 1
+        return [OAVTMetric(name: "EventCounter", type: .Gauge, value: self.eventCounter)]
+    }
+```
+
+#### 4.2.4 Custom Backends
+
+The final stop for an event is the backend, that is a class conforming to the `OAVTBackendProtocol`. Is the backend's duty to store or redirect data to a database, server, filesystem, etc.
+
+```Swift
+class DummyBackend: OAVTBackendProtocol {
+    func sendEvent(event: OAVTEvent) {
+        // Called with the result of hub's processEvent.
+    }
+    
+    func sendMetric(metric: OAVTMetric) {
+        // Called with the results of metricalc's processMetric.
+    }
+    
+    func instrumentReady(instrument: OAVTInstrument) {
+        // Called when ready() is called on the instrument.
+    }
+    
+    func endOfService() {
+        // Called when the tracker is removed from the instrument or when shutdown() is called.
+    }
+}
+```
+
+The method `sendMetric` is called once with each metric returned by metricalc's `processMetric`.
 
 <a name="examp"></a>
 ## 5. Examples
