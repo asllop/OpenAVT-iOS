@@ -20,7 +20,7 @@ public class OAVTInstrument {
     private var nextTrackerId : Int = 0
     private var timeSince : Dictionary<OAVTAttribute, TimeInterval> = [:]
     private var pingTrackerTimers: Dictionary<Int, Timer> = [:]
-    private var trackerGetters : Dictionary<Int, Dictionary<OAVTAttribute, () -> Any?>> = [:]
+    private var trackerGetters : Dictionary<Int, Dictionary<OAVTAttribute, (() -> Any?, (OAVTEvent, OAVTAttribute) -> Bool)>> = [:]
     
     /**
      Init a new OAVTInstrument.
@@ -319,13 +319,14 @@ public class OAVTInstrument {
         - attribute: An OAVTAttribute.
         - getter: Code block. It must return the attribute value.
         - tracker: Tracker.
+        - filter: Code block. If it returns true the attribute will be automatically added to the event. If false, it will be ignored.
     */
-    public func registerGetter(attribute: OAVTAttribute, getter: @escaping () -> Any?, tracker: OAVTTrackerProtocol) {
+    public func registerGetter(attribute: OAVTAttribute, getter: @escaping () -> Any?, tracker: OAVTTrackerProtocol, filter: @escaping (OAVTEvent, OAVTAttribute) -> Bool = { _,_ in return true }) {
         if let trackerId = tracker.trackerId {
             if self.trackerGetters[trackerId] == nil {
                 self.trackerGetters[trackerId] = [:]
             }
-            self.trackerGetters[trackerId]![attribute] = getter
+            self.trackerGetters[trackerId]![attribute] = (getter, filter)
         }
     }
     
@@ -357,7 +358,7 @@ public class OAVTInstrument {
         if let trackerId = tracker.trackerId {
             if let d = self.trackerGetters[trackerId] {
                 if let f = d[attribute] {
-                    return f()
+                    return f.0()
                 }
             }
         }
@@ -365,7 +366,7 @@ public class OAVTInstrument {
     }
     
     /**
-     Call an attribute getter and put the resulting attribute into an event.
+     Call an attribute getter and put the resulting attribute into an event, if filter returns true.
      
      - Parameters:
         - attribute: An OAVTAttribute.
@@ -373,8 +374,16 @@ public class OAVTInstrument {
         - tracker: Tracker.
     */
     public func useGetter(attribute: OAVTAttribute, event: OAVTEvent, tracker: OAVTTrackerProtocol) {
-        if let val = callGetter(attribute: attribute, tracker: tracker) {
-            event.setAttribute(key: attribute, value: val)
+        if let trackerId = tracker.trackerId {
+            if let d = self.trackerGetters[trackerId] {
+                if let f = d[attribute] {
+                    if f.1(event, attribute) {
+                        if let val = f.0() {
+                            event.setAttribute(key: attribute, value: val)
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -384,6 +393,7 @@ public class OAVTInstrument {
         // Generate attributes
         generateSenderId(tracker: tracker, event: event)
         generateTimeSince(event: event)
+        generateAttributesFromGetters(tracker: tracker, event: event)
         
         return event
     }
@@ -398,6 +408,16 @@ public class OAVTInstrument {
         for (attribute, timestamp) in self.timeSince {
             let timeSince = Int(1000.0 * (Date.init().timeIntervalSince1970 - timestamp))
             event.setAttribute(key: attribute, value: timeSince)
+        }
+    }
+    
+    private func generateAttributesFromGetters(tracker: OAVTTrackerProtocol, event: OAVTEvent) {
+        if let trackerId = tracker.trackerId {
+            if let d = self.trackerGetters[trackerId] {
+                for (attr, _) in d {
+                    useGetter(attribute: attr, event: event, tracker: tracker)
+                }
+            }
         }
     }
 }

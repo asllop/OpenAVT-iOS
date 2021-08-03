@@ -56,21 +56,6 @@ open class OAVTTrackerAVPlayer : NSObject, OAVTTrackerProtocol {
             self.lastError = nil
         }
         
-        // Set attributes from getters
-        self.instrument?.useGetter(attribute: OAVTAttribute.trackerTarget, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.position, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.duration, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.resolutionHeight, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.resolutionWidth, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.isMuted, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.volume, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.fps, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.source, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.bitrate, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.language, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.subtitles, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.isAdsTracker, event: event, tracker: self)
-        
         return event
     }
     

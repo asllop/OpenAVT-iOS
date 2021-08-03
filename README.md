@@ -305,21 +305,19 @@ Now we need to bind this method to the attribute:
     }
 ```
 
-And finally, apply the attribute getter to every event we receive:
+After this, every event that is emitted will contain the attribute `OAVTAttribute.position` automatically. But what if we only want to include the attribute in some events? For this we have an optional argument in the `registerGetter`, the `filter`. We pass it a function that returns a boolean:
 
 ```Swift
-    func initEvent(event: OAVTEvent) -> OAVTEvent? {
-        ...
-        
-        self.instrument?.useGetter(attribute: OAVTAttribute.position, event: event, tracker: self)
-        
-        return event
-    }
+    self.instrument?.registerGetter(attribute: OAVTAttribute.position, getter: self.getPosition, tracker: self, filter: { event, _ in
+        return event.getAction() == OAVTAction.Ping
+    })
 ```
 
-But, why all this complexity, when it would be much easier to just call the `getPosition` method, and then set the attribute using `OAVTEvent.setAttribute`?
+Now only ping events will have the attribute.
 
-Certainly we could do that and it would work. But by registering attribute getters, any element outside the tracker, for example a Hub, can query for a specific attribute value (using `OAVTInstrument.callGetter(...)`), doesn't matter the class and the interface. And if the  queried getter is not defined, it will just return nil and no attribute will be created.
+But, why all this complexity? It would be much easier to just call the `getPosition` method, and then set the attribute using `OAVTEvent.setAttribute`.
+
+Certainly we could do that and it would work. But by registering attribute getters, any element outside the tracker, for example a Hub, can query for a specific attribute value (using `OAVTInstrument.callGetter(...)`), doesn't matter the class and the interface. And if the  queried getter is not defined, it will just return nil.
 
 #### 4.2.2 Custom Hubs
 

@@ -36,23 +36,6 @@ open class OAVTTrackerIMA : OAVTTrackerProtocol {
             self.errorMessage = nil
         }
         
-        self.instrument?.useGetter(attribute: OAVTAttribute.trackerTarget, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.adPosition, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.adDuration, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.adBufferedTime, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.adVolume, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.adRoll, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.adDescription, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.adId, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.adTitle, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.adAdvertiserName, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.adCreativeId, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.adBitrate, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.adResolutionWidth, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.adResolutionHeight, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.adSystem, event: event, tracker: self)
-        self.instrument?.useGetter(attribute: OAVTAttribute.isAdsTracker, event: event, tracker: self)
-        
         return event
     }
     
