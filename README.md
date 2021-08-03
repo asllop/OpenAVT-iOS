@@ -345,7 +345,25 @@ class DummyHub: OAVTHubProtocol {
 
 The main method for a hub is the `processEvent`, that is called with the event returned by a tracker. Along with the event, it receives the tracker that generated it.
 
-This simple hub does nothing more than bypassing the events received, but it could implement complex logics: It could update the tracker's state depending on the received events, block an event that is not supposed to happen (for example a `OAVTAction.PauseBegin` when the stream is already paused), add or modify attributes, start or stop timers, etc. It's up to your particular use case.
+This simple hub does nothing more than bypassing the events received, but it could implement complex logics: It could update the tracker's state depending on the received events, block an event that is not supposed to happen, add or modify attributes, start or stop timers, etc. It's up to your particular use case. In the following example we see how to handle the pause logic:
+
+```Swift
+    func processEvent(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> OAVTEvent? {
+        if event.getAction() == OAVTAction.PauseBegin {
+            if tracker.getState().isPaused {
+                return nil
+            }
+            tracker.getState().isPaused = true
+        }
+        else if event.getAction() == OAVTAction.PauseFinish {
+            if !tracker.getState().isPaused {
+                return nil
+            }
+            tracker.getState().isPaused = false
+        }
+        return event
+    }
+```
 
 #### 4.2.3 Custom Metricalcs
 
@@ -369,14 +387,21 @@ class DummyMetricalc: OAVTMetricalcProtocol {
 }
 ```
 
-This metricalc does nothing, it generates no metrics. Let's imagine we want to generate a metric that counts the total number of events sent. We could do something like:
+This metricalc does nothing, it generates no metrics. Let's imagine we want to generate a metric that measures the time between quality change events. We could do something like:
 
 ```Swift
-    private var eventCounter = 0
+    private var tsOfLastEvent: TimeInterval = 0.0
     
     func processMetric(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> [OAVTMetric] {
-        self.eventCounter += 1
-        return [OAVTMetric(name: "EventCounter", type: .Gauge, value: self.eventCounter)]
+        if event.getAction() == OAVTAction.QualityChangeUp || event.getAction() == OAVTAction.QualityChangeDown {
+            if self.tsOfLastEvent > 0.0 {
+                let metric = OAVTMetric(name: "TimeBetweenQualityChanges", type: .Gauge, value: NSDate().timeIntervalSince1970 - self.tsOfLastEvent)
+                self.tsOfLastEvent = NSDate().timeIntervalSince1970
+                return [metric]
+            }
+        }
+        
+        return []
     }
 ```
 
