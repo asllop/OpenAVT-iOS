@@ -2,7 +2,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'OpenAVT-Graphite'
-  s.version          = '0.6.0'
+  s.version          = '0.7.0'
   s.summary          = 'Open Audio-Video Telemetry, Graphite backend.'
   s.description      = <<-DESC
   Open Audio-Video Telemetry, Graphite backend. It contains a backend for the Graphite metrics collector.

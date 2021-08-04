@@ -2,7 +2,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'OpenAVT-IMA'
-  s.version          = '0.6.0'
+  s.version          = '0.7.0'
   s.summary          = 'Open Audio-Video Telemetry, IMA tracker.'
   s.description      = <<-DESC
   Open Audio-Video Telemetry, IMA tracker. It contains a tracker for the IMA Ads library.

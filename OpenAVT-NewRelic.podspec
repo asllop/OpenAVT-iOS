@@ -2,7 +2,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'OpenAVT-NewRelic'
-  s.version          = '0.6.0'
+  s.version          = '0.7.0'
   s.summary          = 'Open Audio-Video Telemetry, NewRelic backend.'
   s.description      = <<-DESC
   Open Audio-Video Telemetry, NewRelic backend. It contains a backend for the NewRelic metrics collector.
