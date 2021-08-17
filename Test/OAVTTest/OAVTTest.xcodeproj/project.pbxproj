@@ -19,6 +19,7 @@
 		9C0E771426CAF32A00DAB91E /* OAVTTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0E771326CAF32A00DAB91E /* OAVTTestUITests.swift */; };
 		9C0E772326CB7ABE00DAB91E /* DummyBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0E772226CB7ABE00DAB91E /* DummyBackend.swift */; };
 		9C0E772526CB7B2000DAB91E /* DummyTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0E772426CB7B2000DAB91E /* DummyTracker.swift */; };
+		9C0E772826CB828E00DAB91E /* OAVTAssert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0E772726CB828E00DAB91E /* OAVTAssert.swift */; };
 		D878717F33C37CE70A041CE0 /* Pods_OAVTTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 175E18FE98267D34BE5FA5F0 /* Pods_OAVTTest.framework */; };
 /* End PBXBuildFile section */
 
@@ -62,6 +63,7 @@
 		9C0E771526CAF32A00DAB91E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9C0E772226CB7ABE00DAB91E /* DummyBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyBackend.swift; sourceTree = "<group>"; };
 		9C0E772426CB7B2000DAB91E /* DummyTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyTracker.swift; sourceTree = "<group>"; };
+		9C0E772726CB828E00DAB91E /* OAVTAssert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAVTAssert.swift; sourceTree = "<group>"; };
 		9E3BAEEFD3D402E15784E909 /* Pods_OAVTTest_OAVTTestUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OAVTTest_OAVTTestUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D24643C0DF4A03DC88A12538 /* Pods-OAVTTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OAVTTest.release.xcconfig"; path = "Target Support Files/Pods-OAVTTest/Pods-OAVTTest.release.xcconfig"; sourceTree = "<group>"; };
 		FB768175F89A3160DA5DCCC5 /* Pods-OAVTTestTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OAVTTestTests.debug.xcconfig"; path = "Target Support Files/Pods-OAVTTestTests/Pods-OAVTTestTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 		9C0E770726CAF32A00DAB91E /* OAVTTestTests */ = {
 			isa = PBXGroup;
 			children = (
+				9C0E772626CB826E00DAB91E /* utils */,
 				9C0E772126CB7A9100DAB91E /* assets */,
 				9C0E770826CAF32A00DAB91E /* CoreTests.swift */,
 				9C0E770A26CAF32A00DAB91E /* Info.plist */,
@@ -180,6 +183,14 @@
 				9C0E772426CB7B2000DAB91E /* DummyTracker.swift */,
 			);
 			path = assets;
+			sourceTree = "<group>";
+		};
+		9C0E772626CB826E00DAB91E /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				9C0E772726CB828E00DAB91E /* OAVTAssert.swift */,
+			);
+			path = utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -415,6 +426,7 @@
 				9C0E772526CB7B2000DAB91E /* DummyTracker.swift in Sources */,
 				9C0E770926CAF32A00DAB91E /* CoreTests.swift in Sources */,
 				9C0E772326CB7ABE00DAB91E /* DummyBackend.swift in Sources */,
+				9C0E772826CB828E00DAB91E /* OAVTAssert.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

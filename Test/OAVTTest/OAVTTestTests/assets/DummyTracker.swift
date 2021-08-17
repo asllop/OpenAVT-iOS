@@ -22,10 +22,12 @@ class DummyTracker: OAVTTrackerProtocol {
     var trackerId: Int?
     
     func instrumentReady(instrument: OAVTInstrument) {
-        
+        instrument.registerGetter(attribute: OAVTAttribute.isAdsTracker, getter: self.getIsAdsTracker, tracker: self)
     }
     
-    func endOfService() {
-        
+    func endOfService() {}
+    
+    func getIsAdsTracker() -> Bool {
+        return false
     }
 }
