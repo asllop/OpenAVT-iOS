@@ -1,0 +1,20 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'OAVTTest' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for OAVTTest
+
+  target 'OAVTTestTests' do
+    inherit! :search_paths
+    # Pods for testing
+    pod 'OpenAVT-Core', :git => 'https://github.com/asllop/OpenAVT-iOS'
+  end
+
+  target 'OAVTTestUITests' do
+    # Pods for testing
+  end
+
+end
