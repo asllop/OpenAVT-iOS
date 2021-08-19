@@ -547,7 +547,6 @@ class AdsTests: XCTestCase {
 
         instrument.emit(action: OAVTAction.End, trackerId: trackerId)
     }
-
     
     private func createInstrument() -> (OAVTInstrument, Int, Int) {
         let instrument = OAVTInstrument(hub: OAVTHubCoreAds(), backend: DummyBackend())
