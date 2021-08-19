@@ -16,7 +16,12 @@ open class OAVTHubCoreAds : OAVTHubCore {
     
     open override func processEvent(event: OAVTEvent, tracker: OAVTTrackerProtocol) -> OAVTEvent? {
         if event.getAction() == OAVTAction.AdBreakBegin {
-            setInAdBreakState(state: true)
+            if !tracker.getState().inAdBreak {
+                setInAdBreakState(state: true)
+            }
+            else {
+                return nil
+            }
         }
         else if event.getAction() == OAVTAction.AdBreakFinish {
             if tracker.getState().inAdBreak {
@@ -27,9 +32,14 @@ open class OAVTHubCoreAds : OAVTHubCore {
             }
         }
         else if event.getAction() == OAVTAction.AdBegin {
-            self.instrument?.startPing(trackerId: tracker.trackerId!, interval: 30.0)
-            setInAdState(state: true)
-            countAds = countAds + 1
+            if !tracker.getState().inAd && tracker.getState().inAdBreak {
+                self.instrument?.startPing(trackerId: tracker.trackerId!, interval: 30.0)
+                setInAdState(state: true)
+                countAds = countAds + 1
+            }
+            else {
+                return nil
+            }
         }
         else if event.getAction() == OAVTAction.AdFinish {
             self.instrument?.stopPing(trackerId: tracker.trackerId!)
@@ -47,7 +57,7 @@ open class OAVTHubCoreAds : OAVTHubCore {
             }
         }
         else if event.getAction() == OAVTAction.AdPauseBegin {
-            if !tracker.getState().isPaused {
+            if !tracker.getState().isPaused && tracker.getState().inAd {
                 tracker.getState().isPaused = true
             }
             else {
@@ -55,7 +65,7 @@ open class OAVTHubCoreAds : OAVTHubCore {
             }
         }
         else if event.getAction() == OAVTAction.AdPauseFinish {
-            if tracker.getState().isPaused {
+            if tracker.getState().isPaused && tracker.getState().inAd {
                 tracker.getState().isPaused = false
             }
             else {

@@ -10,7 +10,7 @@ target 'OAVTTest' do
   target 'OAVTTestTests' do
     inherit! :search_paths
     # Pods for testing
-    pod 'OpenAVT-Core', :git => 'https://github.com/asllop/OpenAVT-iOS'
+    pod 'OpenAVT-Core', :path => '../../' #:git => 'https://github.com/asllop/OpenAVT-iOS'
   end
 
   target 'OAVTTestUITests' do
