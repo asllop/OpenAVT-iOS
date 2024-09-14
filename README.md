@@ -14,7 +14,7 @@
 <a name="intro"></a>
 ## 1. Introduction
 
-The Open Audio-Video Telemetry is a set of tools for performance monitoring in multimedia applications. The objectives are similar to those of the OpenTelemetry project, but specifically for sensing data from audio and video players. OpenAVT can be configured to generate Events, Metrics, or a combination of both.
+The Open Audio-Video Telemetry is a set of tools for performance monitoring in multimedia applications. This repo contains the platform specific components to monitor iPhone, iPad and AppleTV video and audio applications.
 
 <a name="install"></a>
 ## 2. Installation
